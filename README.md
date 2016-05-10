@@ -1,2 +1,3 @@
-## CIS-371
-### Spring/Summer 2016
+CIS 371
+
+Spring/Summer 2016
