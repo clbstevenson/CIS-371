@@ -1,0 +1,54 @@
+.col_1 {
+    float: left;
+    width: 30%;
+    padding: 10px;
+    //display: inline-block
+    //border: 3px solid blue;
+}
+.col_2 {
+    float: left;
+    width: 30%;
+    padding: 10px;
+    //display: inline-block
+    //border: 3px solid green;
+}
+.col_3 {
+    float: left;
+    width: 30%;
+    padding: 10px;
+    //display: inline-block
+    //border: 3px solid red;
+}
+
+#CIS p {
+    text-align: justify;
+}
+#CIS .col_1 table {
+    border: 3px solid darkorange;
+}
+
+#CIS .col_1 th,td {
+    border: 3px solid gray;
+}
+
+#courses ul {
+    font-family: "Times New Roman", Times, serif;
+}
+
+.imp {
+    color: red;
+}
+
+#CIS p,td {
+    color: blue;
+}
+
+#CIS h3 {
+    background: #b5cfe3;
+    text-align: center;
+}
+
+#courses h3 {
+    background: peru;
+    text-align: center;
+}
