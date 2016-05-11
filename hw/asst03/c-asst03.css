@@ -1,23 +1,82 @@
-.col_1 {
+#NAME {
+
+}
+
+#INFO img {
+    float: right;
+    border: 3px solid orange;
+    color: brown;
+    width: 20%;
+}
+
+#INFO .MY_INFO {
+    border: 1px solid purple;
+    margin: 1%;
+    //padding: 4px;
+    width: 75%;
+}
+
+#INFO p {
+    text-align: center;
+}
+
+body {
+    color: black;
+    font-family: "Times New Roman", Times, serif;
+    font-size: medium;
+}
+
+table p {
+    font-size: small;
+}
+
+.even table td, .even table th, .even table{
+    border: 1px solid gray;
+}
+
+ul {
+    color: blue;
+}
+
+.best {
+    font-style: italic;
+}
+
+a:link {
+    color: red;
+}
+
+a:visited {
+    color: green;
+}
+
+table {
+    margin: 2px;
+}
+
+table table {
+    margin: 1px;
+}
+
+
+div.odd {
+    background: #A3A3A3;
+    //color: purple;
+}
+
+.links {
+    font-family: Sans-Serif;
+    //color: purple;
+    //text-decoration: line-through;
+}
+
+/*
+.col_1,.col_2,.col_3 {
     float: left;
     width: 30%;
     padding: 10px;
     //display: inline-block
     //border: 3px solid blue;
-}
-.col_2 {
-    float: left;
-    width: 30%;
-    padding: 10px;
-    //display: inline-block
-    //border: 3px solid green;
-}
-.col_3 {
-    float: left;
-    width: 30%;
-    padding: 10px;
-    //display: inline-block
-    //border: 3px solid red;
 }
 
 #CIS p {
@@ -52,3 +111,4 @@
     background: peru;
     text-align: center;
 }
+*/
