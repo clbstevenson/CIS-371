@@ -1,0 +1,32 @@
+#! /bin/bash
+
+if [ $# == 0 ]; then
+    echo "Sorry, not enough arguments. Format: uploadFile file1 file2 ..."
+    exit
+else
+    echo "Uploading to stevecal public page: $*"
+    DIRECTORY="$HOME/public_html"
+    NEWDIR="/$1"
+    echo $*
+    shift 1
+    echo $*
+    echo "---"
+    if [ $# == 0 ]; then
+        echo "Sorry, no files supplied. Format: uploadToWeb dir file1 file2 ..."
+       #exit
+    fi
+    for filename in $*
+    do
+        echo $filename
+        if [ ! -e "${filename}" ] ; then
+            echo "Invalid parameter: file '$filename' does not exist"
+        elif [ -d j"${filename}" ] ; then
+            echo "Invalid parameter: file '$filename' is a directory" 
+        else
+            echo "Uploading $filename"
+            cp $filename "~/public_html/upload/$filename"
+        fi
+    done
+    echo "Upload Complete"
+fi
+
