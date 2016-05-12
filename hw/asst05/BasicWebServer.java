@@ -65,18 +65,35 @@ public class BasicWebServer {
         // 3: open the requested file
         // use a FileInputStream instead of FileReader for instances
         // where the file contains non-character data (ie images)
-        File file = new File(getSplit[1]);
+        File file = new File("." + getSplit[1]);
+        //File file = new File("test1.html");
         if (!file.exists()) {
-            out.println("HTTP/1.1 404 NOT FOUND");
+            echoPrint(out, "HTTP/1.1 404 NOT FOUND");
             out.println("");
             closeConnection(socket, clientNum);
             return;
         }
 
-        out.println("HTTP/1.1 200 OK");
+        echoPrint(out, "HTTP/1.1 200 OK");
+        //out.println("HTTP/1.1 200 OK");
+        //System.out.println("R: HTTP/1.1 200 OK"); 
+
         //TODO: read the rest of the data
         InputStream fileIn = null;
         try {
+            // 4: print the required response headers (content-type & -length)
+            //    You may base the content-type on the file extension
+
+            // print the content-length of the requested file
+            echoPrint(out,"Content-Length: " + file.length()); 
+            //out.printf("Content-Length: %d\n", file.length());
+            //System.out.printf("R: Content-Length: %d\n", file.length());
+
+            // print the content-type of the requested file 
+            // - splits around . to find the file extension
+            
+            echoPrint(out, "Content-Type: " + "html");
+
             fileIn = new FileInputStream(file);
             byte[] buffer = new byte[1024];
             // read up to 1024 bytes of raw data
@@ -86,14 +103,6 @@ public class BasicWebServer {
         } catch(FileNotFoundException fnfe) {
             System.err.println("No file:  " + fnfe);
         }
-        //FileInputStream requestedFile = new FileInputStream(getSplit[1]); 
-
-        // 4: print the required response headers (content-type & -length)
-        //    You may base the content-type on the file extension
-
-
-
-        
 
         /*
         out.println("HTTP/1.1 200 OK");
@@ -115,6 +124,13 @@ public class BasicWebServer {
         System.out.printf("Closing connection: client %d\n", clientNum);
         socket.close();
     }
+
+    // echos @text to both the OutputStream and stdout
+    public static void echoPrint(PrintStream out, String text) {
+        out.println(text);
+        System.out.printf("R: " + text + "\n");
+    }
+
 
     public static void main(String[] args) throws IOException {
         final int DEFAULT_PORT = 8080;
