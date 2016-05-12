@@ -20,31 +20,94 @@ public class BasicWebServer {
             new InputStreamReader(socket.getInputStream()));
         // Create a PrintWriter to write output to the socket
         // note: may need to change to PrintStream instead of PrintWriter
-        PrintWriter out = new PrintWriter(
+        PrintStream out = new PrintStream(
             socket.getOutputStream(), true);
+        //PrintWriter out = new PrintWriter(
+        //    socket.getOutputStream(), true);
 
-        // while there is input, read until a blank line
-        String clientRequest; // Continue to read data from the client until
+        // while there is input, read until a blank line 
+        String clientRequest; 
+        // Continue to read data from the client until
         // there is an empty line
+        String[] headerLines = new String[256];
+        int linenum = 0;
         while (!((clientRequest = in.readLine()).isEmpty())) {
-            System.out.println("C:  " + clientRequest);
+            System.out.println(clientRequest);
+            headerLines[linenum] = clientRequest;
+            linenum++;
         }
         System.out.println("Completed reading header.");
-        
-        //TODO: send response back to client with a blank line at the end
+
+        //: send response back to client with a blank line at the end
         String serverResponse = "HTTP/1.1 200 OK\n" +
             "Content-Type: text/plain\n" + "Content-Length: 70\n" + 
-            "Connection: close\n\n" +  // include a blank line
-            "WIP: This is not the real content. Work in Progress";
+            "Connection: close\n"; // include a blank line
+            //"WIP: This is not the real content. Work in Progress";
         out.println(serverResponse);
-        out.flush();
+        /*NOTE: chrome requires the content-length to match the content
+          if it doesn't, then it will display an error. 
+          Firefox does not seem to care if content-length matches
+        */
 
-        System.out.printf("Closing connection: client %d\n", clientNum);
-        socket.close();
+        // 2: parse the header lines
+        System.out.println("Parsing header data...");
+        // parse the GET line from the client's header request
+        System.out.printf("\t%s\n", headerLines[0]);
+        String[] getSplit = headerLines[0].split(" ");
+        System.out.printf("0:%s\t1:%s\t2:%s\n", getSplit[0],
+            getSplit[1], getSplit[2]);
 
+        // 3: open the requested file
+        // use a FileInputStream instead of FileReader for instances
+        // where the file contains non-character data (ie images)
+        File file = new File(getSplit[1]);
+        if (!file.exists()) {
+            out.println("HTTP/1.1 404 NOT FOUND");
+            out.println("");
+            closeConnection(socket, clientNum);
+            return;
+        }
 
         //TODO: read the rest of the data
+        InputStream fileIn = null;
+        try {
+            fileIn = new FileInputStream(file);
+            byte[] buffer = new byte[1024];
+            // read up to 1024 bytes of raw data
+            int amount_read = fileIn.read(buffer);
+            // write data back out to an OutputStream
+            out.write(buffer, 0, amount_read);
+        } catch(FileNotFoundException fnfe) {
+            System.err.println("No file:  " + fnfe);
+        }
+        //FileInputStream requestedFile = new FileInputStream(getSplit[1]); 
 
+        // 4: print the required response headers (content-type & -length)
+        //    You may base the content-type on the file extension
+
+
+
+        
+
+        /*
+        out.println("HTTP/1.1 200 OK");
+        out.println("Content-Type: text/plain");
+        out.println("Content-Length: 9");
+        out.println("Connection: close");
+        out.println("");
+        out.println("123456789");
+        */
+        out.flush();
+
+        // 
+        closeConnection(socket, clientNum);
+
+
+    }
+
+    public static void closeConnection(Socket socket, int clientNum) throws IOException{
+        System.out.printf("Closing connection: client %d\n", clientNum);
+        socket.close();
     }
 
     public static void main(String[] args) throws IOException {
