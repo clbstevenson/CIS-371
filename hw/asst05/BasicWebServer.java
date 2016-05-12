@@ -59,8 +59,6 @@ public class BasicWebServer {
         // parse the GET line from the client's header request
         System.out.printf("\t%s\n", headerLines[0]);
         String[] getSplit = headerLines[0].split(" ");
-        System.out.printf("0:%s\t1:%s\t2:%s\n", getSplit[0],
-            getSplit[1], getSplit[2]);
 
         // 3: open the requested file
         // use a FileInputStream instead of FileReader for instances
@@ -90,10 +88,16 @@ public class BasicWebServer {
             //System.out.printf("R: Content-Length: %d\n", file.length());
 
             // print the content-type of the requested file 
-            // - splits around . to find the file extension
-            
-            echoPrint(out, "Content-Type: " + "html");
+            // > finds the index of '.', and then returns the 
+            //   substring of the fileName following the '.'
+            String fileName = getSplit[1];
+            System.out.printf("\t%s\n", fileName);
+            System.out.printf("\t%d\n", fileName.indexOf('.'));
+            String fileType = fileName.substring(fileName.indexOf('.') + 1);
+            echoPrint(out, "Content-Type: " + fileType);
 
+            // begin reading data from the requested file
+            // create a FileInputStream so binary data can be read
             fileIn = new FileInputStream(file);
             byte[] buffer = new byte[1024];
             // read up to 1024 bytes of raw data
