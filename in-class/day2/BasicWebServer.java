@@ -13,6 +13,8 @@ public class BasicWebServer {
     
     public static void handleConnection(Socket socket, int clientNum) throws IOException {
     
+        System.out.printf("Client %d connected.\n", clientNum);
+
         // Create a BufferedReader to read in from the socket
         BufferedReader in = new BufferedReader(
             new InputStreamReader(socket.getInputStream()));
@@ -21,15 +23,28 @@ public class BasicWebServer {
         PrintWriter out = new PrintWriter(
             socket.getOutputStream(), true);
 
-        //TODO: while there is input, read until a blank line
-        String clientResponse;
-        // Continue to read data from the client until
+        // while there is input, read until a blank line
+        String clientRequest; // Continue to read data from the client until
         // there is an empty line
-        while (!((clientResponse = in.readLine()).isEmpty())) {
-            System.out.println("R:  " + clientResponse);
+        while (!((clientRequest = in.readLine()).isEmpty())) {
+            System.out.println("C:  " + clientRequest);
         }
         System.out.println("Completed reading header.");
+        
+        //TODO: send response back to client with a blank line at the end
+        String serverResponse = "HTTP/1.1 200 OK\n" +
+            "Content-Type: text/plain\n" + "Content-Length: 70\n" + 
+            "Connection: close\n\n" +  // include a blank line
+            "WIP: This is not the real content. Work in Progress";
+        out.println(serverResponse);
+        out.flush();
+
+        System.out.printf("Closing connection: client %d\n", clientNum);
+        socket.close();
+
+
         //TODO: read the rest of the data
+
     }
 
     public static void main(String[] args) throws IOException {
