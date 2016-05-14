@@ -89,7 +89,8 @@ public class BasicWebServer {
             //    You may base the content-type on the file extension
 
             // print the content-length of the requested file
-            echoPrint(out,"Content-Length: " + file.length()); 
+            // add 1 to file length for the newline character at end of file
+            echoPrint(out,"Content-Length: " + (file.length())); 
             //out.printf("Content-Length: " + file.length());
             //out.printf("Content-Length: %d\n", file.length());
             //System.out.printf("R: Content-Length: %d\n", file.length());
@@ -102,6 +103,9 @@ public class BasicWebServer {
             System.out.printf("\t%d\n", fileName.indexOf('.'));
             String fileType = fileName.substring(fileName.indexOf('.') + 1);
             echoPrint(out, "Content-Type: " + fileType);
+
+            // include a newline after the header
+            echoPrint(out, "");
 
             // begin reading data from the requested file
             // create a FileInputStream so binary data can be read
