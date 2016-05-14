@@ -66,8 +66,14 @@ public class BasicWebServer {
         File file = new File("." + getSplit[1]);
         //File file = new File("test1.html");
         if (!file.exists()) {
+            // if the server is contacted, but it cannot find the
+            // requested file, then the server returns 404 response
             echoPrint(out, "HTTP/1.1 404 NOT FOUND");
-            out.println("");
+            echoPrint(out, "Content-Type: text/plain");
+            echoPrint(out, "Content-Lenght: 49\n");
+            // send a message to the client for the 404 response
+            echoPrint(out, "404 NOT FOUND\nSorry, we can't find that for you.");
+            out.println("\n");
             closeConnection(socket, clientNum);
             return;
         }
@@ -84,6 +90,7 @@ public class BasicWebServer {
 
             // print the content-length of the requested file
             echoPrint(out,"Content-Length: " + file.length()); 
+            //out.printf("Content-Length: " + file.length());
             //out.printf("Content-Length: %d\n", file.length());
             //System.out.printf("R: Content-Length: %d\n", file.length());
 
@@ -99,11 +106,25 @@ public class BasicWebServer {
             // begin reading data from the requested file
             // create a FileInputStream so binary data can be read
             fileIn = new FileInputStream(file);
-            byte[] buffer = new byte[1024];
-            // read up to 1024 bytes of raw data
-            int amount_read = fileIn.read(buffer);
-            // write data back out to an OutputStream
-            out.write(buffer, 0, amount_read);
+            // continue reading until there is no more data in the file
+            int amount_read;
+            do {
+                // read up to 1024 bytes of raw data, store into byte[]
+                byte[] buffer = new byte[1024];
+                amount_read = fileIn.read(buffer);
+                System.out.printf(":: amount_read = %d\n", amount_read);
+                // write data back out to an OutputStream
+                // buffer: writes amount_read bytes from buffer
+                //      starting at offest 0
+                // if end of the file is reached, stop reading
+                if(amount_read == -1)
+                    break;
+                out.write(buffer, 0, amount_read);
+
+            } while(amount_read != -1); // read until end of file
+            for(int i = 0; i < file.length(); i++) {
+                //out.write(i);
+            }
         } catch(FileNotFoundException fnfe) {
             System.err.println("No file:  " + fnfe);
         }
@@ -126,6 +147,7 @@ public class BasicWebServer {
 
     public static void closeConnection(Socket socket, int clientNum) throws IOException{
         System.out.printf("Closing connection: client %d\n", clientNum);
+        System.out.println();
         socket.close();
     }
 
