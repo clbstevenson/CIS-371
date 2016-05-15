@@ -1,4 +1,4 @@
-package edu.gvsu.cis371;
+//package edu.gvsu.cis371;
 
 import org.junit.Assert;
 import org.junit.Test;

@@ -1,6 +1,6 @@
-package edu.gvsu.cis371;
+//package edu.gvsu.cis371;
 
-import edu.gvsu.cis371.MyURL;
+//import edu.gvsu.cis371.MyURL;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;

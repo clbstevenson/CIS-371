@@ -242,32 +242,40 @@ public class MyURLTest {
   public void differentSchemesNotEqual() {
     MyURL url1 = new MyURL("http://fred.com/blah/blah/blah.html");
     MyURL url2 = new MyURL("https://fred.com/blah/blah/blah.html");
-    Assert.assertNotEquals(url1, url2);
-    Assert.assertNotEquals(url2, url1);
+//    Assert.assertNotEquals(url1, url2);
+//    Assert.assertNotEquals(url2, url1);
+    Assert.assertFalse(url1.equals(url2));
+    Assert.assertFalse(url2.equals(url1));
   }
 
   @Test
   public void differentDomainssNotEqual() {
     MyURL url1 = new MyURL("http://fred.com/blah/blah/blah.html");
     MyURL url2 = new MyURL("http://ferd.com/blah/blah/blah.html");
-    Assert.assertNotEquals(url1, url2);
-    Assert.assertNotEquals(url2, url1);
+//    Assert.assertNotEquals(url1, url2);
+//    Assert.assertNotEquals(url2, url1);
+    Assert.assertFalse(url1.equals(url2));
+    Assert.assertFalse(url2.equals(url1));
   }
 
   @Test
   public void differentPortsNotEqual() {
     MyURL url1 = new MyURL("http://fred.com:19/blah/blah/blah.html");
     MyURL url2 = new MyURL("http://fred.com:22/blah/blah/blah.html");
-    Assert.assertNotEquals(url1, url2);
-    Assert.assertNotEquals(url2, url1);
+//    Assert.assertNotEquals(url1, url2);
+//    Assert.assertNotEquals(url2, url1);
+    Assert.assertFalse(url1.equals(url2));
+    Assert.assertFalse(url2.equals(url1));
   }
 
   @Test
   public void differentPathsNotEqual() {
     MyURL url1 = new MyURL("http://fred.com/blah/blah/blah.html");
     MyURL url2 = new MyURL("http://fred.com/blah/blah.html");
-    Assert.assertNotEquals(url1, url2);
-    Assert.assertNotEquals(url2, url1);
+//    Assert.assertNotEquals(url1, url2);
+//    Assert.assertNotEquals(url2, url1);
+    Assert.assertFalse(url1.equals(url2));
+    Assert.assertFalse(url2.equals(url1));
   }
 
   ////////////////////////////////////////////

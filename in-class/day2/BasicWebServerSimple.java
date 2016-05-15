@@ -2,7 +2,7 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class BasicWebServer_Simple {
+public class BasicWebServerSimple {
 
     
     public static void main(String[] args) {
@@ -26,4 +26,4 @@ public class BasicWebServer_Simple {
         //TODO: read data from input until blank line
         
     }
-}_
+}
