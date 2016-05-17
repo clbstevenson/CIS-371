@@ -64,10 +64,10 @@ public class BasicWebServer {
         String[] getSplit = headerLines[0].split(" ");
         String filename = getSplit[1].substring(1); // store filename as a String (for ease of use).
 
-        if(filename.equals("raventxt")) {
+        if(filename.equals("mytimetxt")) {
             //serveRavenText
-        } else if(filename.equals("raven")) {
-            //handleRavenHTML
+        } else if(filename.equals("mytime")) {
+            handleMyTimeHTML(out);
         } else if(filename.equals("who")) {
             //serveWhoHTML
             serveWhoHTML(out);
@@ -172,6 +172,17 @@ public class BasicWebServer {
     // Calls the 'who' command and displays the result wrapped in a html format
     private static void serveWhoHTML(PrintStream out) {
         String toPrint = Who.whoHTML();
+        out.println("HTTP/1.1 200 OK");
+        out.println("Content-Type: text/html");
+        out.println("Content-Lenght: " + toPrint.length());
+        out.println("Connection: close");
+        out.println("");
+        out.print(toPrint);
+    }
+
+    // Runs the 'mytime' bash script and displays the time wrapped in an html layout
+    private static void handleMyTimeHTML(PrintStream out) {
+        String toPrint = MyTime.mytimeHTML();
         out.println("HTTP/1.1 200 OK");
         out.println("Content-Type: text/html");
         out.println("Content-Lenght: " + toPrint.length());

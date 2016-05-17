@@ -1,2 +1,2 @@
-currTime="date +%r"
+currTime="date  +%u:%r"
 echo "Current time is $($currTime)"

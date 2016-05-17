@@ -38,7 +38,7 @@ public class MyTime {
    *
    * @return A {@code String} containing the entire document.
    */
-  public static String whoHTML() {
+  public static String mytimeHTML() {
     StringBuffer buffer = new StringBuffer();
     buffer.append("<html>\n");
     buffer.append("<head>\n");
@@ -49,15 +49,29 @@ public class MyTime {
     buffer.append("</style>\n");
     buffer.append("</head>\n");
     buffer.append("<body>\n");
-    buffer.append("<h1>Who is logged into this machine?</h1>\n");
-    buffer.append("<table>\n");
-    buffer.append("<tr><th>Who</th><th>Where</th><th>When</th></tr>\n");
-    for (String line : who()) {
-      Scanner parts = new Scanner(line);
+    buffer.append("<h2>Current Time</h2>\n");
+    for (String line : mytime()) {
+        String[] splitLine = line.split(" ");
+        String am = splitLine[4];
+        if(am.equals("AM")) {
+            buffer.append("<h3>Good Morning!</h3>\n");
+        } else {
+            buffer.append("<h3>Good Afternoon!</h3>\n");
+        }
+        String[] timeSplit = splitLine[3].split(":");
+        String day = getDayOfTheWeek(Integer.parseInt(timeSplit[0]));
+        buffer.append("<h4>Hey! It's " + day + "</h4>\n");
 
-      buffer.append("<tr><td>" + parts.next() + "</td>");
-      buffer.append("<td>" + parts.next() + "</td>");
-      buffer.append("<td>" + parts.nextLine() + "</td></tr>\n");
+        buffer.append("<table>\n");
+        buffer.append("<tr><th>HOUR</th><th>MIN</th><th>SEC</th></tr>\n");
+        //Scanner parts = new Scanner(line);
+
+        buffer.append("<tr>\n");
+
+        buffer.append("<td>"+timeSplit[1]+"</td>\n");
+        buffer.append("<td>"+timeSplit[2]+"</td>\n");
+        buffer.append("<td>"+timeSplit[3]+"</td>\n");
+        buffer.append("</tr>\n");
     }
     buffer.append("</table>\n");
     buffer.append("</body>\n");
@@ -65,8 +79,27 @@ public class MyTime {
     return buffer.toString();
   }
 
+  public static String getDayOfTheWeek(int day) {
+      switch(day) {
+          case 1:
+            return "Monday";
+          case 2:
+            return "Tuesday";
+          case 3:
+            return "Wednesday";
+          case 4:
+            return "Thursday";
+          case 5:
+            return "Friday";
+          case 6:
+            return "Saturday";
+          case 7:
+            return "Sunday";
+      }
+      return "Noday";
+  }
+
 
   public static void main(String[] args) {
-    System.out.println(whoText());
   }
 }
