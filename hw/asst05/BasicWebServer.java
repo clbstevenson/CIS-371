@@ -165,11 +165,15 @@ public class BasicWebServer {
     public static void main(String[] args) throws IOException {
         final int DEFAULT_PORT = 8080;
         // if specified, use cmd args as port number; otherwise port 8080
-        int portNumber = args.length > 1 ? Integer.parseInt(args[0]) : DEFAULT_PORT;
+        int portNumber = args.length >= 1 ? Integer.parseInt(args[0]) : DEFAULT_PORT;
         
         ServerSocket serverSocket = new ServerSocket(portNumber);
         for(int clientNum = 0; true; clientNum++) {
             final Socket socket = serverSocket.accept();
+            // Only accept connections from the connection running the server.
+            if (!socket.getInetAddress().isLoopbackAddress()) {
+                return;
+            }
             final int localClientNum = clientNum;
             // Create a new Thread for each client connection
             // to allow multiple clients to be connected concurrently
