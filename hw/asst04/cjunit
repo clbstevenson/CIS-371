@@ -1,0 +1,12 @@
+#! /bin/bash
+
+if [ $# < 2 ]; then
+    echo "Not enough parameters. Expected: junit-c TestFile.java"
+    exit;
+else 
+    echo "Enough params"
+fi
+
+echo "Compiling  $1"
+#javac -cp .:junit.jar MyURLTest.java
+# java -cp .:junit.jar org.junit.runner.JUnitCore MyURLTest

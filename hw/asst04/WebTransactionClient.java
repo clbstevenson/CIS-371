@@ -10,6 +10,9 @@ import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Caleb Stevenson
+ */
 
 public class WebTransactionClient {
 

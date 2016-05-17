@@ -1,0 +1,2 @@
+javac -cp .:junit.jar MyURLTest.java
+java -cp .:junit.jar org.junit.runner.JUnitCore MyURLTest

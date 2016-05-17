@@ -1,6 +1,7 @@
 //package edu.gvsu.cis371;
 /**
  * Represents a URL
+ * Caleb Stevenson
  */
 public class MyURL {
     private String scheme = "http";
