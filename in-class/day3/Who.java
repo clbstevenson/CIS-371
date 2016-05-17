@@ -1,5 +1,3 @@
-package edu.gvsu.cis371;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;

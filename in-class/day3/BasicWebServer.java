@@ -10,6 +10,8 @@ import java.net.Socket;
  * for each connection.
  */
 public class BasicWebServer {
+
+    //private static PrintStream out;
     
     public static void handleConnection(Socket socket, int clientNum) throws IOException {
     
@@ -22,6 +24,7 @@ public class BasicWebServer {
         // note: may need to change to PrintStream instead of PrintWriter
         PrintStream out = new PrintStream(
             socket.getOutputStream(), true);
+        //out = new PrintStream(socket.getOutputStream());
         //PrintWriter out = new PrintWriter(
         //    socket.getOutputStream(), true);
 
@@ -59,12 +62,15 @@ public class BasicWebServer {
         // parse the GET line from the client's header request
         System.out.printf("\t%s\n", headerLines[0]);
         String[] getSplit = headerLines[0].split(" ");
-        String filename = getSplit[1]; // store filename as a String (for ease of use).
+        String filename = getSplit[1].substring(1); // store filename as a String (for ease of use).
 
         if(filename.equals("raventxt")) {
-            //handleRavenText
+            //serveRavenText
         } else if(filename.equals("raven")) {
             //handleRavenHTML
+        } else if(filename.equals("who")) {
+            //serveWhoHTML
+            serveWhoHTML(out);
         } else {
             // Otherwise, assume it is a filename request.
             handleFileRequest(socket, out, clientNum, filename);
@@ -93,7 +99,7 @@ public class BasicWebServer {
         // 3: open the requested file
         // use a FileInputStream instead of FileReader for instances
         // where the file contains non-character data (ie images)
-        File file = new File("." + filename);
+        File file = new File("./" + filename);
         //File file = new File("test1.html");
         if (!file.exists()) {
             // if the server is contacted, but it cannot find the
@@ -161,6 +167,17 @@ public class BasicWebServer {
         } catch(FileNotFoundException fnfe) {
             System.err.println("No file:  " + fnfe);
         }
+    }
+
+    // Calls the 'who' command and displays the result wrapped in a html format
+    private static void serveWhoHTML(PrintStream out) {
+        String toPrint = Who.whoHTML();
+        out.println("HTTP/1.1 200 OK");
+        out.println("Content-Type: text/html");
+        out.println("Content-Lenght: " + toPrint.length());
+        out.println("Connection: close");
+        out.println("");
+        out.print(toPrint);
     }
 
     public static void closeConnection(Socket socket, int clientNum) throws IOException{
