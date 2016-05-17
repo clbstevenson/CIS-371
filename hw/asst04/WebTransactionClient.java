@@ -99,6 +99,14 @@ public class WebTransactionClient {
 
         // TODO: Read the rest of the data from the InputStream as text and return it as a single string.
         // (In this case, using a StringBuffer is more efficient that concatenating String objects.)
+        String responseLine;
+        // Continue to read until there is no more text from the InputStream
+        // readLine() returns null when there is no more data to read.)
+        while((responseLine = in.readLine()) != null) {
+            result.append(responseLine);
+            // Include a newline character at the end of each line for text files.
+            result.append('\n');
+        }
 
         return result.toString();
     } // end getText
@@ -123,8 +131,7 @@ public class WebTransactionClient {
         // TODO: retreive the response code (e.g., 200) from the response string and return it as an integer.
         // Split with a limit of 3 to make sure the code (e.g., 200, 404) are at index [1].
         String[] responseSplit = response.split(" ", 3);
-        return (Integer.parseInt(responseSplit[1]));
-        //return -1;
+        return (Integer.parseInt(responseSplit[1])); // convert to Integer
     }
 
     public Map<String, String> responseHeaders() {
