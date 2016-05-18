@@ -10,26 +10,13 @@ $startMonth = time() - (($day-1) * 24 * 60 * 60);
 $startOfMonth = date('w', $startMonth);
 echo "Today is $day; $month starts on $startOfMonth;\n";
 echo "$days days and  $weeks weeks";
-switch($startOfMonth) {
-    case 0:
-    break;
-    case 1:
-    break;
-    case 2:
-    break;
-    case 3:
-    break; 
-    case 4: 
-    break; 
-    case 5: 
-    break; 
-    case 6: 
-    break;
+$offset = $startOfMonth;
 ?>
 
 <html>
 
 <head>
+    <link rel="stylesheet" href="calendar.css" type="text/css"/>
     <title>Monthly Calendar</title>
 </head>
 
@@ -44,23 +31,65 @@ switch($startOfMonth) {
     <?php
         //$startDayOfWeek = date('w', mktime(null, null, null, $month, 2, $year));
         //echo $startDayOfWeek;
-        for ($weeknum = 0; $weeknum < $weeks; $weeknum++) {
-            echo "<tr>";
-            for ($x = 0; $x < 7; $x++) {
-                echo "<td>";
-                echo "$x-$weeknum";
-                if ($startOfMonth == $x && $weeknum == 0) {
-                    echo date('j', $startMonth);
-                    //echo date('j', $startOfMonth);
-                } else {
-                    echo date('j', $startMonth + $x);
-                    //echo "other";
+        //print blank slots until the start day of the month
+        for ($y = 0; $y < $startOfMonth; $y++) {
+           echo "<td>-</td>"; 
+        }
+        $day_count = 0; // total days displayed
+        $days_in_week_count = 1; // used for end-of-month 'blank' days
+        for($day_x = 1; $day_x <= $days; $day_x++) {
+            echo "<td>$day_x</td>";
+
+            // ignore first row if start on 6th day of week
+            if($startOfMonth == 6) {
+                echo "</tr>";
+                if(($day_count+1)!=$days) {
+                    //start a new row
+                    echo "<tr>";
                 }
-                //echo date('w:m-01-Y');
-                echo "</td>";    
+                $startOfMonth = -1;
+                $days_in_week_count = 0;
+            }
+            $day_count++;
+            $days_in_week_count++;
+            $startOfMonth++;
+        }
+        //display blanks for the end of the month
+        if($days_in_week_count <=7) {
+            for($z = 1; $z <= (8-$days_in_week_count); $z++) {
+                echo "<td>-</td>";
+            }
+        }
+        echo "</tr>";
+        /*for ($weeknum = 0.0; $weeknum < $weeks; $weeknum++) {
+            echo "<tr>";
+            for ($x = 0.0; $x < 7; $x++) {
+                // if there is an offset, then echo an empty slot
+                $seven = 7;
+                $daynum = 4;
+                if($weeknum == 0 && $offset > 0) {
+                   //  && $offset > 0) {
+                    
+                    echo "<td>$offset-</td>";
+                    $offset--;
+                } else {
+                    echo "<td>";
+                    //$daynum = $weeknum * 7;
+                    //echo "$x:$weeknum:$daynum";
+                    if ($startOfMonth == $x && $weeknum == 0) {
+                        //echo date('j', $startMonth);
+                        //echo date('j', $startOfMonth);
+                    } else {
+                        echo date('j', $startMonth + $x);
+                        //echo "other";
+                    }
+                    //echo date('w:m-01-Y');
+                    echo "</td>";    
+                }
             }
             echo "</tr>";
         }
+        */
     ?>
 </table>
 

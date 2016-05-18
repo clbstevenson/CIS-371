@@ -1,0 +1,91 @@
+h1{
+    background: #b5cfe3;
+    margin: 10px;
+    text-align: center;
+}
+
+table td, table th, table{
+    border: 1px solid gray;
+    text-align: center;
+}
+
+table th {
+    color: darkblue;
+}
+
+table {
+    margin: 2px;
+}
+
+h3 {
+    background: #b5cfe3;
+    margin: 10px;
+    clear: left;
+}
+
+#INFO img {
+    float: right;
+    border: 3px solid orange;
+    color: brown;
+    width: 20%;
+    margin: 10px;
+}
+
+#INFO .MY_INFO {
+    border: 1px solid purple;
+    margin: 1%;
+    //padding: 4px;
+    width: 75%;
+}
+
+#INFO p {
+    text-align: center;
+}
+
+body {
+    color: black;
+    font-family: "Times New Roman", Times, serif;
+    font-size: medium;
+}
+
+table p {
+    font-size: small;
+}
+
+
+ul {
+    color: blue;
+}
+
+.best {
+    font-style: italic;
+}
+
+a:link {
+    color: red;
+}
+
+a:visited {
+    color: green;
+}
+
+table {
+    margin: 2px;
+}
+
+table table {
+    margin: 1px;
+}
+
+
+div.odd {
+    background: #A3A3A3;
+    //color: purple;
+}
+
+.links {
+    font-family: Sans-Serif;
+    //color: purple;
+    //text-decoration: line-through;
+}
+
