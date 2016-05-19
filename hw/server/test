@@ -1,0 +1,20 @@
+#! /bin/tcsh
+# Check the number of arguments provided
+if ( $# == 0 || $#argv > 6) then
+    echo "enter between 1 and 7 arguments"
+else
+    echo "correct args number"
+    set sum = 0
+    set count = 0
+    foreach i ($argv[*])
+        @ count ++
+        @ sum = $sum + $i
+        echo "i = $i"
+        echo "new sum = $sum"
+    end
+    set avg = 0
+    @ avg  = $sum / $count
+    echo "avg = $avg "
+endif
+
+

@@ -5,7 +5,9 @@
     It will be used to collect information about a new friend,
     including their First Name, Last Name, Phone Number, and Age.
 -->
-<?php error_reporting(E_ALL); ?>
+<?php error_reporting(E_ALL); 
+require('friendDB.php');
+?>
 <html>
 <head>
     <title>Friend Form</title>
@@ -30,7 +32,7 @@
 
             <fieldset>
                 <legend>Information</legend>
-                <form action="friendform.php" method="post">
+                <form action="friendSubmit.php" method="post">
                     First Name: 
                     <input type="text" name="firstname" value=""/><br/>
                     Last Name: 
@@ -44,14 +46,6 @@
                 </form>
             </fieldset>
 
-            <table>
-                <tr>
-                    <th colspan=2>Contents of <code>$_POST</code></th>
-                </tr>
-                <tr>
-                    <th>Key</th>
-                    <th>Value</th>
-                </tr>
                 <?php
                 $datafile = fopen("frienddata.txt", "a") or die("Unable to open file");
                 foreach ($_POST as $key => $value) {
@@ -59,7 +53,7 @@
                     if (is_array($value)) {
                         $printMe = "[" . implode($value, ", ") . "]";
                     }
-                    echo "<tr><td>$key</td><td>$printMe</td></tr>\n";
+                    //echo "<tr><td>$key</td><td>$printMe</td></tr>\n";
                 }
                 if (isset($_POST["lastname"])) {
                     fwrite($datafile, $_POST["firstname"] . ",");
@@ -69,7 +63,6 @@
                 }
                 fclose($datafile);
                 ?>
-            </table>
 
 
         </td>
@@ -82,6 +75,34 @@ echo stream_get_contents($fp);
 ?>
 
 <hr>
+
+<table>
+    <tr>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>Phone Number</th>
+        <th>Age</th>
+    </tr>
+    
+    <?php
+    $c = connect();
+    $create_result = createDB($c);
+    $result = getAll($c);
+    // iterate over each record in the result.
+    // Each record will be one row in the table, beginning with <tr> 
+    foreach ($result as $row) {
+        echo "<tr>";
+        $keys = array("fname", "lname", "phone", "age");
+        // iterate over all the columns.  Each column is a <td> element.
+        foreach ($keys as $key) {
+            echo "<td>" . $row[$key] . "</td>";
+        }
+        echo "</tr>\n";
+    }
+    $c->close();
+                                                                                ?> 
+
+</table>
 
 
 </body>
