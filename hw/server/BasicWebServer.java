@@ -10,6 +10,8 @@ import java.net.Socket;
  * for each connection.
  */
 public class BasicWebServer {
+
+    //private static PrintStream out;
     
     public static void handleConnection(Socket socket, int clientNum) throws IOException {
     
@@ -22,6 +24,7 @@ public class BasicWebServer {
         // note: may need to change to PrintStream instead of PrintWriter
         PrintStream out = new PrintStream(
             socket.getOutputStream(), true);
+        //out = new PrintStream(socket.getOutputStream());
         //PrintWriter out = new PrintWriter(
         //    socket.getOutputStream(), true);
 
@@ -59,11 +62,44 @@ public class BasicWebServer {
         // parse the GET line from the client's header request
         System.out.printf("\t%s\n", headerLines[0]);
         String[] getSplit = headerLines[0].split(" ");
+        String filename = getSplit[1].substring(1); // store filename as a String (for ease of use).
 
+        if(filename.equals("mytimetxt")) {
+            //serveRavenText
+        } else if(filename.equals("mytime")) {
+            handleMyTimeHTML(out);
+        } else if(filename.equals("who")) {
+            //serveWhoHTML
+            serveWhoHTML(out);
+        } else {
+            // Otherwise, assume it is a filename request.
+            handleFileRequest(socket, out, clientNum, filename);
+        }
+
+
+        /*
+        out.println("HTTP/1.1 200 OK");
+        out.println("Content-Type: text/plain");
+        out.println("Content-Length: 9");
+        out.println("Connection: close");
+        out.println("");
+        out.println("123456789");
+        */
+        out.flush();
+
+        // 
+        closeConnection(socket, clientNum);
+
+
+    }
+
+    // This function is used to open a requested file and read the data.
+    // If the file can't be found, a 404 response is sent.
+    public static void handleFileRequest(Socket socket, PrintStream out, int clientNum, String filename) throws IOException {
         // 3: open the requested file
         // use a FileInputStream instead of FileReader for instances
         // where the file contains non-character data (ie images)
-        File file = new File("." + getSplit[1]);
+        File file = new File("./" + filename);
         //File file = new File("test1.html");
         if (!file.exists()) {
             // if the server is contacted, but it cannot find the
@@ -98,11 +134,13 @@ public class BasicWebServer {
             // print the content-type of the requested file 
             // > finds the index of '.', and then returns the 
             //   substring of the fileName following the '.'
-            String fileName = getSplit[1];
-            System.out.printf("\t%s\n", fileName);
-            System.out.printf("\t%d\n", fileName.indexOf('.'));
-            String fileType = fileName.substring(fileName.indexOf('.') + 1);
+            //String fileName = getSplit[1];
+            System.out.printf("\t%s\n", filename);
+            System.out.printf("\t%d\n", filename.indexOf('.'));
+            String fileType = filename.substring(filename.indexOf('.') + 1);
             echoPrint(out, "Content-Type: " + fileType);
+
+            echoPrint(out, "Connection: close");
 
             // include a newline after the header
             echoPrint(out, "");
@@ -126,27 +164,31 @@ public class BasicWebServer {
                 out.write(buffer, 0, amount_read);
 
             } while(amount_read != -1); // read until end of file
-            for(int i = 0; i < file.length(); i++) {
-                //out.write(i);
-            }
         } catch(FileNotFoundException fnfe) {
             System.err.println("No file:  " + fnfe);
         }
+    }
 
-        /*
+    // Calls the 'who' command and displays the result wrapped in a html format
+    private static void serveWhoHTML(PrintStream out) {
+        String toPrint = Who.whoHTML();
         out.println("HTTP/1.1 200 OK");
-        out.println("Content-Type: text/plain");
-        out.println("Content-Length: 9");
+        out.println("Content-Type: text/html");
+        out.println("Content-Lenght: " + toPrint.length());
         out.println("Connection: close");
         out.println("");
-        out.println("123456789");
-        */
-        out.flush();
+        out.print(toPrint);
+    }
 
-        // 
-        closeConnection(socket, clientNum);
-
-
+    // Runs the 'mytime' bash script and displays the time wrapped in an html layout
+    private static void handleMyTimeHTML(PrintStream out) {
+        String toPrint = MyTime.mytimeHTML();
+        out.println("HTTP/1.1 200 OK");
+        out.println("Content-Type: text/html");
+        out.println("Content-Lenght: " + toPrint.length());
+        out.println("Connection: close");
+        out.println("");
+        out.print(toPrint);
     }
 
     public static void closeConnection(Socket socket, int clientNum) throws IOException{
