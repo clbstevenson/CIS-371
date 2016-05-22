@@ -49,18 +49,16 @@ echo "NEW DATE: ".$new_date;
 //$year = date('Y');
 //$day = date('j');
 
-
 $month_str = date('M', $new_time);
 
 $days = date('t', $new_time);
 
 $weeks = ceil($days / 7);
 $startMonth = time() - (($day-1) * 24 * 60 * 60);
-$startMonth = mktime(0,0,0,$month+1,0,$year);
+$startMonth = mktime(0,0,0,$month,1,$year);
 $startOfMonth = date('w', $startMonth);
-echo $startOfMonth;
-//echo "Today is $day; $month starts on $startOfMonth;\n";
-//echo "$days days and  $weeks weeks";
+echo "Today is $day; $month_str($month) starts on $startOfMonth;\n";
+echo "$days days and  $weeks weeks";
 $offset = $startOfMonth;
 ?>
 
@@ -73,7 +71,7 @@ $offset = $startOfMonth;
 
 
 <body>
-<h1> <?php echo "$month $year"?> </h1>
+<h1> <?php echo "$month_str $year"?> </h1>
 
 <table>
     <tr> <th>Sunday</th><th>Monday</th><th>Tuesday</th><th>Wednesday</th>
