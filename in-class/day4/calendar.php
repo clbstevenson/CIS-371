@@ -6,50 +6,59 @@ echo "Query String:  " . $_SERVER['QUERY_STRING'] . "\n";
 $query = $_SERVER['QUERY_STRING'];
 
 
-if(isset($query['day'])) {
-    echo "D:". $query['day'];
-    $day = $query['day'];
+echo "::(";
+if(isset($_GET['day'])) {
+    echo "qd:". $_GET['day'];
+    $day = $_GET['day'];
 } else {
     $day = date('j');
 }
-echo "D:". $day;
-if(isset($query['month'])) {
-    $month= $query['month'];
+echo "D:". $day . "::";
+if(isset($_GET['month'])) {
+    echo "qm:".$_GET['month'];
+    $month= $_GET['month'];
 } else {
-    $month = date('M');
+    $month = date('n');
 }
-echo "M:". $month;
-if(isset($query['year'])) {
-    echo "Y:". $query['year'];
-    $year = $query['year'];
+echo "M:". $month . "::";
+if(isset($_GET['year'])) {
+    echo "qy:". $_GET['year'];
+    $year = $_GET['year'];
 } else {
     $year = date('Y');
 }
-echo "Y:". $year . "   ";
+echo "Y::". $year . ")";
 
-$new_date = mktime(null, null, null, $month, $day, $year);
+$new_time = mktime(null, null, null, $month, $day, $year);
+//$new_date = date("M--d--Y",mktime(null, null, null, $month, $day, $year));
+$new_date = date("M--d--Y",$new_time);
 echo "NEW DATE: ".$new_date;
 
 
-parse_str($_SERVER['QUERY_STRING'], $query);
 //echo "M:". $query['month'] . ";";
 //echo "Y:". $query['year'];
 //$custom_date = mktime(null, null, null, $_SERVER['QUERY_STRING']['month'], 2, $_SERVER['QUERY_STRING']['year']);
 //echo "::".$custom_date."::";
 //$month = date('M', $custom_date);
-echo $month;
+//echo $month;
 //$year = date('Y', $custom_date);
 //$day = date('j', $custom_date);
 //$days = date('t', $custom_date);
 // original calendar date
-$month = date('M');
-$year = date('Y');
-$day = date('j');
-$days = date('t');
+//$month = date('M');
+//$year = date('Y');
+//$day = date('j');
+
+
+$month_str = date('M', $new_time);
+
+$days = date('t', $new_time);
 
 $weeks = ceil($days / 7);
 $startMonth = time() - (($day-1) * 24 * 60 * 60);
+$startMonth = mktime(0,0,0,$month+1,0,$year);
 $startOfMonth = date('w', $startMonth);
+echo $startOfMonth;
 //echo "Today is $day; $month starts on $startOfMonth;\n";
 //echo "$days days and  $weeks weeks";
 $offset = $startOfMonth;
