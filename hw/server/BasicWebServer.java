@@ -62,8 +62,8 @@ public class BasicWebServer {
         // parse the GET line from the client's header request
         System.out.printf("\t%s\n", headerLines[0]);
         String[] getSplit = headerLines[0].split(" ");
-        String filename = getSplit[1].substring(1); // store filename as a String (for ease of use).
-
+        String filenameWithQuery = getSplit[1].substring(1); // store filename as a String (for ease of use).
+        System.out.printf("%s\n",filenameWithQuery);
         if(filename.equals("mytimetxt")) {
             //serveRavenText
         } else if(filename.equals("mytime")) {

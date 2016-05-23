@@ -52,14 +52,14 @@ public class MyTime {
     buffer.append("<h2>Current Time</h2>\n");
     for (String line : mytime()) {
         String[] splitLine = line.split(" ");
-        String am = splitLine[4];
+        String am = splitLine[5];
         if(am.equals("AM")) {
             buffer.append("<h3>Good Morning!</h3>\n");
         } else {
             buffer.append("<h3>Good Afternoon!</h3>\n");
         }
-        String[] timeSplit = splitLine[3].split(":");
-        String day = getDayOfTheWeek(Integer.parseInt(timeSplit[0]));
+        String[] timeSplit = splitLine[4].split(":");
+        String day = getDayOfTheWeek(Integer.parseInt(splitLine[3]));
         buffer.append("<h4>Hey! It's " + day + "</h4>\n");
 
         buffer.append("<table>\n");
@@ -68,9 +68,9 @@ public class MyTime {
 
         buffer.append("<tr>\n");
 
+        buffer.append("<td>"+timeSplit[0]+"</td>\n");
         buffer.append("<td>"+timeSplit[1]+"</td>\n");
         buffer.append("<td>"+timeSplit[2]+"</td>\n");
-        buffer.append("<td>"+timeSplit[3]+"</td>\n");
         buffer.append("</tr>\n");
     }
     buffer.append("</table>\n");
