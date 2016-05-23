@@ -25,6 +25,7 @@ $new_date = date("M--d--Y",$new_time);
 //echo "NEW DATE: ".$new_date;
 
 $month_str = date('F', $new_time);
+$current_month = date('n');
 
 $days = date('t', $new_time);
 
@@ -71,7 +72,7 @@ $offset = $startOfMonth;
         $day_count = 0; // total days displayed
         $days_in_week_count = 1; // used for end-of-month 'blank' days
         for($day_x = 1; $day_x <= $days; $day_x++) {
-            if($day_x == $day) {
+            if($day_x == $day && $month == $current_month) {
                 echo "<td id='TODAY'>$day_x</td>";
             } else {
                 echo "<td>$day_x</td>";
