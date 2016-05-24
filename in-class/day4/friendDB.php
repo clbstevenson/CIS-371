@@ -9,7 +9,7 @@ function create_DB($c) {
         "age INT NOT NULL,".
         "PRIMARY KEY ( id ));";
     $return_val = $c->query($sql);
-    echo "Created table";
+    //echo "Created table";
     if(!$return_val) {
         die("Could not create the friends table [" . $c->error . "]");
     }
@@ -19,12 +19,15 @@ function create_DB($c) {
     //    die("Could not insert into friends table [" . $c->error . "]");
     //}
 
+
+    //read_from_file($c, "frienddata.txt");
+
     return $return_val;
             
 }
 
 function connect_DB() {
-    echo "Connecting...";
+    //echo "Connecting...";
     $connection = new mysqli("127.0.0.1", "stevecal", "stevecal9889");
 
     // Complain if the connection fails. 
@@ -35,12 +38,12 @@ function connect_DB() {
         die ("Unable to seelct database: [" . $connection->error . "]");
     }
 
-    echo "Connected!" . "<br>";
+    //echo "Connected!" . "<br>";
     return $connection;
 }
 
 function add_friend($c, $p_fname, $p_lname, $p_phone, $p_age) {
-    echo "Adding a friend..." . "<br>";
+    //echo "Adding a friend..." . "<br>";
     if(!$p_fname) {
         echo "Sorry, that friend is missing a first name. Please try again<br>";
         return $p_fname;
@@ -62,23 +65,23 @@ function add_friend($c, $p_fname, $p_lname, $p_phone, $p_age) {
     if(!$return_val) {
         die("Could not insert into friends table [" . $c->error . "]");
     }
-    echo "Added a new friend!" . "<br>";
+    //echo "Added a new friend!" . "<br>";
     return $return_val;
 }
 
 function get_all($c) {
-    echo "Selecting all friends...";
+    //echo "Selecting all friends...";
     $sql = "select * from friends";
     $result = $c->query($sql);
     if (!$result) {
         die ("Query was unsuccessful: [" . $c->error ."]");
     }
-    echo "Found all friends!" . "<br>";
+    //echo "Found all friends!" . "<br>";
     return $result;
 }
 
 function read_from_file($c, $filename) {
-    echo "Reading friend data from a file" . "<br>";
+    //echo "Reading friend data from a file" . "<br>";
     $datafile = fopen($filename, "r") or die("Unable to open file for reading");
     //echo fread($datafile, filesize($filename));
     // output one line until end-of-file
@@ -97,13 +100,13 @@ function read_from_file($c, $filename) {
         // get age from the current line
         $token = strtok(",");
         $p_age = $token;
-        echo "Read: $p_fname::$p_lname::$p_phone/$new_p_phone::$p_age<br>";
+        //echo "Read: $p_fname::$p_lname::$p_phone/$new_p_phone::$p_age<br>";
         add_friend($c, $p_fname, $p_lname, $new_p_phone, $p_age);
     }
     
     fclose($datafile);
 
-    echo "Done reading friend data!" . "<br>";
+    //echo "Done reading friend data!" . "<br>";
 }
 function display_friends($c) {
     //echo "Displaying friends...";
@@ -112,6 +115,7 @@ function display_friends($c) {
     // iterate over each record in the result.
     // Each record will be one row in the table, beginning with <tr> 
     echo "<table>";
+    echo "<tr><th>First Name</th><th>Last Name</th><th>Phone Number</th><th>Age</th>";
     foreach ($result as $row) {
         echo "<tr>";
         $keys = array("fname", "lname", "phone", "age");
@@ -122,7 +126,7 @@ function display_friends($c) {
         echo "</tr>\n";
     }
     echo "</table>" . "<br>";
-    //echo "Done displaying friends!";
+    //echo "Done displaying friends!<br>";
 }
 //$c = connect_DB();
 //$create_result = create_DB($c);
@@ -132,9 +136,9 @@ function display_friends($c) {
 
 $c = connect_DB();
 create_DB($c);
-display_friends($c);
+//display_friends($c);
 
-read_from_file($c, "frienddata.txt");
+//read_from_file($c, "frienddata.txt");
 //display_friends($c);
 
 ?>

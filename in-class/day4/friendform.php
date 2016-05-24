@@ -43,6 +43,8 @@
                     <input type="number" name="age" value="18"/><br/>
 
                     <input type="submit" name="postSubmit" value="Submit"/>
+
+
                 </form>
             </fieldset>
 
@@ -77,16 +79,12 @@ echo stream_get_contents($fp);
 <hr>
 
 <table>
-    <tr>
-        <th>First Name</th>
-        <th>Last Name</th>
-        <th>Phone Number</th>
-        <th>Age</th>
-    </tr>
     
     <?php
     include 'friendDB.php';
     $c = connect_DB();
+    display_friends($c);
+    /*
     $create_result = create_DB($c);
     $result = get_all($c);
     // iterate over each record in the result.
@@ -100,6 +98,7 @@ echo stream_get_contents($fp);
         }
         echo "</tr>\n";
     }
+    */
     $c->close();
                                                                                 ?> 
 

@@ -7,9 +7,9 @@
 
 require ('friendDB.php');
 
-if (array_key_exists('ilike', $_POST)) {
-    $c = connect();
-    add_friend($c, $_POST['fname'], $_POST['lname'], $_POST['phone'], $_POST['age']);
+if (array_key_exists('firstname', $_POST)) {
+    $c = connect_DB();
+    add_friend($c, $_POST['firstname'], $_POST['lastname'], $_POST['phonenumber'], $_POST['age']);
 }
 
 # redirect back to the original page;
