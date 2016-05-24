@@ -1,4 +1,5 @@
 import javax.swing.*;
+import java.util.ArrayList;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -109,6 +110,17 @@ public class SimpleBrowser {
     // This code here is just so that the simple browser will do something until you get the 
     // networking part working.
     
+
+    MyURL url = new MyURL(textInBar);
+    WebTransactionClient wtc = new WebTransactionClient(url);
+
+    List<String> contents = new ArrayList<String>();
+    // WebTransactionClient.getText() only returns a String,
+    // so that string will be the only text in the display contents.
+    contents.add(wtc.getText());    
+
+    /* Starter code 
+     *
     File file = new File(textInBar);
     List<String> contents = null;
     try {
@@ -120,6 +132,8 @@ public class SimpleBrowser {
       System.out.println("Can't open file " + file);
       e.printStackTrace();
     }
+    */
+    
     display.setText(contents);
     frame.repaint();
   }
@@ -129,7 +143,9 @@ public class SimpleBrowser {
   protected Image fetchImage(MyURL url) {
     // TODO:  implement me.
     // Hint:  Use a new WebTransactionClient object.
-    return null;
+    WebTransactionClient wtc = new WebTransactionClient(url);
+    return wtc.getImage();
+    //return null;
   }
 
   /**
