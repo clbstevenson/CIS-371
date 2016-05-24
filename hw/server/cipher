@@ -1,7 +1,0 @@
-#! /bin/bash
-
-# Check if QUERY_STRING has 'key' defined
-echo "Query_String: $QUERY_STRING"
-QUERY_STRING="key=PINEAPPLE"
-echo "Query_String: $QUERY_STRING"
-

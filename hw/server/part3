@@ -1,0 +1,2 @@
+#! /bin/bash
+sed -n -e s/Fall\ /F/p -e s/Winter\ /W/p out_2 > out_3 

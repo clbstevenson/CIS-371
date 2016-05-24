@@ -63,10 +63,19 @@ public class BasicWebServer {
         System.out.printf("\t%s\n", headerLines[0]);
         String[] getSplit = headerLines[0].split(" ");
         String filenameWithQuery = getSplit[1].substring(1); // store filename as a String (for ease of use).
-        System.out.printf("%s\n",filenameWithQuery);
-        String[] filenameArr = filenameWithQuery.split("?");
-        String filename = filenameArr[0];
-        String querystr = filenameArr[1];
+        System.out.printf("FILE+QUERY: %s\n",filenameWithQuery);
+        //String[] filenameArr = filenameWithQuery.split("?");
+        int queryIndex = filenameWithQuery.lastIndexOf("?");
+        //String filename = filenameArr[0];
+        //String querystr = filenameArr[1];
+        String filename, querystr;
+        if(queryIndex == -1) {
+            filename = filenameWithQuery; 
+            querystr = "";
+        } else {
+            filename = filenameWithQuery.substring(0,queryIndex);
+            querystr = filenameWithQuery.substring(queryIndex+1);
+        }
         System.out.printf("FILE: %s\tQUERY: %s\n", filename, querystr);
         if(filename.equals("mytimetxt")) {
             //serveRavenText
@@ -77,7 +86,10 @@ public class BasicWebServer {
             serveWhoHTML(out);
         } else if(filename.endsWith(".pl")) {
             // run the perl script and display output
-            Perl.runPerl(filename, querystr);
+            handlePerlScript(out, filename, querystr);
+        } else if(filename.endsWith(".sh")) {
+            // run the bash script and display output
+            handleBashScript(out, filename, querystr);
         } else {
             // Otherwise, assume it is a filename request.
             handleFileRequest(socket, out, clientNum, filename);
@@ -196,6 +208,35 @@ public class BasicWebServer {
         out.println("Connection: close");
         out.println("");
         out.print(toPrint);
+    }
+
+    // Runs the specified perl script 'filename' with parameters determined by 'querystr'
+    private static void handlePerlScript(PrintStream out, String filename, String querystr) {
+        String toPrint = Perl.runPerl(filename, querystr); 
+        out.println("HTTP/1.1 200 OK");
+        out.println("Content-Type: text/html");
+        out.println("Content-Lenght: " + toPrint.length());
+        out.println("Connection: close");
+        out.println("");
+        out.print(toPrint);
+    }
+
+    // Runs the specified bash script 'filename' with parameters determined by 'querystr'
+    private static void handleBashScript(PrintStream out, String filename, String querystr) {
+        String dataToPrint = Bash.runBash(filename, querystr); 
+        String title = "<html><head><title>Bash Script " + filename + 
+            "</title></head>";
+        String endHTML = "</html>";
+        out.println("HTTP/1.1 200 OK");
+        out.println("Content-Type: text/html");
+        out.println("Content-Length: " + dataToPrint.length() + 
+            title.length() + endHTML.length());
+        out.println("Connection: close");
+        out.println("");
+
+        out.println(title); 
+        out.println(dataToPrint);
+        out.println(endHTML);
     }
 
     public static void closeConnection(Socket socket, int clientNum) throws IOException{

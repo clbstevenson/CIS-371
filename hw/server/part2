@@ -1,0 +1,2 @@
+#! /bin/bash
+gawk -F, '{printf "%s\t%s\t\t%s\n", $3, $2, $1}' out_1 > out_2 
