@@ -125,7 +125,7 @@ public class BasicWebServer {
             // requested file, then the server returns 404 response
             echoPrint(out, "HTTP/1.1 404 NOT FOUND");
             echoPrint(out, "Content-Type: text/plain");
-            echoPrint(out, "Content-Lenght: 49\n");
+            echoPrint(out, "Content-Length: 49\n");
             // send a message to the client for the 404 response
             echoPrint(out, "404 NOT FOUND\nSorry, we can't find that for you.");
             out.println("\n");
@@ -223,20 +223,31 @@ public class BasicWebServer {
 
     // Runs the specified bash script 'filename' with parameters determined by 'querystr'
     private static void handleBashScript(PrintStream out, String filename, String querystr) {
-        String dataToPrint = Bash.runBash(filename, querystr); 
-        String title = "<html><head><title>Bash Script " + filename + 
-            "</title></head>";
-        String endHTML = "</html>";
-        out.println("HTTP/1.1 200 OK");
-        out.println("Content-Type: text/html");
-        out.println("Content-Length: " + dataToPrint.length() + 
-            title.length() + endHTML.length());
-        out.println("Connection: close");
-        out.println("");
+        File file = new File(filename);
+        if(!file.exists()) {
+            echoPrint(out, "HTTP/1.1 404 NOT FOUND");
+            echoPrint(out, "Content-Type: text/plain");
+            echoPrint(out, "Connection: close");
+            echoPrint(out, "Content-Length: 49\n");
+            // send a message to the client for the 404 response
+            echoPrint(out, "404 NOT FOUND\nSorry, we can't find that for you.");
+        } else {
 
-        out.println(title); 
-        out.println(dataToPrint);
-        out.println(endHTML);
+            String dataToPrint = Bash.runBash(filename, querystr); 
+            String title = "<html><head><title>Bash Script " + filename + 
+                "</title></head>";
+            String endHTML = "</html>";
+            out.println("HTTP/1.1 200 OK");
+            out.println("Content-Type: text/html");
+            out.println("Content-Length: " + dataToPrint.length() + 
+                title.length() + endHTML.length());
+            out.println("Connection: close");
+            out.println("");
+
+            out.println(title); 
+            out.println(dataToPrint);
+            out.println(endHTML);
+        }
     }
 
     public static void closeConnection(Socket socket, int clientNum) throws IOException{
