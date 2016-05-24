@@ -1,6 +1,6 @@
 <?php
 
-function createDB($c) {
+function create_DB($c) {
     $sql = "CREATE TABLE IF NOT EXISTS friends( ".
         "id INT NOT NULL AUTO_INCREMENT,".
         "fname VARCHAR(100) NOT NULL,".
@@ -22,7 +22,7 @@ function createDB($c) {
             
 }
 
-function connect() {
+function connect_DB() {
     $connection = new mysqli("127.0.0.1", "stevecal", "stevecal9889");
 
     // Complain if the connection fails. 
@@ -45,7 +45,7 @@ function add_friend($c, $p_fname, $p_lname, $p_phone, $p_age) {
     return $return_val;
 }
 
-function getAll($c) {
+function get_all($c) {
     $sql = "select * from friends";
     $result = $c->query($sql);
     if (!$result) {
@@ -53,23 +53,31 @@ function getAll($c) {
     }
     return $result;
 }
-?>
 
-    <?php
-    $c = connect();
-    $create_result = createDB($c);
-    $result = getAll($c);
+function read_from_file($c, $filename) {
+    $datafile = fopen($filename, "r") or die("Unable to open file for reading");
+    echo fread($datafile, filesize($filename));
+    fclose($datafile);
+}
+function display_friends($c) {
+   $result = get_all($c); 
+
     // iterate over each record in the result.
     // Each record will be one row in the table, beginning with <tr> 
+    echo "<table>";
     foreach ($result as $row) {
-        //echo "<tr>";
+        echo "<tr>";
         $keys = array("fname", "lname", "phone", "age");
         // iterate over all the columns.  Each column is a <td> element.
         foreach ($keys as $key) {
-            //echo "<td>" . $row[$key] . "</td>";
+            echo "<td>" . $row[$key] . "</td>";
         }
-        //echo "</tr>\n";
+        echo "</tr>\n";
     }
-    $c->close();
-                                                                                ?> 
-
+    echo "</table>";
+}
+//$c = connect_DB();
+//$create_result = create_DB($c);
+//$result = get_all($c);
+//$c->close();
+?>

@@ -6,7 +6,7 @@
     including their First Name, Last Name, Phone Number, and Age.
 -->
 <?php error_reporting(E_ALL); 
-require('friendDB.php');
+//require('friendDB.php');
 ?>
 <html>
 <head>
@@ -47,7 +47,7 @@ require('friendDB.php');
             </fieldset>
 
                 <?php
-                $datafile = fopen("frienddata.txt", "a") or die("Unable to open file");
+                    $datafile = fopen("frienddata.txt", "a") or die("Unable to open file");
                 foreach ($_POST as $key => $value) {
                     $printMe = $value;
                     if (is_array($value)) {
@@ -85,9 +85,10 @@ echo stream_get_contents($fp);
     </tr>
     
     <?php
-    $c = connect();
-    $create_result = createDB($c);
-    $result = getAll($c);
+    include 'friendDB.php';
+    $c = connect_DB();
+    $create_result = create_DB($c);
+    $result = get_all($c);
     // iterate over each record in the result.
     // Each record will be one row in the table, beginning with <tr> 
     foreach ($result as $row) {
