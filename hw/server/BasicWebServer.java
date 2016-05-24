@@ -64,6 +64,10 @@ public class BasicWebServer {
         String[] getSplit = headerLines[0].split(" ");
         String filenameWithQuery = getSplit[1].substring(1); // store filename as a String (for ease of use).
         System.out.printf("%s\n",filenameWithQuery);
+        String[] filenameArr = filenameWithQuery.split("?");
+        String filename = filenameArr[0];
+        String querystr = filenameArr[1];
+        System.out.printf("FILE: %s\tQUERY: %s\n", filename, querystr);
         if(filename.equals("mytimetxt")) {
             //serveRavenText
         } else if(filename.equals("mytime")) {
@@ -71,6 +75,9 @@ public class BasicWebServer {
         } else if(filename.equals("who")) {
             //serveWhoHTML
             serveWhoHTML(out);
+        } else if(filename.endsWith(".pl")) {
+            // run the perl script and display output
+            Perl.runPerl(filename, querystr);
         } else {
             // Otherwise, assume it is a filename request.
             handleFileRequest(socket, out, clientNum, filename);
