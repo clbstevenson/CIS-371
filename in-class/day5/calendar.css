@@ -4,7 +4,52 @@ h1{
     text-align: center;
 }
 
-table td, table th, table{
+//body {
+//    margin: 0;
+//    padding: 0;
+//}
+
+#ROW {
+    //position: relative;
+}
+
+.summer {
+    background: #eb934b;    
+}
+
+.winter {
+    background: #176399;
+}
+
+.spring {
+    background: #0dba07;
+}
+
+.fall {
+    background: #853f14;
+}
+
+.default {
+    background: #b5cfe3;
+}
+
+#ROW td {
+    float: center;
+    width: 35%;
+}
+
+#ROW table{
+    /*margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-right: -50%;
+    margin-bottom: -50%;
+    transform: translate(-50%, -50%)
+    */
+}
+
+#TABLE table td, #TABLE table th, #TABLE table{
     border: 1px solid gray;
     text-align: center;
 }
@@ -13,12 +58,13 @@ table th {
     color: darkblue;
 }
 
-a, table {
+/*a, table {
     margin: 2px;
     float: left;
     width: 24%;
     text-align: center;
 }
+*/
 
 #TODAY {
     background: #d3e5f2;

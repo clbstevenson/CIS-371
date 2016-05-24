@@ -3,6 +3,7 @@
 date_default_timezone_set('America/New_York');
 //echo "Query String:  " . $_SERVER['QUERY_STRING'] . "\n";
 
+
 if(isset($_GET['day'])) {
     $day = $_GET['day'];
 } else {
@@ -18,6 +19,37 @@ if(isset($_GET['year'])) {
 } else {
     $year = date('Y');
 }
+
+// if selected a theme, set the cookie
+if(isset($_POST['myTheme'])) {
+    $theme = $_POST['myTheme'];
+    setcookie('cookietheme', $theme, time() + 5);
+    echo "CookieTheme: $theme for 5 seconds";
+} else {
+    // check to see if a cookie has been set with key of "cookietheme"
+    if (!array_key_exists("cookietheme", $_COOKIE)) {
+
+        $new_visitor = true;
+        $new_theme = 'default';
+        echo "Setting new cookie for theme";
+        setcookie('cookietheme', $new_theme, time() + 5);
+
+        setcookie('visits', 0);
+
+    } else {
+        $new_visitor = false;
+        echo "Already visited";
+        $theme = $_COOKIE['cookietheme'];
+        echo "CookieTheme: $theme";
+        $visits = intval($_COOKIE['visits']) + 1;
+        setcookie('visits', $visits);
+    }
+}
+// If the theme is set by post, change the theme
+// And set a cookie
+/*if(isset($_POST['myTheme'])) {
+   $theme = $_POST['myTheme']; 
+}*/
 
 $new_time = mktime(null, null, null, $month, $day, $year);
 //$new_date = date("M--d--Y",mktime(null, null, null, $month, $day, $year));
@@ -47,8 +79,31 @@ $offset = $startOfMonth;
 
 
 <body>
-<h1> <?php echo "$month_str $year"?> </h1>
+<?php
+    if(isset($theme) ) {
+        if($theme == 'Winter') {
+            echo "<h1 class='winter'>";
+        } else if($theme == 'Summer') {
+            echo "<h1 class='summer'>";
+        } else if($theme == 'Spring') {
+            echo "<h1 class='spring'>";
+        } else if($theme == 'Fall') {
+            echo "<h1 class='fall'>";
+        } else if($theme == 'default') {
+            echo "<h1 class='default'>";
+        }
 
+    }else {
+        echo "<h1>";
+    }
+    echo "$month_str $year</h1>";
+
+?>
+
+<div id="ROW">
+<table>
+<tr>
+<td>
 <?php
     $prev_month = $month-1;
     $prev_year = $year;
@@ -56,13 +111,34 @@ $offset = $startOfMonth;
         $prev_month = 12;
         $prev_year = $year-1;
     }
-    echo "<a href='http://www.cis.gvsu.edu/~stevecal/PHP/calendar.php?month=$prev_month&day=$day&year=$prev_year'><<</a>"
+    echo "<a href='http://www.cis.gvsu.edu/~stevecal/PHP/day5/calendar.php?month=$prev_month&day=$day&year=$prev_year'><<</a>"
 ?>
+</td>
 
+<td>
+<div id="TABLE">
 <table>
-    <tr> <th>Sunday</th><th>Monday</th><th>Tuesday</th><th>Wednesday</th>
-        <th>Thursday</th><th>Friday</th><th>Saturday</th>
-    </tr>
+    <?php
+        if(isset($theme)) {
+            if($theme == 'Winter') {
+                echo "<tr class='winter'>";
+            }else if($theme == 'Summer') {
+                echo "<tr class='summer'>";
+            }else if($theme == 'Spring') {
+                echo "<tr class='spring'>";
+            }else if($theme == 'Fall') {
+                echo "<tr class='fall'>";
+            }else if($theme == 'Default') {
+                echo "<tr class='default'";
+            }
+        } else {
+            echo "<tr class='default'>";
+        }
+        echo "<th>Sunday</th><th>Monday</th>";
+        echo "<th>Tuesday</th><th>Wednesday</th><th>Thursday</th>";
+        echo "<th>Friday</th><th>Saturday</th> </tr>";
+
+    ?>
     <?php
         //$startDayOfWeek = date('w', mktime(null, null, null, $month, 2, $year));
         //print blank slots until the start day of the month
@@ -75,7 +151,21 @@ $offset = $startOfMonth;
             if($day_x == $day && $month == $current_month) {
                 echo "<td id='TODAY'>$day_x</td>";
             } else {
-                echo "<td>$day_x</td>";
+                if(isset($theme)) {
+                    if($theme == 'Winter') {
+                        echo "<td class='winter'>$day_x</td>";
+                    }else if($theme == 'Summer') {
+                        echo "<td class='summer'>$day_x</td>";
+                    }else if($theme == 'Spring') {
+                        echo "<td class='spring'>$day_x</td>";
+                    }else if($theme == 'Fall') {
+                        echo "<td class='fall'>$day_x</td>";
+                    }else if($theme == 'default') {
+                        echo "<td class='default'>$day_x</td>";
+                    }
+                } else {
+                    echo "<td>$day_x</td>";
+                }
             }
 
             // ignore first row if start on 6th day of week
@@ -101,7 +191,10 @@ $offset = $startOfMonth;
         echo "</tr>";
     ?>
 </table>
+</div>
+</td>
 
+<td>
 <?php
     $next_month = $month+1;
     $next_year = $year;
@@ -109,8 +202,34 @@ $offset = $startOfMonth;
         $next_month = 1;
         $next_year = $year + 1;
     }
-    echo "<a href='http://www.cis.gvsu.edu/~stevecal/PHP/calendar.php?month=$next_month&day=$day&year=$next_year'>>></a>"
+    echo "<a href='http://www.cis.gvsu.edu/~stevecal/PHP/day5/calendar.php?month=$next_month&day=$day&year=$next_year'>>></a>"
 ?>
+</td>
+</tr>
+</table>
+</div>
+
+<hr>
+
+<fieldset>
+<legend>Data</legend>
+<form action="calendar.php" method="post">
+    Select a Theme: <br>
+    Winter <input type="radio" name="myTheme" value="Winter"/><br>
+    Spring <input type="radio" name="myTheme" value="Spring"/><br>
+    Summer <input type="radio" name="myTheme" value="Summer"/><br>
+    Fall   <input type="radio" name="myTheme" value="Fall"/><br>
+
+    <input type="submit" name="submit" value="Submit"/>
+</form>
+</fieldset>
 
 </body>
 </html>
+
+<?php
+    // if selected a theme, set a new cookie
+    if(isset($_POST['myTheme'])) {
+        setcookie('cookietheme', $_POST['myTheme'], time() + 5);
+    }
+?>
