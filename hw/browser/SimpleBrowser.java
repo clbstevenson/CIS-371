@@ -88,6 +88,8 @@ public class SimpleBrowser {
         clicked(e.getPoint());
       }
     });
+
+    currentURL = new MyURL("http://www.cis.gvsu.edu/~stevecal/");
   }
 
   public SimpleBrowser(String frameName, String initialLocation, StarterDisplay display_in) {
