@@ -58,8 +58,38 @@ public class MyURL {
             else {
                 // Found the end of the path, before the filename.
                 // Take the substring up to and including the "/" before the old filename.
+                // If the last directory is the same as the directory 
+                // in the new URL, then only change /file not /path/file
+                System.out.println("currentPath contains a dir");
+                String shortenedPath = currentPath.substring(0,endOfPath);
+                int newURLEndOfPath = newURL.lastIndexOf("/");
+                if(newURLEndOfPath == -1) {
+                    // If newURL does not have a path, then just append
+                    // the filename to currentPath
+                    path = currentPath.substring(0, endOfPath + 1) 
+                        + newURL;
+                    System.out.println("newURL does NOT contain a dir");
+                } else {
+                    System.out.println("newURL DOES contain a dir");
+                    String newURLPath = newURL.substring(0,newURLEndOfPath);
+                    int newURLPathIndex = currentPath.indexOf(newURLPath);
+                    if(newURLPathIndex == -1) {
+                        System.out.println("currentPath does NOT contain newURL");
+                        // If newURLPath is not in currentPath, 
+                        // then just append newURL to currentPath
+                        path = currentPath.substring(0, endOfPath + 1) 
+                            + newURL;
+                    } else {
+                        System.out.println("currentPath DOES contain newURL");
+                        // If currentPath contains newURLPath,
+                        // then only append the file to currentPath
+                        String newURLFile = newURL.substring(newURLPathIndex);
+                        path = currentPath.substring(0, endOfPath + 1) 
+                            + newURLFile; 
+                    }
+                }
                 // Append the newURL to the end of the path.
-                path = currentPath.substring(0, endOfPath + 1) + newURL;
+                //path = currentPath.substring(0, endOfPath + 1) + newURL;
             }
         }
 

@@ -25,6 +25,7 @@ public class StarterDisplay extends JPanel {
   // When building a "real" browser, the links are also areas on the screen, but the corresponding value is the URL
   // that should be loaded when the link is clicked.
   private Map<Rectangle, Color> links = new HashMap<Rectangle, Color>();
+  private Map<Rectangle, String> realLinks = new HashMap<Rectangle, String>();
 
 
   /**
@@ -72,10 +73,14 @@ public class StarterDisplay extends JPanel {
     Font originalFont = g.getFont();
 
 
-  boolean startBold = false;
-  boolean endBold = false;
-  boolean startItal = false;
-  boolean endItal = false;
+    boolean startBold = false;
+    boolean endBold = false;
+    boolean startItal = false;
+    boolean endItal = false;
+    boolean startLink = false;
+    boolean endLink = false;
+    String linkURL = null;
+    String linkText = "";
     // Iterate over each line.
     for (String line : content) {
       Scanner words = new Scanner(line);
@@ -113,6 +118,7 @@ public class StarterDisplay extends JPanel {
                 //wordList.add(nextWord.substring(1) + " "); 
             }
         } else if(nextWord.endsWith("*")) {
+            // remove the '*' markup
             nextWord = nextWord.substring(0, nextWord.length() -1 );
             //isBold = false;
             endBold = true;
@@ -124,35 +130,20 @@ public class StarterDisplay extends JPanel {
         // Search until find another word that ends with '_'.
         if (nextWord.startsWith("_")) {
             startItal = true;
-            //List<String> boldWords = new ArrayList<String>(); 
-            // add the current word to the list, without the starting '*'.
-            //style = Font.BOLD;
             if(nextWord.endsWith("_")) {
                 endItal = true;
-                // remove the '*' markup
+                // remove the '_' markup
                 nextWord = nextWord.substring(1, nextWord.length() -1 );
-                //wordList.add(nextWord.substring(1, nextWord.length() -1) + " "); 
             } else {
                 nextWord = nextWord.substring(1);
-                //wordList.add(nextWord.substring(1) + " "); 
             }
         } else if(nextWord.endsWith("_")) {
+            // remove the '_' markup
             nextWord = nextWord.substring(0, nextWord.length() -1 );
-            //isBold = false;
             endItal = true;
-            //style = Font.BOLD;
         } 
-        /*
-        if(startBold) {
-            nextWord = nextWord + " ";
-        } else if(startItal) {
-            nextWord = nextWord + " ";
-        }
-        */
         
-        
-        //System.out.printf(" : %s, sb=%b, eb=%b, si=%b, ei=%b\n", nextWord, startBold, endBold, startItal, endItal);
-        
+        // Update the font to Bold, Italic, or Bold|Italic
         if((startBold || endBold) && (startItal || endItal)) {
             style = Font.BOLD|Font.ITALIC;
         } else {
@@ -166,15 +157,47 @@ public class StarterDisplay extends JPanel {
             } 
         }
 
+        // "Turn Off" the bold marker
         if(endBold) {
             endBold = false;
             startBold = false;
         }
+        // "Turn Off" the italic marker
         if(endItal) {
             endItal = false;
             startItal = false;
         }
-        //for(String nextString: wordList) {
+
+        // Starts with '[[', then it is a link.
+        // Continue searching until ']]'
+        if (nextWord.startsWith("[[")) {
+            startLink = true; 
+            if(nextWord.endsWith("]]")) {
+                endLink = true;
+                // If the same words starts and ends with '[['
+                // this means the URL is the link text.
+                //linkURL = new MyURL(nextWord.substring(2,nextWord.length()-2));
+                linkURL = nextWord.substring(2, nextWord.length()-2);
+                linkText = nextWord.substring(2, nextWord.length()-2);
+                nextWord = linkURL;
+                
+            } else {
+                // Otherwise, the next few words are the link text
+                // in place of the URL.    
+                //linkURL = new MyURL(nextWord.substring(2));
+                linkURL = nextWord.substring(2);
+                nextWord = linkURL;
+                // linkText will be whatever comes next
+            }
+        } else if(nextWord.endsWith("]]")) {
+            // The link text is ending: create the link where the 
+            // URL is not the link text.
+            endLink = true;
+            linkText += nextWord.substring(0,nextWord.length()-2);
+            nextWord = linkText;
+        } else if(startLink) {
+            linkText += nextWord;
+        }
 
         String wordAndSpace = nextWord + " ";
         g.setFont(originalFont.deriveFont(style));
@@ -182,28 +205,53 @@ public class StarterDisplay extends JPanel {
 
         int word_width = metrics.stringWidth(wordAndSpace);
 
-        // If there isn't room for this word, go to the next line
-        if (x + word_width > panel_width) {
-          x = MARGIN;
-          y += line_height;
+        // When reach the end of the link, create a Rectangle wrapping
+        // the linkText, and the URL is the link value.
+        if(endLink) {
+            endLink = false;
+            startLink = false;
+            String linkTextAndSpace = linkText + " ";
+            word_width = metrics.stringWidth(linkTextAndSpace);
+            System.out.printf("linkTextAndSpace: %s\turl:%s\n", 
+                linkTextAndSpace, linkURL.toString());
+
+            // If there isn't room for this word, go to the next line
+            if (x + word_width > panel_width) {
+              x = MARGIN;
+              y += line_height;
+            }
+
+            Rectangle rect = new Rectangle(x, y - line_height, word_width, line_height);
+            realLinks.put(rect, linkURL);
+            // draw the word
+            //g.setFont(originalFont.deriveFont(style));
+            g.setColor(Color.orange.darker());
+            g.drawString(linkTextAndSpace, x, y);
+            
+        } else if(!startLink){
+            // Otherwise, not in the middle of a link so draw normally. 
+            // If there isn't room for this word, go to the next line
+            if (x + word_width > panel_width) {
+              x = MARGIN;
+              y += line_height;
+            }
+
+            // A simple example of how to handle links. A word of the form (#123456) will be
+            // represented as a link that, when clicked on, will change the text color.
+            Color color = getColor(nextWord);
+            if (color != null) {
+              g.setColor(color);
+              Rectangle rect = new Rectangle(x, y - line_height, word_width, line_height);
+              links.put(rect, color);
+              // g.drawRect(rect.x, rect.y, rect.width, rect.height);
+            } else {
+              g.setColor(defaultColor);
+            }
+            // draw the word
+            //g.setFont(originalFont.deriveFont(style));
+            g.drawString(wordAndSpace, x, y);
         }
 
-        // A simple example of how to handle links. A word of the form (#123456) will be
-        // represented as a link that, when clicked on, will change the text color.
-        Color color = getColor(nextWord);
-        if (color != null) {
-          g.setColor(color);
-          Rectangle rect = new Rectangle(x, y - line_height, word_width, line_height);
-          links.put(rect, color);
-          // g.drawRect(rect.x, rect.y, rect.width, rect.height);
-        } else {
-          g.setColor(defaultColor);
-        }
-
-
-        // draw the word
-        //g.setFont(originalFont.deriveFont(style));
-        g.drawString(wordAndSpace, x, y);
 
 
         x += word_width;
@@ -255,5 +303,14 @@ public class StarterDisplay extends JPanel {
       }
     }
     return null;
+  }
+
+  public String getLink(Point point) {
+      for (Map.Entry<Rectangle, String> entry : realLinks.entrySet()) {
+          if(entry.getKey().contains(point)) {
+              return entry.getValue();
+          }
+      }
+      return null;
   }
 }

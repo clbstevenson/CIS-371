@@ -105,6 +105,13 @@ public class SimpleBrowser {
       display.setColor(c);
       display.repaint();
     }
+    
+    String linkURLText = display.getLink(point);
+    if(linkURLText != null && !linkURLText.isEmpty() ) {
+        // set the contents of the display to the contents of the url link
+        loadPage(linkURLText);
+        display.repaint(); // is this necessary?
+    }
   }
 
   protected void loadPage(String textInBar) {
@@ -153,6 +160,8 @@ public class SimpleBrowser {
     //addressBar.setText(url.path());
     addressBar.setText(textInBar);
     display.setText(contents);
+    // after loading the page, update currentURL
+    currentURL = url;
     frame.repaint();
   }
 
