@@ -140,7 +140,10 @@ public class SimpleBrowser {
       e.printStackTrace();
     }
     */
-    
+    //update addressbar to show the new url
+    //addressBar.setText(url.toString());
+    //addressBar.setText(url.path());
+    addressBar.setText(textInBar);
     display.setText(contents);
     frame.repaint();
   }
