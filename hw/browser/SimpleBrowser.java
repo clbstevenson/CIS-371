@@ -111,13 +111,18 @@ public class SimpleBrowser {
     // networking part working.
     
 
-    MyURL url = new MyURL(textInBar);
-    WebTransactionClient wtc = new WebTransactionClient(url);
-
     List<String> contents = new ArrayList<String>();
-    // WebTransactionClient.getText() only returns a String,
-    // so that string will be the only text in the display contents.
-    contents.add(wtc.getText());    
+    MyURL url = new MyURL(textInBar, currentURL);
+    try {
+        WebTransactionClient wtc = new WebTransactionClient(url);
+
+        // WebTransactionClient.getText() only returns a String,
+        // so that string will be the only text in the display contents.
+        contents.add(wtc.getText());    
+    } catch(IOException e) {
+        System.out.println("Cannot open file/WebTransactionClient");
+        e.printStackTrace();
+    }
 
     /* Starter code 
      *
@@ -143,8 +148,13 @@ public class SimpleBrowser {
   protected Image fetchImage(MyURL url) {
     // TODO:  implement me.
     // Hint:  Use a new WebTransactionClient object.
-    WebTransactionClient wtc = new WebTransactionClient(url);
-    return wtc.getImage();
+    try {
+        WebTransactionClient wtc = new WebTransactionClient(url);
+        return wtc.getImage();
+    } catch(IOException e) {
+        e.printStackTrace();
+    }
+    return null;
     //return null;
   }
 
