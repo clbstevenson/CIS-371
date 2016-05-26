@@ -83,7 +83,7 @@ public class MyURL {
                         System.out.println("currentPath DOES contain newURL");
                         // If currentPath contains newURLPath,
                         // then only append the file to currentPath
-                        String newURLFile = newURL.substring(newURLPathIndex);
+                        String newURLFile = newURL.substring(newURLEndOfPath);
                         path = currentPath.substring(0, endOfPath + 1) 
                             + newURLFile; 
                     }

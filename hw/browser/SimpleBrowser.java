@@ -46,6 +46,8 @@ public class SimpleBrowser {
     JButton home = new JButton("Home");
     barPanel.add(home, BorderLayout.WEST);
     barPanel.add(addressBar, BorderLayout.CENTER);
+    JButton basic = new JButton("Basic.txt");
+    barPanel.add(basic, BorderLayout.EAST);
     
     Dimension screenSize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
     screenSize.width /= 2;
@@ -79,6 +81,13 @@ public class SimpleBrowser {
         loadPage(homeLoc);
       }
     });
+
+    basic.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            loadPage("http://cis.gvsu.edu/~stevecal/sampleInput/basic.txt");
+        }
+    });
     
 
     displayPanel.addMouseListener(new MouseAdapter() {
@@ -110,7 +119,7 @@ public class SimpleBrowser {
     if(linkURLText != null && !linkURLText.isEmpty() ) {
         // set the contents of the display to the contents of the url link
         loadPage(linkURLText);
-        display.repaint(); // is this necessary?
+        frame.repaint(); // is this necessary?
     }
   }
 
@@ -163,6 +172,8 @@ public class SimpleBrowser {
     // after loading the page, update currentURL
     currentURL = url;
     frame.repaint();
+    //frame.pack();
+    scrollPane.getVerticalScrollBar().setValue(scrollPane.getVerticalScrollBar().getMinimum());
   }
 
   // Fetch an image from from the server, or return null if 

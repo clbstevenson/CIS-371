@@ -196,7 +196,7 @@ public class StarterDisplay extends JPanel {
             linkText += nextWord.substring(0,nextWord.length()-2);
             nextWord = linkText;
         } else if(startLink) {
-            linkText += nextWord;
+            linkText += nextWord + " ";
         }
 
         String wordAndSpace = nextWord + " ";
@@ -227,6 +227,10 @@ public class StarterDisplay extends JPanel {
             //g.setFont(originalFont.deriveFont(style));
             g.setColor(Color.orange.darker());
             g.drawString(linkTextAndSpace, x, y);
+            // reset the linkText and linkURL
+            linkText = "";
+            linkURL = "";
+            x += word_width;
             
         } else if(!startLink){
             // Otherwise, not in the middle of a link so draw normally. 
@@ -250,11 +254,11 @@ public class StarterDisplay extends JPanel {
             // draw the word
             //g.setFont(originalFont.deriveFont(style));
             g.drawString(wordAndSpace, x, y);
+            x += word_width;
         }
 
 
 
-        x += word_width;
         //}
 
       } // end of the line
