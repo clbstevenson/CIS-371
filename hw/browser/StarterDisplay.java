@@ -84,41 +84,61 @@ public class StarterDisplay extends JPanel {
 
         // A simple example of how to handle a *one-word* markup 
         // Remember, your assignment will use multi-word markup.
-        if (nextWord.startsWith("*") && nextWord.endsWith("*") && nextWord.length() > 1) {
+        /*if (nextWord.startsWith("*") && nextWord.endsWith("*") && nextWord.length() > 1) {
           // remove the markup.
           nextWord = nextWord.substring(1, nextWord.length() - 1);
           style = Font.BOLD;
         }
-
-
-        String wordAndSpace = nextWord + " ";
-        int word_width = metrics.stringWidth(wordAndSpace);
-
-        // If there isn't room for this word, go to the next line
-        if (x + word_width > panel_width) {
-          x = MARGIN;
-          y += line_height;
+        */
+        // Starts with '*', start adding words to a list that will be bold.
+        // Search until find another word that ends with '*'.
+        List<String> wordList = new ArrayList<String>();
+        if (nextWord.startsWith("*")) {
+            //List<String> boldWords = new ArrayList<String>(); 
+            // add the current word to the list, without the starting '*'.
+            wordList.add(nextWord.substring(1));
+            do {
+                String nextBoldWord = words.next();
+                if(nextBoldWord.endsWith("*")) {
+                    // add the final bold word to the list.
+                    // don't including the ending '*'.
+                    wordList.add(nextBoldWord.subString(0, nextBoldWord.length - 2)); 
+                    break;
+                }
+            }while(true);
         }
 
-        // A simple example of how to handle links. A word of the form (#123456) will be
-        // represented as a link that, when clicked on, will change the text color.
-        Color color = getColor(nextWord);
-        if (color != null) {
-          g.setColor(color);
-          Rectangle rect = new Rectangle(x, y - line_height, word_width, line_height);
-          links.put(rect, color);
-          // g.drawRect(rect.x, rect.y, rect.width, rect.height);
-        } else {
-          g.setColor(defaultColor);
+        for(String nextString: wordList) {
+
+            String wordAndSpace = nextWord + " ";
+            int word_width = metrics.stringWidth(wordAndSpace);
+
+            // If there isn't room for this word, go to the next line
+            if (x + word_width > panel_width) {
+              x = MARGIN;
+              y += line_height;
+            }
+
+            // A simple example of how to handle links. A word of the form (#123456) will be
+            // represented as a link that, when clicked on, will change the text color.
+            Color color = getColor(nextWord);
+            if (color != null) {
+              g.setColor(color);
+              Rectangle rect = new Rectangle(x, y - line_height, word_width, line_height);
+              links.put(rect, color);
+              // g.drawRect(rect.x, rect.y, rect.width, rect.height);
+            } else {
+              g.setColor(defaultColor);
+            }
+
+
+            // draw the word
+            g.setFont(originalFont.deriveFont(style));
+            g.drawString(wordAndSpace, x, y);
+
+
+            x += word_width;
         }
-
-
-        // draw the word
-        g.setFont(originalFont.deriveFont(style));
-        g.drawString(wordAndSpace, x, y);
-
-
-        x += word_width;
 
       } // end of the line
 
