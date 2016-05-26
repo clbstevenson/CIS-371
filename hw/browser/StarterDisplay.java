@@ -72,12 +72,15 @@ public class StarterDisplay extends JPanel {
     Font originalFont = g.getFont();
 
 
+  boolean startBold = false;
+  boolean endBold = false;
+  boolean startItal = false;
+  boolean endItal = false;
     // Iterate over each line.
     for (String line : content) {
       Scanner words = new Scanner(line);
 
-      boolean isBold = false;
-      boolean isItal = false;
+      System.out.println("~~");
 
       // iterate over each word.
       while (words.hasNext()) {
@@ -97,60 +100,113 @@ public class StarterDisplay extends JPanel {
         // Starts with '*', start adding words to a list that will be bold.
         // Search until find another word that ends with '*'.
         if (nextWord.startsWith("*")) {
-            isBold = true;
+            startBold = true;
             //List<String> boldWords = new ArrayList<String>(); 
             // add the current word to the list, without the starting '*'.
-            style = Font.BOLD;
+            //style = Font.BOLD;
             if(nextWord.endsWith("*")) {
-                isBold = false;
+                endBold = true;
                 // remove the '*' markup
-                nextWord = nextWord.substring(1, nextWord.length() -1 ) + " ";
-                //wordList.add(nextWord.substring(1, nextWord.length() -1) + " "); 
+                nextWord = nextWord.substring(1, nextWord.length() -1 );                //wordList.add(nextWord.substring(1, nextWord.length() -1) + " "); 
             } else {
-                nextWord = nextWord.substring(1) + " ";
+                nextWord = nextWord.substring(1);
                 //wordList.add(nextWord.substring(1) + " "); 
             }
         } else if(nextWord.endsWith("*")) {
-            nextWord = nextWord.substring(0, nextWord.length() -1 ) + " ";
+            nextWord = nextWord.substring(0, nextWord.length() -1 );
             //isBold = false;
-            style = Font.BOLD;
-            
-        } else {
-            // no tags, simply add nextWord to it's own List
-            //wordList.add(nextWord);
-            nextWord = nextWord + " ";
+            endBold = true;
+            //style = Font.BOLD;
         }
 
+
+        // Starts with '_', start adding words to a list that will be bold.
+        // Search until find another word that ends with '_'.
+        if (nextWord.startsWith("_")) {
+            startItal = true;
+            //List<String> boldWords = new ArrayList<String>(); 
+            // add the current word to the list, without the starting '*'.
+            //style = Font.BOLD;
+            if(nextWord.endsWith("_")) {
+                endItal = true;
+                // remove the '*' markup
+                nextWord = nextWord.substring(1, nextWord.length() -1 );
+                //wordList.add(nextWord.substring(1, nextWord.length() -1) + " "); 
+            } else {
+                nextWord = nextWord.substring(1);
+                //wordList.add(nextWord.substring(1) + " "); 
+            }
+        } else if(nextWord.endsWith("_")) {
+            nextWord = nextWord.substring(0, nextWord.length() -1 );
+            //isBold = false;
+            endItal = true;
+            //style = Font.BOLD;
+        } 
+        /*
+        if(startBold) {
+            nextWord = nextWord + " ";
+        } else if(startItal) {
+            nextWord = nextWord + " ";
+        }
+        */
+        
+        
+        //System.out.printf(" : %s, sb=%b, eb=%b, si=%b, ei=%b\n", nextWord, startBold, endBold, startItal, endItal);
+        
+        if((startBold || endBold) && (startItal || endItal)) {
+            style = Font.BOLD|Font.ITALIC;
+        } else {
+            if((startBold || endBold)) {
+                style = Font.BOLD;
+                //if(startBold)
+            }
+            if((startItal || endItal)) {
+                style = Font.ITALIC;
+                //if(startItal)
+            } 
+        }
+
+        if(endBold) {
+            endBold = false;
+            startBold = false;
+        }
+        if(endItal) {
+            endItal = false;
+            startItal = false;
+        }
         //for(String nextString: wordList) {
 
-            String wordAndSpace = nextWord + " ";
-            int word_width = metrics.stringWidth(wordAndSpace);
+        String wordAndSpace = nextWord + " ";
+        g.setFont(originalFont.deriveFont(style));
+        metrics = g.getFontMetrics();
 
-            // If there isn't room for this word, go to the next line
-            if (x + word_width > panel_width) {
-              x = MARGIN;
-              y += line_height;
-            }
+        int word_width = metrics.stringWidth(wordAndSpace);
 
-            // A simple example of how to handle links. A word of the form (#123456) will be
-            // represented as a link that, when clicked on, will change the text color.
-            Color color = getColor(nextWord);
-            if (color != null) {
-              g.setColor(color);
-              Rectangle rect = new Rectangle(x, y - line_height, word_width, line_height);
-              links.put(rect, color);
-              // g.drawRect(rect.x, rect.y, rect.width, rect.height);
-            } else {
-              g.setColor(defaultColor);
-            }
+        // If there isn't room for this word, go to the next line
+        if (x + word_width > panel_width) {
+          x = MARGIN;
+          y += line_height;
+        }
 
-
-            // draw the word
-            g.setFont(originalFont.deriveFont(style));
-            g.drawString(wordAndSpace, x, y);
+        // A simple example of how to handle links. A word of the form (#123456) will be
+        // represented as a link that, when clicked on, will change the text color.
+        Color color = getColor(nextWord);
+        if (color != null) {
+          g.setColor(color);
+          Rectangle rect = new Rectangle(x, y - line_height, word_width, line_height);
+          links.put(rect, color);
+          // g.drawRect(rect.x, rect.y, rect.width, rect.height);
+        } else {
+          g.setColor(defaultColor);
+        }
 
 
-            x += word_width;
+        // draw the word
+        //g.setFont(originalFont.deriveFont(style));
+        g.drawString(wordAndSpace, x, y);
+
+
+        x += word_width;
         //}
 
       } // end of the line

@@ -120,7 +120,15 @@ public class SimpleBrowser {
 
         // WebTransactionClient.getText() only returns a String,
         // so that string will be the only text in the display contents.
-        contents.add(wtc.getText());    
+        String wtcText = wtc.getText();
+        // Split the WebTransactionClient text into separate strings
+        // for each newline character.
+        String[] splitWTC = wtcText.split("\n");
+        for(String s: splitWTC) {
+            System.out.printf("\t:%s\n", s);
+            contents.add(s);
+        }
+        //contents.add(wtc.getText());    
     } catch(IOException e) {
         System.out.println("Cannot open file/WebTransactionClient");
         e.printStackTrace();
