@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.HashMap;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -75,6 +76,9 @@ public class StarterDisplay extends JPanel {
     for (String line : content) {
       Scanner words = new Scanner(line);
 
+      boolean isBold = false;
+      boolean isItal = false;
+
       // iterate over each word.
       while (words.hasNext()) {
 
@@ -94,23 +98,35 @@ public class StarterDisplay extends JPanel {
         // Search until find another word that ends with '*'.
         List<String> wordList = new ArrayList<String>();
         if (nextWord.startsWith("*")) {
+            isBold = true;
             //List<String> boldWords = new ArrayList<String>(); 
             // add the current word to the list, without the starting '*'.
-            wordList.add(nextWord.substring(1));
-            do {
-                String nextBoldWord = words.next();
-                if(nextBoldWord.endsWith("*")) {
-                    // add the final bold word to the list.
-                    // don't including the ending '*'.
-                    wordList.add(nextBoldWord.subString(0, nextBoldWord.length - 2)); 
-                    break;
-                }
-            }while(true);
+            style = Font.BOLD;
+            if(nextWord.endsWith("*")) {
+                isBold = false;
+                // remove the '*' markup
+                wordList.add(nextWord.substring(1, nextWord.length() -1) + " "); 
+            } else {
+                wordList.add(nextWord.substring(1) + " ");
+                // search for the ending '*'
+                do {
+                    String nextBoldWord = words.next();
+                    if(nextBoldWord.endsWith("*")) {
+                        // add the final bold word to the list.
+                        // don't including the ending '*'.
+                        wordList.add(nextBoldWord.substring(0, nextBoldWord.length() - 1) + " "); 
+                        break;
+                    }
+                }while(true);
+            }
+        } else {
+            // no tags, simply add nextWord to it's own List
+            wordList.add(nextWord);
         }
 
         for(String nextString: wordList) {
 
-            String wordAndSpace = nextWord + " ";
+            String wordAndSpace = nextString + " ";
             int word_width = metrics.stringWidth(wordAndSpace);
 
             // If there isn't room for this word, go to the next line
@@ -121,7 +137,7 @@ public class StarterDisplay extends JPanel {
 
             // A simple example of how to handle links. A word of the form (#123456) will be
             // represented as a link that, when clicked on, will change the text color.
-            Color color = getColor(nextWord);
+            Color color = getColor(nextString);
             if (color != null) {
               g.setColor(color);
               Rectangle rect = new Rectangle(x, y - line_height, word_width, line_height);
