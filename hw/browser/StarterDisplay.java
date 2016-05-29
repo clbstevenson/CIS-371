@@ -215,6 +215,7 @@ public class StarterDisplay extends JPanel {
             endLink = false;
             startLink = false;
             style = Font.BOLD;
+            g.setFont(originalFont.deriveFont(style));
             String linkTextAndSpace = linkText + " ";
             word_width = metrics.stringWidth(linkTextAndSpace);
             //System.out.printf("link: %s >>> %s\n", 
