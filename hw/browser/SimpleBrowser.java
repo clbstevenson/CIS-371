@@ -149,7 +149,11 @@ public class SimpleBrowser {
         }
         //contents.add(wtc.getText());    
     } catch(IOException e) {
-        System.out.println("Cannot open file/WebTransactionClient");
+        //System.out.println("Cannot open file/WebTransactionClient");
+        // TODO: add message to list, then settext
+        contents.clear();
+        contents.add(e.getMessage());
+        display.setText(contents);
         e.printStackTrace();
     }
 
