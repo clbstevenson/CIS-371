@@ -62,30 +62,47 @@ public class MyURL {
                 // in the new URL, then only change /file not /path/file
                 System.out.println("currentPath contains a dir");
                 String shortenedPath = currentPath.substring(0,endOfPath);
+                String removedDir = currentPath.substring(endOfPath);
+                
                 int newURLEndOfPath = newURL.lastIndexOf("/");
                 if(newURLEndOfPath == -1) {
                     // If newURL does not have a path, then just append
                     // the filename to currentPath
-                    path = currentPath.substring(0, endOfPath + 1) 
-                        + newURL;
+                    //path = currentPath.substring(0, endOfPath + 1) 
+                    //    + newURL;
+                    path = shortenedPath + "/" + newURL;
                     System.out.println("newURL does NOT contain a dir");
+                    System.out.printf("debug: currentPath: %s,  shortPath: %s,  newURL: %s, newURLEndOfPath: $d\n", currentPath, shortenedPath, newURL, newURLEndOfPath);
                 } else {
                     System.out.println("newURL DOES contain a dir");
                     String newURLPath = newURL.substring(0,newURLEndOfPath);
-                    int newURLPathIndex = currentPath.indexOf(newURLPath);
-                    if(newURLPathIndex == -1) {
-                        System.out.println("currentPath does NOT contain newURL");
-                        // If newURLPath is not in currentPath, 
-                        // then just append newURL to currentPath
-                        path = currentPath.substring(0, endOfPath + 1) 
-                            + newURL;
+                    //System.out.println("\tnewURLPath: " + newURLPath);
+                    // If the newURL specified "../" then remove the
+                    // directory from currentURL and add the filename
+                    // from newURL following the "../".
+                    if(newURLPath.equals("..")) {
+                        System.out.println("newURL DOES contain ../");
+                        String newURLFilename = newURL.substring(newURLEndOfPath);
+                        String twiceShortenedPath = shortenedPath.substring(0,shortenedPath.lastIndexOf("/")); 
+                        path = twiceShortenedPath 
+                            + newURLFilename;
                     } else {
-                        System.out.println("currentPath DOES contain newURL");
-                        // If currentPath contains newURLPath,
-                        // then only append the file to currentPath
-                        String newURLFile = newURL.substring(newURLEndOfPath);
-                        path = currentPath.substring(0, endOfPath + 1) 
-                            + newURLFile; 
+                        // Otherwise, newURL has a normal dir name
+                        int newURLPathIndex = currentPath.indexOf(newURLPath);
+                        if(newURLPathIndex == -1) {
+                            System.out.println("currentPath does NOT contain newURL");
+                            // If newURLPath is not in currentPath, 
+                            // then just append newURL to currentPath
+                            path = currentPath.substring(0, endOfPath + 1) 
+                                + newURL;
+                        } else {
+                            System.out.println("currentPath DOES contain newURL");
+                            // If currentPath contains newURLPath,
+                            // then only append the file to currentPath
+                            String newURLFile = newURL.substring(newURLEndOfPath);
+                            path = currentPath.substring(0, endOfPath + 1) 
+                                + newURLFile; 
+                        }
                     }
                 }
                 // Append the newURL to the end of the path.

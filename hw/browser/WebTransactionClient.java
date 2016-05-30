@@ -88,10 +88,12 @@ public class WebTransactionClient {
 
         } catch (UnknownHostException e1) {
             System.err.println("Can't find host " + host);// end try
-            System.exit(1);
+            throw new IOException ("Sorry, can not find host: " + host);
+            //System.exit(1);
         } catch (IOException e2) {
             System.err.println("Error in getting IO for connection");
-            System.exit(1);
+            throw new IOException("Sorry, there was an error in establishing connection");
+            //System.exit(1);
         }
 
     }

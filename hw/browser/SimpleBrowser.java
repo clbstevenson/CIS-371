@@ -98,7 +98,7 @@ public class SimpleBrowser {
       }
     });
 
-    currentURL = new MyURL("http://www.cis.gvsu.edu/~stevecal/");
+    currentURL = new MyURL("http://www.cis.gvsu.edu/~stevecal/sampleInput");
   }
 
   public SimpleBrowser(String frameName, String initialLocation, StarterDisplay display_in) {
@@ -131,6 +131,9 @@ public class SimpleBrowser {
 
     List<String> contents = new ArrayList<String>();
     MyURL url = new MyURL(textInBar, currentURL);
+    System.out.printf("loadpage: url: %s,  currentURL: %s,  textInBar: %s" +
+        ",  url.path: %s\n", 
+        url, currentURL, textInBar, url.path());
     try {
         WebTransactionClient wtc = new WebTransactionClient(url);
 
@@ -146,7 +149,11 @@ public class SimpleBrowser {
         }
         //contents.add(wtc.getText());    
     } catch(IOException e) {
-        System.out.println("Cannot open file/WebTransactionClient");
+        //System.out.println("Cannot open file/WebTransactionClient");
+        // TODO: add message to list, then settext
+        contents.clear();
+        contents.add(e.getMessage());
+        display.setText(contents);
         e.printStackTrace();
     }
 
@@ -167,10 +174,15 @@ public class SimpleBrowser {
     //update addressbar to show the new url
     //addressBar.setText(url.toString());
     //addressBar.setText(url.path());
-    addressBar.setText(textInBar);
+    //addressBar.setText(textInBar);
+    addressBar.setText(url.path());
     display.setText(contents);
     // after loading the page, update currentURL
     currentURL = url;
+    System.out.printf("POST loadpage: url: %s\n\tcurrentURL: %s\n\ttextInBar: %s" +
+        "\n\turl.path: %s\n", 
+        url, currentURL, textInBar, url.path());
+    //currentURL = new MyURL(url.toString(), currentURL);
     frame.repaint();
     //frame.pack();
     scrollPane.getVerticalScrollBar().setValue(scrollPane.getVerticalScrollBar().getMinimum());

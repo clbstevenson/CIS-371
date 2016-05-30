@@ -60,6 +60,10 @@ public class StarterDisplay extends JPanel {
       return;
     }
 
+    // clear the rectangle links so they are not clickable from 
+    // other pages.
+    realLinks.clear();
+
     // The FontMetrics object can compute the size of text in the window.
     // You must get a new FontMetrics object every time you change or modify the font (e.g., use bold or italics).
     FontMetrics metrics = g.getFontMetrics();
@@ -85,7 +89,7 @@ public class StarterDisplay extends JPanel {
     for (String line : content) {
       Scanner words = new Scanner(line);
 
-      System.out.println("~~");
+      //System.out.println("~~");
 
       // iterate over each word.
       while (words.hasNext()) {
@@ -210,10 +214,12 @@ public class StarterDisplay extends JPanel {
         if(endLink) {
             endLink = false;
             startLink = false;
+            style = Font.BOLD;
+            g.setFont(originalFont.deriveFont(style));
             String linkTextAndSpace = linkText + " ";
             word_width = metrics.stringWidth(linkTextAndSpace);
-            System.out.printf("linkTextAndSpace: %s\turl:%s\n", 
-                linkTextAndSpace, linkURL.toString());
+            //System.out.printf("link: %s >>> %s\n", 
+            //    linkTextAndSpace, linkURL.toString());
 
             // If there isn't room for this word, go to the next line
             if (x + word_width > panel_width) {
@@ -225,7 +231,7 @@ public class StarterDisplay extends JPanel {
             realLinks.put(rect, linkURL);
             // draw the word
             //g.setFont(originalFont.deriveFont(style));
-            g.setColor(Color.orange.darker());
+            g.setColor(Color.blue);
             g.drawString(linkTextAndSpace, x, y);
             // reset the linkText and linkURL
             linkText = "";
