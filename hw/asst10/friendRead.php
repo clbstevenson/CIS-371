@@ -10,19 +10,29 @@
 ?>
 <html>
 <head>
-    <title>Friend Form</title>
+    <title>Friend Form - Read</title>
     <style type="text/css">
         #post {
             vertical-align: top;
+        }
+        #ReadTable table td, #ReadTable table {
+            border: 1px solid gray;
+            text-align: center;
         }
 
     </style>
 </head>
 <body>
 
-<h1>Friend Form</h1>
+<h1>Friend Form - Read</h1>
 
-<h3>Please enter a file to read new friends from.</h3>
+<h3>Other pages to update your friends list</h3>
+<ul>
+<li><a href="friendView.php">View a list of all your friends.</a></li>
+<li><a href="friendAdd.php">Add another friend's info by hand.</a></li>
+</ul>
+
+<h3>Please enter a file to read new friends from</h3>
 
 <table>
     <tr>
@@ -53,7 +63,7 @@
                 // call the 'read_from_file' function from friendDB.php
                 // to update the database based on the file entered.
                 if (isset($_POST["filename"])) {
-                    include 'friendDB.php';
+                    include_once 'friendDB.php';
                     try {
                         $c = connect_DB();
                         //display_friends($c);
@@ -81,12 +91,13 @@
 
 <hr>
 
+<div id="ReadTable">
 <table>
     
     <?php
-    include 'friendDB.php';
+    include_once 'friendDB.php';
     $c = connect_DB();
-    create_DB();
+    create_DB($c);
     display_friends($c);
     /*
     $create_result = create_DB($c);
@@ -107,6 +118,7 @@
                                                                                 ?> 
 
 </table>
+</div>
 
 
 </body>

@@ -22,6 +22,12 @@
 
 <h1>Friend Form - Add</h1>
 
+<h3>Other pages to update your friends list</h3>
+<ul>
+<li><a href="friendView.php">View a list of all your friends.</a></li>
+<li><a href="friendRead.php">Update friends from a file.</a></li>
+</ul>
+
 <h3>Please enter your information below.</h3>
 
 <table>
@@ -75,8 +81,8 @@
 
 $fp = fopen("php://input", 'r+');
 echo "<br>";
-echo "<h3>Thank you for your submission!</h3>";
+echo "<h4>Thank you for your submission!</h4>";
+echo "<p>To view your updated friends list, <a href='friendView.php'>visit this page!</a></p>"
 ?>
-
 </body>
 </html>

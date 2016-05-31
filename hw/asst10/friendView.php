@@ -10,12 +10,13 @@
 ?>
 <html>
 <head>
-    <title>Friend Form - List</title>
+    <title>Friend Form - View</title>
     <style type="text/css">
         #post {
             vertical-align: top;
             }
-        #LISTTABLE table td, #LISTTABLE table th, #LISTTABLE table {
+        #LISTTABLE table td, #LISTTABLE table th, #LISTTABLE table,
+        #LinkTable table, #LinkTable table td{
             border: 1px solid gray;
             text-align: center;
         }
@@ -25,18 +26,16 @@
 </head>
 <body>
 
-<h1>Friend Form - List</h1>
+<h1>Friend Form - View</h1>
 
-<h3>Here is all of your friends.</h3>
+<h3>Other pages to update your friends list</h3>
+<ul>
+<li><a href="friendRead.php">Update friends from a file.</a></li>
+<li><a href="friendAdd.php">Add another friend's info by hand.</a></li>
+</ul>
 
-<div id="LinkTable">
-<table>
-    <tr><td><a href="friendRead.php">Update friends from a file</a></td>
-        <td><a href="friendAdd.php">Add another friend's info.</a></td>
-    </tr>
-</table>
-</div>
 
+<h3>Here is all of your friends</h3>
 <div id="LISTTABLE">
 <table>
     <?php

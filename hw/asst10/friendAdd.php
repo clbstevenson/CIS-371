@@ -22,6 +22,12 @@
 
 <h1>Friend Form - Add</h1>
 
+<h3>Other pages to update your friends list</h3>
+<ul>
+<li><a href="friendView.php">View a list of all your friends.</a></li>
+<li><a href="friendRead.php">Update friends from a file.</a></li>
+</ul>
+
 <h3>Please enter your information below.</h3>
 
 <table>
