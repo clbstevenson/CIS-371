@@ -29,6 +29,13 @@
 
 <h3>Here is all of your friends.</h3>
 
+<div id="LinkTable">
+<table>
+    <tr><td><a href="friendRead.php">Update friends from a file</a></td>
+        <td><a href="friendAdd.php">Add another friend's info.</a></td>
+    </tr>
+</table>
+</div>
 
 <div id="LISTTABLE">
 <table>

@@ -83,6 +83,7 @@ echo stream_get_contents($fp);
     <?php
     include 'friendDB.php';
     $c = connect_DB();
+    create_DB();
     display_friends($c);
     /*
     $create_result = create_DB($c);
