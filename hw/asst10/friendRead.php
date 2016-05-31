@@ -84,9 +84,10 @@
 <table>
     
     <?php
-    //include 'friendDB.php';
-    //$c = connect_DB();
-    //display_friends($c);
+    include 'friendDB.php';
+    $c = connect_DB();
+    create_DB();
+    display_friends($c);
     /*
     $create_result = create_DB($c);
     $result = get_all($c);

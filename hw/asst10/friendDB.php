@@ -2,12 +2,12 @@
 
 function create_DB($c) {
     $sql = "CREATE TABLE IF NOT EXISTS friends( ".
-        "id INT NOT NULL AUTO_INCREMENT,".
+        "id INT NOT NULL,".
         "fname VARCHAR(100) NOT NULL,".
         "lname VARCHAR(100) NOT NULL,".
         "phone VARCHAR(10) NOT NULL,".
         "age INT NOT NULL,".
-        "PRIMARY KEY ( id ));";
+        "CONSTRAINT pk_friendID PRIMARY KEY ( id, lname, fname ));";
     $return_val = $c->query($sql);
     //echo "Created table";
     if(!$return_val) {
