@@ -45,20 +45,28 @@ function connect_DB() {
 function add_friend($c, $p_fname, $p_lname, $p_phone, $p_age) {
     //echo "Adding a friend..." . "<br>";
     if(!$p_fname) {
-        echo "Sorry, that friend is missing a first name. Please try again<br>";
-        return $p_fname;
+        $msgf = "Sorry, that friend is missing a first name. Please try again<br>";
+        echo "add_friend error: " . $msgf;
+        throw new Exception($msgf);
+        //return $p_fname;
     }
     if(!$p_lname) {
-        echo "Sorry, that friend is missing a last name. Please try again<br>";
-        return $p_lname;
+        $msgl = "Sorry, that friend is missing a last name. Please try again<br>";
+        echo "add_friend error: " . $msgl;
+        throw new Exception($msgl);
+        //return $p_lname;
     }
     if(!$p_phone) {
-        echo "Sorry, that friend is missing a phone number. Please try again<br>";
-        return $p_phone;
+        $msgp = "Sorry, that friend is missing a phone number. Please try again<br>";
+        echo "add_friend error: " . $msgp;
+        throw new Exception($msgp);
+        //return $p_phone;
     }
     if(!$p_age) {
-        echo "Sorry, that friend is missing an age. Please try again<br>";
-        return $p_age;
+        $msga = "Sorry, that friend is missing an age. Please try again<br>";
+        echo "add_friend error: " . $msga;
+        throw new Exception($msga);
+        //return $p_age;
     }
     $sql = "INSERT IGNORE INTO  friends (fname, lname, phone, age) VALUES ('$p_fname', '$p_lname', '$p_phone', '$p_age');";
     $return_val = $c->query($sql);
@@ -87,6 +95,8 @@ function read_from_file($c, $filename) {
     // output one line until end-of-file
     while(!feof($datafile)) {
         $line = fgets($datafile);
+        echo "<h4>debug: line=$line</h4>";
+        
         // get first name from the current line
         $token = strtok($line, ",");
         $p_fname = $token;
@@ -101,7 +111,9 @@ function read_from_file($c, $filename) {
         $token = strtok(",");
         $p_age = $token;
         //echo "Read: $p_fname::$p_lname::$p_phone/$new_p_phone::$p_age<br>";
-        add_friend($c, $p_fname, $p_lname, $new_p_phone, $p_age);
+        if($p_fname) {
+            add_friend($c, $p_fname, $p_lname, $new_p_phone, $p_age);
+        }
     }
     
     fclose($datafile);

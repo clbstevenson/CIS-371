@@ -22,9 +22,7 @@
 
 <h1>Friend Form</h1>
 
-<h3>Please enter your information below.</h3>
-
-
+<h3>Please enter a file to read new friends from.</h3>
 
 <table>
     <tr>
@@ -32,17 +30,11 @@
 
             <fieldset>
                 <legend>Information</legend>
-                <form action="friendSubmit.php" method="post">
-                    First Name: 
-                    <input type="text" name="firstname" value=""/><br/>
-                    Last Name: 
-                    <input type="text" name="lastname" value=""/><br/>
-                    Phone Number: 
-                    <input type="text" name="phonenumber" value="1234567890"/><br/>
-                    Age:  
-                    <input type="number" name="age" value="18"/><br/>
-
-                    <input type="submit" name="postSubmit" value="Submit"/>
+                <form action="friendRead.php" method="post">
+                    Filename: 
+                    <input type="text" name="filename" value="friends.txt"/><br/>
+                    <br/>
+                    <input type="submit" name="postSubmit" value="Read Data"/>
 
 
                 </form>
@@ -57,11 +49,20 @@
                     }
                     //echo "<tr><td>$key</td><td>$printMe</td></tr>\n";
                 }
-                if (isset($_POST["lastname"])) {
-                    fwrite($datafile, $_POST["firstname"] . ",");
-                    fwrite($datafile, $_POST["lastname"] . ",");
-                    fwrite($datafile, $_POST["phonenumber"] . ",");
-                    fwrite($datafile, $_POST["age"] . "\n");
+                // If the filename is set in POST,
+                // call the 'read_from_file' function from friendDB.php
+                // to update the database based on the file entered.
+                if (isset($_POST["filename"])) {
+                    include 'friendDB.php';
+                    try {
+                        $c = connect_DB();
+                        //display_friends($c);
+                        read_from_file($c, $_POST["filename"]); 
+                        $c->close();
+                    } catch (Exception $e) {
+                        echo 'Sorry, we ran into a problem: ',
+                            $e->getMessage();
+                    }
                 }
                 fclose($datafile);
                 ?>
@@ -72,8 +73,10 @@
 
 <?php
 
-$fp = fopen("php://input", 'r+');
-echo stream_get_contents($fp);
+//$fp = fopen("php://input", 'r+');
+//echo stream_get_contents($fp);
+//$datafile = fopen("frienddata.txt", "a") or die("Unable to open file");
+
 ?>
 
 <hr>
@@ -81,9 +84,9 @@ echo stream_get_contents($fp);
 <table>
     
     <?php
-    include 'friendDB.php';
-    $c = connect_DB();
-    display_friends($c);
+    //include 'friendDB.php';
+    //$c = connect_DB();
+    //display_friends($c);
     /*
     $create_result = create_DB($c);
     $result = get_all($c);
@@ -99,7 +102,7 @@ echo stream_get_contents($fp);
         echo "</tr>\n";
     }
     */
-    $c->close();
+    //$c->close();
                                                                                 ?> 
 
 </table>
