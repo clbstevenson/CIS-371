@@ -27,6 +27,7 @@ public class SimpleBrowser {
   private StarterDisplay display;
   private String homeLoc;
 
+  private String missingImgURL = "http://www.cis.gvsu.edu:80/~stevecal/sampleInput/Images/image_missing.png";
 
   // Caching images prevents the browser from repeatedly fetching the same image from the server
   // (This repeated fetching is especially annoying when scrolling.)
@@ -139,17 +140,24 @@ public class SimpleBrowser {
     try {
         WebTransactionClient wtc = new WebTransactionClient(url);
 
-        // WebTransactionClient.getText() only returns a String,
-        // so that string will be the only text in the display contents.
-        String wtcText = wtc.getText();
-        // Split the WebTransactionClient text into separate strings
-        // for each newline character.
-        String[] splitWTC = wtcText.split("\n");
-        for(String s: splitWTC) {
-            System.out.printf("\t:%s\n", s);
-            contents.add(s);
+        if(isImage(url.toString())) {
+            String wtcText = "<<" + url.toString() + ">>";
+            contents.add(wtcText);
+        } else {
+            // WebTransactionClient.getText() only returns a String,
+            // so that string will be the only text in the display contents.
+            String wtcText = wtc.getText();
+            // Split the WebTransactionClient text into separate strings
+            // for each newline character.
+            String[] splitWTC = wtcText.split("\n");
+            for(String s: splitWTC) {
+                System.out.printf("\t:%s\n", s);
+                contents.add(s);
+            }
+            //contents.add(wtc.getText());    
+
         }
-        //contents.add(wtc.getText());    
+
     } catch(IOException e) {
         //System.out.println("Cannot open file/WebTransactionClient");
         // TODO: add message to list, then settext
@@ -206,7 +214,8 @@ public class SimpleBrowser {
             //List<String> errorContents = new ArrayList<String>();
             //errorContents.add("Failed to load from url: " + url.toString());
             //display.setText(errorContents);
-            return null;
+            return getCachedImage(missingImgURL);
+            //return null;
         } else {
             
             return wtc.getImage();
@@ -236,6 +245,12 @@ public class SimpleBrowser {
         return fetchImage(url);
       }
     });
+  }
+
+
+  private boolean isImage(String urlText) {
+        return (urlText.endsWith(".gif") || urlText.endsWith(".jpg")
+            || urlText.endsWith(".png") || urlText.endsWith(".jpeg"));
   }
 
 
