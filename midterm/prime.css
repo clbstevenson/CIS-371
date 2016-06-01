@@ -1,0 +1,78 @@
+// Caleb Stevenson
+// CIS 371 - 2016 - Midterm
+// prime.css
+
+#FormTable table{
+    float: center; 
+    text-align: center;
+}
+
+#FormTable #post {
+}
+
+#Result {
+    text-align: center;
+    color: darkblue; 
+    font-weight: bold;
+    background: lightgray;
+}
+
+h1{
+    background: #b5cfe3;
+    margin: 10px;
+    text-align: center;
+}
+
+table td, table th{
+    border: 1px solid gray;
+    text-align: center;
+    width: 10%;
+}
+
+table th {
+    color: darkblue;
+}
+
+a, table {
+    margin: 2px;
+    float: left;
+    width: 24%;
+    text-align: center;
+}
+
+
+h3 {
+    background: #b5cfe3;
+    margin: 10px;
+    clear: left;
+}
+
+body {
+    color: black;
+    font-family: "Times New Roman", Times, serif;
+    font-size: medium;
+}
+
+
+a:link {
+    color: red;
+}
+
+a:visited {
+    color: green;
+}
+
+table {
+    margin: 2px;
+}
+
+table table {
+    margin: 1px;
+}
+
+.links {
+    font-family: Sans-Serif;
+    //color: purple;
+    //text-decoration: line-through;
+}
+
