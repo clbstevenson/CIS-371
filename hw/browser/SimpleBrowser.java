@@ -104,6 +104,7 @@ public class SimpleBrowser {
   public SimpleBrowser(String frameName, String initialLocation, StarterDisplay display_in) {
     this(frameName, initialLocation, (JPanel) display_in);
     display = display_in;
+    display.setBrowser(this);
   }
 
   protected void clicked(Point point) {

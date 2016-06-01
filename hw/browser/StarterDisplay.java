@@ -18,6 +18,7 @@ public class StarterDisplay extends JPanel {
   private static final int MARGIN = 10; // the margin around the edge of the window.
   private List<String> content;  // the text that is to be displayed.
   private Color defaultColor; // the default text color
+  private SimpleBrowser browser;
 
 
   // This Map is what makes links:  Each Rectangle is a link --- an area on the screen that can be clicked.
@@ -45,6 +46,10 @@ public class StarterDisplay extends JPanel {
    */
   public void setColor(Color c) {
     defaultColor = c;
+  }
+
+  public void setBrowser(SimpleBrowser b) {
+    browser = b;
   }
 
   /**
@@ -83,6 +88,7 @@ public class StarterDisplay extends JPanel {
     boolean endItal = false;
     boolean startLink = false;
     boolean endLink = false;
+    boolean startImg = false, endImg = false;
     String linkURL = null;
     String linkText = "";
     // Iterate over each line.
@@ -172,6 +178,23 @@ public class StarterDisplay extends JPanel {
             startItal = false;
         }
 
+        // Starts with '<<', then it is a link
+        // Search until find another word that ends with '>>'.
+        if (nextWord.startsWith("<<")) {
+            startImg = true;
+            if(nextWord.endsWith(">>")) {
+                endImg = true;
+                // remove the '_' markup
+                nextWord = nextWord.substring(2, nextWord.length() -2 );
+            } else {
+                nextWord = nextWord.substring(2);
+            }
+        } else if(nextWord.endsWith(">>")) {
+            // remove the '_' markup
+            nextWord = nextWord.substring(0, nextWord.length() -2 );
+            endImg = true;
+        } 
+
         // Starts with '[[', then it is a link.
         // Continue searching until ']]'
         if (nextWord.startsWith("[[")) {
@@ -239,28 +262,42 @@ public class StarterDisplay extends JPanel {
             x += word_width;
             
         } else if(!startLink){
-            // Otherwise, not in the middle of a link so draw normally. 
-            // If there isn't room for this word, go to the next line
-            if (x + word_width > panel_width) {
-              x = MARGIN;
-              y += line_height;
-            }
 
-            // A simple example of how to handle links. A word of the form (#123456) will be
-            // represented as a link that, when clicked on, will change the text color.
-            Color color = getColor(nextWord);
-            if (color != null) {
-              g.setColor(color);
-              Rectangle rect = new Rectangle(x, y - line_height, word_width, line_height);
-              links.put(rect, color);
-              // g.drawRect(rect.x, rect.y, rect.width, rect.height);
+            if(endImg) {
+
+                // Find and render the image.
+                // Create a new MyURL based on currentURL and the
+                // image text (in 'nextWord').
+                MyURL newImgURL = new MyURL(browser.currentURL, nextWord);
+                Image cacheImage = browser.getCachedImage(newImgURL);
+                BufferedImage 
+                
+
             } else {
-              g.setColor(defaultColor);
-            }
-            // draw the word
-            //g.setFont(originalFont.deriveFont(style));
-            g.drawString(wordAndSpace, x, y);
-            x += word_width;
+
+                // Otherwise, not in the middle of a link so draw normally. 
+                // If there isn't room for this word, go to the next line
+                if (x + word_width > panel_width) {
+                  x = MARGIN;
+                  y += line_height;
+                }
+
+                // A simple example of how to handle links. A word of the form (#123456) will be
+                // represented as a link that, when clicked on, will change the text color.
+                Color color = getColor(nextWord);
+                if (color != null) {
+                  g.setColor(color);
+                  Rectangle rect = new Rectangle(x, y - line_height, word_width, line_height);
+                  links.put(rect, color);
+                  // g.drawRect(rect.x, rect.y, rect.width, rect.height);
+                } else {
+                  g.setColor(defaultColor);
+                }
+                // draw the word
+                //g.setFont(originalFont.deriveFont(style));
+                g.drawString(wordAndSpace, x, y);
+                x += word_width;
+                }
         }
 
 
