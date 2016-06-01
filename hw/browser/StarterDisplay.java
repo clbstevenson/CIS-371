@@ -178,7 +178,7 @@ public class StarterDisplay extends JPanel {
             startItal = false;
         }
 
-        // Starts with '<<', then it is a link
+        // Starts with '<<', then it is an Image
         // Search until find another word that ends with '>>'.
         if (nextWord.startsWith("<<")) {
             startImg = true;
@@ -264,13 +264,29 @@ public class StarterDisplay extends JPanel {
         } else if(!startLink){
 
             if(endImg) {
+                endImg = false;
+                startImg = false;
 
                 // Find and render the image.
                 // Create a new MyURL based on currentURL and the
                 // image text (in 'nextWord').
-                MyURL newImgURL = new MyURL(browser.currentURL, nextWord);
-                Image cacheImage = browser.getCachedImage(newImgURL);
-                BufferedImage 
+                
+                //MyURL newImgURL = new MyURL(browser.currentURL, nextWord);
+                //Image cacheImage = browser.getCachedImage(newImgURL);
+                System.out.printf("\t: nextWord: %s :\n", nextWord);
+                Image cacheImage = browser.getCachedImage(nextWord);
+                if(cacheImage != null) {
+                    // If there isn't room for this imag, go to the next line
+                    if (x + cacheImage.getWidth(null) > panel_width) {
+                      x = MARGIN;
+                      //y += line_height;
+                    }
+                    g.drawImage(cacheImage, x, y, null);
+                    y += cacheImage.getHeight(null);
+
+                } else {
+                    //g.drawString("CANNOT FIND IMAGE: " + nextWord, x, y); 
+                } 
                 
 
             } else {

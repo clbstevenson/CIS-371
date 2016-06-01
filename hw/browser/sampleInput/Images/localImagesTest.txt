@@ -1,0 +1,9 @@
+
+Displaying one image 
+
+
+Local 1:
+
+<<logo1.png>>
+
+[[../basic.txt back]]

@@ -27,6 +27,7 @@ public class SimpleBrowser {
   private StarterDisplay display;
   private String homeLoc;
 
+
   // Caching images prevents the browser from repeatedly fetching the same image from the server
   // (This repeated fetching is especially annoying when scrolling.)
   protected ImageCache cache = new ImageCache();
@@ -196,7 +197,20 @@ public class SimpleBrowser {
     // Hint:  Use a new WebTransactionClient object.
     try {
         WebTransactionClient wtc = new WebTransactionClient(url);
-        return wtc.getImage();
+        if(wtc.responseCode() == 404) {
+            // if the image can't be found, then just return...uhm
+            // I want to return the text for the 404 message
+            // but that may not (immediately) work b/c this function
+            // returns an Image instead
+            //loadPage(url.toString());
+            //List<String> errorContents = new ArrayList<String>();
+            //errorContents.add("Failed to load from url: " + url.toString());
+            //display.setText(errorContents);
+            return null;
+        } else {
+            
+            return wtc.getImage();
+        }
     } catch(IOException e) {
         e.printStackTrace();
     }

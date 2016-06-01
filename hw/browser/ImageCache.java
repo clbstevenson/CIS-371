@@ -26,6 +26,8 @@ public class ImageCache {
    * @return The desired image, or {@code null} if the image was not available.
    */
   public Image getImage(MyURL url, ImageLoader loader) {
+    System.out.printf("DEBUG: : :url: %s\tcontains: %b\n", url.toString(),
+        imageCache.containsKey(url));
     if (imageCache.containsKey(url)) {
       return imageCache.get(url);
     } else {
@@ -36,6 +38,7 @@ public class ImageCache {
       if (image != null) {
         imageCache.put(url, image);
       }
+      //System.out.println("Adding image url: " + url.toString());
       return image;
     }
   }

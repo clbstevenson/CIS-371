@@ -8,6 +8,7 @@ public class MyURL {
     private String domainName = null;
     private int port = 80;
     private String path = "/";
+    private boolean debug = true;
 
     /**
      * Split {@code url} into the various components of a URL
@@ -72,11 +73,11 @@ public class MyURL {
                     //    + newURL;
                     path = shortenedPath + "/" + newURL;
                     System.out.println("newURL does NOT contain a dir");
-                    System.out.printf("debug: currentPath: %s,  shortPath: %s,  newURL: %s, newURLEndOfPath: $d\n", currentPath, shortenedPath, newURL, newURLEndOfPath);
+                    System.out.printf("myurl debug: currentPath: %s,  shortPath: %s,  newURL: %s, newURLEndOfPath: $d\n", currentPath, shortenedPath, newURL, newURLEndOfPath);
                 } else {
-                    System.out.println("newURL DOES contain a dir");
+                    //System.out.println("newURL DOES contain a dir");
                     String newURLPath = newURL.substring(0,newURLEndOfPath);
-                    //System.out.println("\tnewURLPath: " + newURLPath);
+                    System.out.println("\tnewURLPath: " + newURLPath);
                     // If the newURL specified "../" then remove the
                     // directory from currentURL and add the filename
                     // from newURL following the "../".
@@ -89,6 +90,10 @@ public class MyURL {
                     } else {
                         // Otherwise, newURL has a normal dir name
                         int newURLPathIndex = currentPath.indexOf(newURLPath);
+                        // check for Images/ 
+                        // otherwise you get false positives for 'contains'
+                        int newURLPathIndex2 = currentPath.indexOf(newURLPath + "/");
+                        System.out.printf("\tcurrentPath: %s;\tcPath.indexof(newURLPath)=%d;\tindexOf-2=%d\n", currentPath, newURLPathIndex, newURLPathIndex2);
                         if(newURLPathIndex == -1) {
                             System.out.println("currentPath does NOT contain newURL");
                             // If newURLPath is not in currentPath, 
@@ -97,11 +102,27 @@ public class MyURL {
                                 + newURL;
                         } else {
                             System.out.println("currentPath DOES contain newURL");
-                            // If currentPath contains newURLPath,
-                            // then only append the file to currentPath
-                            String newURLFile = newURL.substring(newURLEndOfPath);
-                            path = currentPath.substring(0, endOfPath + 1) 
-                                + newURLFile; 
+                            if(newURLPathIndex2 == -1) {
+                                if(debug)
+                                    System.out.println("currentPath does NOT contain newURL's directory");
+                                // If currentPath does not contain directory newURLPath,
+                                // then replace last file in currentPath
+                                // with newPath (dir/file).
+                                String newURLFile = newURL.substring(newURLEndOfPath);
+                                path = currentPath.substring(0, endOfPath +
+                                     1) + newURL; 
+                            } else {
+                                if(debug)
+                                    System.out.println("currentPath DOES contain newURL's directory");
+                                // If currentPath contains newURL's dir,
+                                // then cut file from currentPath and
+                                // remove (dir) from newURL, then append
+                                // filename
+                                String newURLFile = newURL.substring(newURLEndOfPath);
+                                path = currentPath.substring(0, endOfPath +
+                                     1) + newURL; 
+
+                            }
                         }
                     }
                 }
