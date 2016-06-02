@@ -33,6 +33,17 @@ $username = $_SESSION["username"];
 <li><a href="friendRead.php">Update friends from a file.</a></li>
 </ul>
 
+<?php
+    include 'accountDB.php';
+    $c = connect_accounts_DB();
+    if(!has_permission($c, $username)) {
+        // user does not have permission to add friends
+        echo "<h3> Sorry, you don't have permission to add friends.</h3>";
+    } else {
+        // Otherwise user is a superuser
+
+?>
+
 <h3>Please enter your information below.</h3>
 
 <table>
@@ -81,6 +92,10 @@ $username = $_SESSION["username"];
 
         </td>
 </table>
+
+<?php
+    } // end else for if user has permission
+?>
 
 <h4><a href="index.php">Home<a></h4>
 <a href="logout.php">Logout</a>

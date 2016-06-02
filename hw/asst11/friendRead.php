@@ -37,6 +37,17 @@ $username = $_SESSION["username"];
 <li><a href="friendAdd.php">Add another friend's info by hand.</a></li>
 </ul>
 
+<?php
+    include 'accountDB.php';
+    $c = connect_accounts_DB();
+    if(!has_permission($c, $username)) {
+        // user does not have permission to add friends
+        echo "<h3> Sorry, you don't have permission to add friends.</h3>";
+    } else {
+        // Otherwise user is a superuser
+
+?>
+
 <h3>Please enter a file to read new friends from</h3>
 
 <table>
@@ -88,6 +99,7 @@ $username = $_SESSION["username"];
 
 <?php
 
+
 //$fp = fopen("php://input", 'r+');
 //echo stream_get_contents($fp);
 //$datafile = fopen("frienddata.txt", "a") or die("Unable to open file");
@@ -124,6 +136,10 @@ $username = $_SESSION["username"];
 
 </table>
 </div>
+
+<?php
+    } //end else for if user has permission
+?>
 
 <h4><a href="index.php">Home<a></h4>
 <a href="logout.php">Logout</a>
