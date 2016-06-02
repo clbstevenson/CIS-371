@@ -68,6 +68,10 @@ function add_account($c, $p_name, $p_pass, $p_superuser) {
 }
 
 function add_my_friend($c, $username, $p_fname, $p_lname, $p_phone, $p_age) {
+    if(!has_permission($c, $username)) {
+        echo "Sorry, you do not have permission to add friends.";
+        return false;
+    }
     //echo "Adding a friend..." . "<br>";
     if(!$p_fname) {
         $msgf = "Sorry, that friend is missing a first name. Please try again<br>";
@@ -127,13 +131,20 @@ function get_my_friends($c, $username) {
 // but it is left here in case it should be updated to
 // add accounts from a text file.
 function read_from_file_accounts($c, $filename, $username) {
+
+    if(!has_permission($c, $username)) {
+        echo "Sorry, you do not have permission to add friends.";
+        return false;
+    }
+    
     //echo "Reading friend data from a file" . "<br>";
+    
     $datafile = fopen($filename, "r") or die("Unable to open file for reading");
     //echo fread($datafile, filesize($filename));
     // output one line until end-of-file
     while(!feof($datafile)) {
         $line = fgets($datafile);
-        echo "<h4>debug: line=$line</h4>";
+        //echo "<h4>debug: line=$line</h4>";
         
         // get first name from the current line
         $token = strtok($line, ",");
@@ -197,6 +208,20 @@ function display_my_friends($c, $name) {
         echo "</tr>\n";
     }
     echo "</table>" . "<br>";
+}
+
+function has_permission($c, $username) {
+    $sql = "SELECT superuser FROM friendAccounts WHERE name = '$username';";
+    if(!$result = $c->query($sql)) {
+        die("Unable to process permissions query [".$c->error."]");
+    }
+    //echo "permissions result = $result";
+    echo "<br/>";
+    while($row = $result->fetch_assoc()) {
+        $permission = $row['superuser'];
+        echo $row['superuser'] . '<br/>';
+    }
+    return $permission;
 }
 //$c = connect_DB();
 //$create_result = create_DB($c);

@@ -11,6 +11,7 @@ session_start();
 if (! isset($_SESSION["username"])) {
     header("Location: index.php");
 }
+$username = $_SESSION["username"];
 ?>
 <html>
 <head>
@@ -85,11 +86,17 @@ if (! isset($_SESSION["username"])) {
 <a href="logout.php">Logout</a>
 
 <?php
-
+include_once 'accountDB.php';
 $fp = fopen("php://input", 'r+');
+$c = connect_accounts_DB();
 echo "<br>";
-echo "<h4>Thank you for your submission!</h4>";
-echo "<p>To view your updated friends list, <a href='friendView.php'>visit this page!</a></p>"
+if(has_permission($c, $username)) {
+    echo "<h4>Thank you for your submission!</h4>";
+    echo "<p>To view your updated friends list, <a href='friendView.php'>visit this page!</a></p>";
+
+} else {
+    echo "<h4>Sorry, you don't have permission to add friends.</h4>";
+}
 ?>
 </body>
 </html>
