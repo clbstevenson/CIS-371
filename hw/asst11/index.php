@@ -27,10 +27,18 @@ session_start();
 </head>
 <body>
 
-<h1>Friend Form</h1>
+
+<h1>Friend Form
+<?php
+if (isset($_SESSION["username"])) {
+    $username = $_SESSION["username"];
+    echo $username;
+}
+?></h1>
 
 <?php
     if (isset($_SESSION["username"])) {
+        $username = $_SESSION["username"];
 ?>
 
 <h3>Other pages to update your friends list</h3>
@@ -44,9 +52,9 @@ session_start();
 <div id="LISTTABLE">
 <table>
     <?php
-    include 'friendDB.php';
-    $c = connect_DB();
-    display_friends($c);
+    include 'accountDB.php';
+    $c = connect_accounts_DB();
+    display_my_friends($c, $username);
     $c->close();
     ?>
 </table>
@@ -57,6 +65,7 @@ session_start();
 <a href="logout.php">Logout</a>
 
 <?php
+    // end if isset($_SESSION["username"])
     } else {
 ?>
 
@@ -67,9 +76,9 @@ session_start();
 
             <fieldset>
                 <legend>Information</legend>
-                <form action="index.php" method="post">
+                <form action="checkAccount.php" method="post">
                     Username: 
-                    <input type="text" name="username" value=""/><br/>
+                    <input type='text' name='username' value=''/><br/>
                     <br/>
                     Password: 
                     <input type="password" name="password" value=""/><br/>

@@ -11,6 +11,7 @@ session_start();
 if (! isset($_SESSION["username"])) {
     header("Location: index.php");
 }
+$username = $_SESSION["username"];
 ?>
 <html>
 <head>
@@ -30,7 +31,10 @@ if (! isset($_SESSION["username"])) {
 </head>
 <body>
 
-<h1>Friend Form - View</h1>
+<h1>Friend Form - View 
+<?php
+echo $username;
+?>'s Friends</h1>
 
 <h3>Other pages to update your friends list</h3>
 <ul>
@@ -43,9 +47,9 @@ if (! isset($_SESSION["username"])) {
 <div id="LISTTABLE">
 <table>
     <?php
-    include 'friendDB.php';
-    $c = connect_DB();
-    display_friends($c);
+    include 'accountDB.php';
+    $c = connect_accounts_DB();
+    display_my_friends($c, $username);
     $c->close();
     ?>
 </table>

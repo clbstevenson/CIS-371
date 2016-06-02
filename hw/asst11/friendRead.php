@@ -11,6 +11,7 @@ session_start();
 if (! isset($_SESSION["username"])) {
     header("Location: index.php");
 }
+$username = $_SESSION["username"];
 ?>
 <html>
 <head>
@@ -19,7 +20,7 @@ if (! isset($_SESSION["username"])) {
         #post {
             vertical-align: top;
         }
-        #ReadTable table td, #ReadTable table {
+        #ReadTable table td, #ReadTable table th, #ReadTable table {
             border: 1px solid gray;
             text-align: center;
         }
@@ -67,11 +68,11 @@ if (! isset($_SESSION["username"])) {
                 // call the 'read_from_file' function from friendDB.php
                 // to update the database based on the file entered.
                 if (isset($_POST["filename"])) {
-                    include_once 'friendDB.php';
+                    include_once 'accountDB.php';
                     try {
-                        $c = connect_DB();
+                        $c = connect_accounts_DB();
                         //display_friends($c);
-                        read_from_file($c, $_POST["filename"]); 
+                        read_from_file_accounts($c, $_POST["filename"], $username); 
                         $c->close();
                     } catch (Exception $e) {
                         echo 'Sorry, we ran into a problem: ',
@@ -99,10 +100,10 @@ if (! isset($_SESSION["username"])) {
 <table>
     
     <?php
-    include_once 'friendDB.php';
-    $c = connect_DB();
-    create_DB($c);
-    display_friends($c);
+    include_once 'accountDB.php';
+    $c = connect_accounts_DB();
+    create_accounts_DB($c);
+    display_my_friends($c, $username);
     /*
     $create_result = create_DB($c);
     $result = get_all($c);
