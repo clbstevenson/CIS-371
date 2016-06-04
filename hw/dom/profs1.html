@@ -11,8 +11,8 @@
         <th id="col_school">School</th>
     </tr>
 
-    <tr><td>Zachary</td><td>Kurmas</td><td>Associate</td><td>Georgia Tech</td></tr>
-<tr><td>Scott</td><td>Grissom</td><td>Full</td><td>Ohio State</td></tr>
+    <tr id="row_a"><td>Zachary</td><td>Kurmas</td><td>Associate</td><td>Georgia Tech</td></tr>
+<tr id="row_b"><td>Scott</td><td>Grissom</td><td>Full</td><td>Ohio State</td></tr>
 <tr><td>Hansye</td><td>Dulimarta</td><td>Associate</td><td>Michigan State</td></tr>
 <tr><td>Christian</td><td>Trefftz</td><td>Associate</td><td>Michigan State</td></tr>
 <tr><td>Jonathan</td><td>Engelsma</td><td>Associate</td><td>Michigan State</td></tr>
@@ -44,7 +44,10 @@
 <script src="sortProfs.js"></script>
 <script>
 
+var row_test_a = document.getElementById("row_a");
+var row_test_b = document.getElementById("row_b");
 document.getElementById("col_fname").addEventListener("click", testing());
+document.getElementById("col_lname").addEventListener("click", compare_rows(row_test_a, row_test_b));
 
     //function() {
     //    document.getElementById("demo").innerHTML = "LAME";

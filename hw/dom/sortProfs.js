@@ -3,8 +3,9 @@
  */
 
 function compare_rows(row_a, row_b) {
-    var lname_a = document.getElementyByTagName("td");
+    var lname_a = document.getElementsByTagName("td");
     console.log("lname_a: " + lname_a);
+    console.log("\t0: " + lname_a[0].innerHTML);
 }
 
 function testing() {
