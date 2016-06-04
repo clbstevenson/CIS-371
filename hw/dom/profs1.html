@@ -5,10 +5,10 @@
 <h1>GVSU CIS Professors</h1>
   <table>
     <tr>
-        <th>First Name</th>
-        <th>Last Name</th>
-        <th>Rank</th>
-        <th>School</th>
+        <th id="col_fname">First Name</th>
+        <th id="col_lname">Last Name</th>
+        <th id="col_rank">Rank</th>
+        <th id="col_school">School</th>
     </tr>
 
     <tr><td>Zachary</td><td>Kurmas</td><td>Associate</td><td>Georgia Tech</td></tr>
@@ -28,10 +28,9 @@
 <div id="capitals">
 <h1>State Capitals</h1>
 
-<script src="sortProfs.js"></script>
 
 <table>
- <tr><th>State</th><th>Capital</th></tr>
+ <tr><th id="col_state">State</th><th id="col_cap">Capital</th></tr>
 <tr><td>Michigan</td><td>Lansing</td></tr>
 <tr><td>Ohio</td><td>Columbus</td></tr>
 <tr><td>Indiana</td><td>Indianapolis</td></tr>
@@ -40,6 +39,19 @@
 <tr><td>California</td><td>Sacramento</td></tr>
 </table>
 </div>
+
+<p id="demo"></p>
+<script src="sortProfs.js"></script>
+<script>
+
+document.getElementById("col_fname").addEventListener("click", testing());
+
+    //function() {
+    //    document.getElementById("demo").innerHTML = "LAME";
+    // }
+//)
+</script>
+
 
 </body>
 </html>

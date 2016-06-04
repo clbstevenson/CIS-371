@@ -2,7 +2,15 @@
  * Created by kurmasz on 5/18/15.
  */
 
-function 
+function compare_rows(row_a, row_b) {
+    var lname_a = document.getElementyByTagName("td");
+    console.log("lname_a: " + lname_a);
+}
+
+function testing() {
+    document.getElementById("demo").innerHTML = "Functional";
+    console.log("functional log");
+}
 
 function findLinks() {
     var answer = [];
