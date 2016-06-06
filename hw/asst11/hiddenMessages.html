@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Hidden Messages</title>
+    <style type="text/css">
+        #notAnInteger {
+            display: none;
+        }
+
+        .redError {
+            background-color: red;
+        }
+
+        #notEven {
+            display: none;
+        }
+
+        .yellowError {
+            background-color: yellow;
+        }
+    </style>
+    <script type="text/javascript" src="underscore-min.js"></script>
+</head>
+<body>
+
+
+<!--- This is an error message that remains hidden unless needed by the validation code -->
+<div id="notAnInteger" class="myError">
+    <div class="redError">You are an absolute moron! <span class="entry"></span> is not even a number.<br>
+        Did you Kindergarten teacher really teach you that <span class="entry"></span> is a number?<br>
+        Try again.
+    </div>
+</div>
+
+<!--- This is an error message that remains hidden unless needed by the validation code -->
+<div id="notEven" class="myError">
+    <span class="yellowError"> Oops.  <span class="entry"></span> is not even</span>
+</div>
+
+
+<fieldset>
+    <legend>Validate some input</legend>
+    <form id="theForm" action="handleClick1.html">
+        Enter an even integer: <input type="text" name="pn" id="pn"/>
+        <input id="button1" type="submit" name="button1"/>
+    </form>
+</fieldset>
+
+
+<script type="text/javascript">
+
+    function displayError(errorBox, input) {
+
+        // Hide all the error boxes (to make sure that only one shows)
+        _.each(document.getElementsByClassName("myError"), function (item) {
+            item.style.display = "none";
+        });
+
+        // Display the error box
+        errorBox.style.display = "block";
+
+        /// Insert the invalid entry in the error message
+        _.each(errorBox.getElementsByClassName("entry"), function (item) {
+            console.log("here!");
+            item.innerHTML = input;
+        });
+    }
+
+    // Event handler for when form is submitted
+    document.getElementById("theForm").addEventListener("submit", function (event) {
+        var entry = document.getElementById("pn").value
+        var input = parseInt(entry);
+
+
+        if (isNaN(input)) {
+            // Prevent the form from submitting.  (In other words, don't bother the server with this crap.)
+            event.preventDefault();
+
+            // Display a (somewhat) appropriate error message.
+            displayError(document.getElementById("notAnInteger"), entry);
+        } else if (input % 2 != 0) {
+            event.preventDefault();
+            displayError(document.getElementById("notEven"), entry);
+        }
+    });
+</script>
+</body>
+</html>
