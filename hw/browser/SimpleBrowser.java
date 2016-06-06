@@ -137,6 +137,7 @@ public class SimpleBrowser {
     System.out.printf("loadpage: url: %s,  currentURL: %s,  textInBar: %s" +
         ",  url.path: %s\n", 
         url, currentURL, textInBar, url.path());
+    boolean hasError = false;
     try {
         WebTransactionClient wtc = new WebTransactionClient(url);
 
@@ -146,13 +147,19 @@ public class SimpleBrowser {
         } else {
             // WebTransactionClient.getText() only returns a String,
             // so that string will be the only text in the display contents.
+            //System.out.println("DEBUG WTC: before getText");
             String wtcText = wtc.getText();
             // Split the WebTransactionClient text into separate strings
             // for each newline character.
-            String[] splitWTC = wtcText.split("\n");
-            for(String s: splitWTC) {
-                System.out.printf("\t:%s\n", s);
-                contents.add(s);
+            //System.out.println("DEBUG WTC: GOT TEXT");
+            if(wtcText.isEmpty() || wtcText.equals("")) {
+                contents.add("There was an error: " + wtc.responseCode());
+            } else {
+                String[] splitWTC = wtcText.split("\n");
+                for(String s: splitWTC) {
+                    System.out.printf("\t:%s\n", s);
+                    contents.add(s);
+                }
             }
             //contents.add(wtc.getText());    
 
@@ -163,8 +170,11 @@ public class SimpleBrowser {
         // TODO: add message to list, then settext
         contents.clear();
         contents.add(e.getMessage());
+        contents.add("Too bad. So sad.\n");
         display.setText(contents);
-        e.printStackTrace();
+        addressBar.setText(url.toString() + "random");
+        hasError = true;
+        //e.printStackTrace();
     }
 
     /* Starter code 
@@ -182,10 +192,10 @@ public class SimpleBrowser {
     }
     */
     //update addressbar to show the new url
-    //addressBar.setText(url.toString());
+    addressBar.setText(url.toString());
     //addressBar.setText(url.path());
     //addressBar.setText(textInBar);
-    addressBar.setText(url.path());
+    //addressBar.setText(url.path());
     display.setText(contents);
     // after loading the page, update currentURL
     currentURL = url;
@@ -203,6 +213,7 @@ public class SimpleBrowser {
   protected Image fetchImage(MyURL url) {
     // TODO:  implement me.
     // Hint:  Use a new WebTransactionClient object.
+    List<String> contents = new ArrayList<String>();
     try {
         WebTransactionClient wtc = new WebTransactionClient(url);
         if(wtc.responseCode() == 404) {
@@ -221,7 +232,11 @@ public class SimpleBrowser {
             return wtc.getImage();
         }
     } catch(IOException e) {
-        e.printStackTrace();
+        //e.printStackTrace();
+        contents.add(e.getMessage());
+        contents.add("\nERORRERER\n");
+        display.setText(contents);
+
     }
     return null;
     //return null;

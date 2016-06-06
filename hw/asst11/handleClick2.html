@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Handle Click Demo (v2)</title>
+</head>
+<body>
+
+<p>Demonstrates a more useful way to modify the DOM in response to a click.</p>
+
+<ul id="followMe">
+    <li>Item 1</li>
+    <li>Item 2</li>
+    <li>Item <em>(some extra stuff)</em> 3</li>
+    <li>Item 4</li>
+</ul>
+
+<p>You have clicked:</p>
+<ul id="report">
+
+</ul>
+
+<script type="text/javascript">
+
+    // Responds to a click by adding a *copy* of the item to a different <ul>
+    var report = function(event) {
+
+        // TO DO:  See what happens if you add this to the new list without cloning it.
+        // TO DO:  See what happens if you omit the "true" parameter.
+       var item = this.cloneNode(true);
+       document.getElementById("report").appendChild(item);
+    };
+
+    // Get only those <li> tags in the <ul> marked with "followMe"
+    var list = document.getElementById("followMe");
+    var li = list.getElementsByTagName("li");
+    for (var i = 0; i < li.length; i++) {
+        li[i].addEventListener("click", report);
+    }
+
+</script>
+
+
+</body>
+</html>

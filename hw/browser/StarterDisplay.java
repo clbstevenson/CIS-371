@@ -283,6 +283,8 @@ public class StarterDisplay extends JPanel {
                     }
                     g.drawImage(cacheImage, x, y, null);
                     y += cacheImage.getHeight(null);
+                    //g.drawString("image: " + nextWord, x, y);
+                    // + line_height;
 
                 } else {
                     //g.drawString("CANNOT FIND IMAGE: " + nextWord, x, y); 

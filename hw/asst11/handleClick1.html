@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Handle Click Demo</title>
+</head>
+<body>
+
+<p>Demonstrate how to add and use a click handler</p>
+
+<ul>
+    <li>Item 1</li>
+    <li>Item <b>(stuff in the middle)</b> 2</li>
+    <li>Item 3</li>
+    <li>Item <em>(more <b>Nested</b> tags)</em> 4</li>
+</ul>
+
+<p>Notice what happens when you click on text nested in other tags.</p>
+
+<div id="report">
+    You have clicked:
+</div>
+
+<script type="text/javascript">
+
+    // Responds to a click by printing the content on the console.
+    function handler1(event) {
+        console.log(this.textContent);
+
+        //
+        // IMPORTANT:
+        // The variable 'this' refers to the object to which you added the handler.
+        // event.target is the object that you clicked on.
+        // They are not necessarily the same object.  The target may be nested inside of this.
+
+        // Uncomment the line below and see what happens.
+        //console.log(event.target.textContent)
+    }
+
+    // Responds to a click by adding the content to a div.
+    function handler2(event) {
+        document.getElementById("report").innerHTML += (this.textContent + "&nbsp;");
+    }
+
+
+    // Add handler to each element in the <ul>
+
+    var li = document.getElementsByTagName("li");
+    for (var i = 0; i < li.length; i++) {
+        // Notice that an element can have more than one handler.
+        // All handlers are called.
+        li[i].addEventListener("click", handler1);
+        li[i].addEventListener("click", handler2);
+    }
+</script>
+
+</body>
+</html>

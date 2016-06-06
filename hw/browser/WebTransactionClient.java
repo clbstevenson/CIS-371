@@ -70,6 +70,7 @@ public class WebTransactionClient {
             // Note: Ignore the deprecated warning for in.readLine() for now.
             response = "";
             String responseLine;
+            System.out.println("DEBUG WTC: before loop");
             while(!((responseLine = in.readLine()).isEmpty())) { //.equals("\n"))) {
                 System.out.println("R:  " + responseLine);  // for debugging - print to stdout the response line.
                 String[] splitResponse = responseLine.split(":", 2); // Limit of 2, so [0] is tag, [1] is everything else.
@@ -82,6 +83,7 @@ public class WebTransactionClient {
                 }
                 response += responseLine;
             }
+            System.out.println("DEBUG WTC: after loop");
 
             // Do not read the rest of the data. This is handled by getText or getImage.
 
@@ -107,12 +109,15 @@ public class WebTransactionClient {
         String responseLine;
         // Continue to read until there is no more text from the InputStream
         // readLine() returns null when there is no more data to read.)
-        while((responseLine = in.readLine()) != null) {
+        while((responseLine = in.readLine()) != null ) {
+            //System.out.println("DEBUG WTC: gettext: reponse = " + responseLine);
             result.append(responseLine);
             // Include a newline character at the end of each line for text files.
             result.append('\n');
+            System.out.println("DEBUG WTC: after append");
         }
 
+        System.out.println("DEBUG WTC: after gettext loop");
         return result.toString();
     } // end getText
 
