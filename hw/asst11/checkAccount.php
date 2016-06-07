@@ -6,14 +6,16 @@ if(isset($_POST["username"])) {
     $name = $_POST['username'];
     echo "username is $name";
 } else {
-    header("Location: login.php");
+    header("Location: index_error.php");
+    exit;
 }
 echo "<br/>";
 if(isset($_POST["password"])) {
     $pass = $_POST['password'];
     if(!$pass) {
         echo "pass isn't set";
-        header("Location: index.php");
+        header("Location: index_error.php");
+        exit;
     } else {
         echo "password is $pass";
 
@@ -39,7 +41,7 @@ if(!$result->num_rows){
     //    die("Error adding account to db [" .$c->error."]");
     //}
     echo "<br/>";
-    header("Location: index.php");
+    header("Location: index_error.php");
     //echo "Account created for $name";
 } else {
     echo "Account found!";
@@ -48,6 +50,12 @@ if(!$result->num_rows){
     while($row = $result->fetch_assoc()) {
         $result_name = $row['name'];
         echo $row['name'] .'<br />';
+        $result_pass = $row['password'];
+        echo $result_pass .'<br/>';
+        if($result_pass != $pass) {
+            header('Location: index_error.php');
+            exit;
+        }
     }
     $result->free();
     $_SESSION['username']=$name;

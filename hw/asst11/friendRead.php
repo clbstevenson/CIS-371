@@ -83,7 +83,7 @@ $username = $_SESSION["username"];
                     try {
                         $c = connect_accounts_DB();
                         //display_friends($c);
-                        read_from_file_accounts($c, $_POST["filename"], $meusername); 
+                        read_from_file_accounts($c, $_POST["filename"], $username); 
                         $c->close();
                     } catch (Exception $e) {
                         echo 'Sorry, we ran into a problem: ',
