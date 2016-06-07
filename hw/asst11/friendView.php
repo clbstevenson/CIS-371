@@ -55,6 +55,47 @@ echo $username;
 </table>
 </div>
 
+<p id="demo"></p>
+
+<script src="sortProfs.js"></script>
+<script>
+    var table_html = document.getElementById("LISTTABLE");
+    console.log(table_html);
+
+    // Note: I know there is a better way to add same action to multiple
+    // objects where they don't all change/mess with the params of the
+    // other listeners, yet this is sufficient for now.
+    // TODO: use a loop to add the listeners (in case more cols are added).
+    var headers = table_html.getElementsByTagName("th");
+    console.log(headers);
+    var h0 = headers[0].innerHTML;
+    headers[0].addEventListener("click", function(){
+            testing("LISTTABLE", h0, 0);
+    });
+    var h1 = headers[1].innerHTML;
+    headers[1].addEventListener("click", function(){
+            testing("LISTTABLE", h1, 1);
+    });
+    var h2 = headers[2].innerHTML;
+    headers[2].addEventListener("click", function(){
+            testing("LISTTABLE", h2, 2);
+    });
+    var h3 = headers[3].innerHTML;
+    headers[3].addEventListener("click", function(){
+            testing("LISTTABLE", h3, 3);
+    });
+
+    /*for ( i = 0; i < headers.length; i++) {
+        console.log("headers[" + i + "]: " + headers[i]);
+        var hh = headers[i].innerHTML;
+        console.log("headers[" + i + "] html: " + headers[i].innerHTML);
+        headers[i].addEventListener("click", function(){
+            testing("LISTTABLE", hh, i);
+        });
+    }
+    */
+</script>
+
 <h4><a href="index.php">Home<a></h4>
 <a href="logout.php">Logout</a>
 
