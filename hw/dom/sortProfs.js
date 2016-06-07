@@ -3,9 +3,27 @@
  */
 
 function compare_rows(row_a, row_b) {
-    var lname_a = document.getElementsByTagName("td");
-    console.log("lname_a: " + lname_a);
-    console.log("\t0: " + lname_a[0].innerHTML);
+    var td_a = row_a.getElementsByTagName("td");
+    var lname_a = td_a[1].innerHTML;
+    console.log("lname_a: " + td_a);
+    console.log("\t1: " + lname_a);
+
+    var td_b = row_b.getElementsByTagName("td");
+    var lname_b = td_b[1].innerHTML;
+    console.log("lname_b: " + td_b);
+    console.log("\t1: " + lname_b);
+
+    // Compare the last names in the two rows.
+    // A positive value means lastname B is AFTER lastname A alphabetically.
+    // A negative value meanst lastname B is BEFORE lastname A.
+    // A zero value means lastname B and lastname A are the same.
+    var comp_val = lname_a.localeCompare(lname_b);
+    console.log("\'" + lname_a + "\'.localCompare(\'" + lname_b+"\') = " + comp_val);
+    return comp_val;
+}
+
+function testing2(text) {
+    document.getElementById("demo2").innerHTML += text + "<br/>";
 }
 
 function testing() {
