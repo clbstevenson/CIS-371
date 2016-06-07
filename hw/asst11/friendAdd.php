@@ -13,8 +13,10 @@ if (! isset($_SESSION["username"])) {
 }
 $username = $_SESSION["username"];
 ?>
+<!DOCTYPE html>
 <html>
-<head>
+<head lang="en">
+    <meta charset="UTF-8">
     <title>Friend Form - Add</title>
     <style type="text/css">
         #post {
@@ -120,7 +122,7 @@ $username = $_SESSION["username"];
                     });
                 }
 
-                function checkInput(inputEvent) {
+                function checkInput(eventIn) {
                     console.log("Checking input...");
                     var entry_fn = document.getElementById("firstname").value.trim();
                     var entry_ln = document.getElementById("lastname").value.trim();
@@ -131,7 +133,7 @@ $username = $_SESSION["username"];
                     if (isNaN(input_age)) {
                         // Prevent the form from submitting.  (In other 
                         // words, don't bother the server with this crap.)
-                        event.preventDefault();
+                        eventIn.preventDefault();
 
                         // Display a (somewhat) appropriate error message.
                         displayError(document.getElementById("notAnInt"), entry_age);
@@ -140,7 +142,7 @@ $username = $_SESSION["username"];
                     if (input_age < 1 || input_age > 120) {
                         // Prevent the form from submitting.  (In other 
                         // words, don't bother the server with this crap.)
-                        event.preventDefault();
+                        eventIn.preventDefault();
 
                         // Display a (somewhat) appropriate error message.
                         displayError(document.getElementById("randomInt"), entry_age);
@@ -151,7 +153,7 @@ $username = $_SESSION["username"];
                     if (!entry_fn) {
                         // Prevent the form from submitting.  (In other 
                         // words, don't bother the server with this crap.)
-                        event.preventDefault();
+                        eventIn.preventDefault();
 
                         // Display a (somewhat) appropriate error message.
                         displayError(document.getElementById("blankFName"), entry_fn);
@@ -160,17 +162,20 @@ $username = $_SESSION["username"];
                     if (!entry_ln) {
                         // Prevent the form from submitting.  (In other 
                         // words, don't bother the server with this crap.)
-                        event.preventDefault();
+                        eventIn.preventDefault();
 
                         // Display a (somewhat) appropriate error message.
                         displayError(document.getElementById("blankLName"), entry_ln);
                         return;
                     }
+                    var entry_ph_len = entry_ph.length;
                     var input_ph = parseInt(entry_ph);
-                    if(isNaN(input_ph) || input_ph.length != 10) {
+                    console.log("input_ph: " + input_ph);
+                    console.log("entry_ph.len: " + entry_ph_len);
+                    if(!input_ph || isNaN(input_ph) || entry_ph_len != 10) {// || input_ph.length != 10) {
                         // Prevent the form from submitting.  (In other 
                         // words, don't bother the server with this crap.)
-                        event.preventDefault();
+                        eventIn.preventDefault();
 
                         // Display a (somewhat) appropriate error message.
                         displayError(document.getElementById("phoneError"), entry_ph);
@@ -181,7 +186,7 @@ $username = $_SESSION["username"];
                 }
 
                 document.getElementById("form_a").addEventListener("submit",
-                    function() {
+                    function(event) {
                         checkInput(event);
                         console.log("anonymous function call");
                     }
