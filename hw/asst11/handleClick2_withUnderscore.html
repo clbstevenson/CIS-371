@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Demo using underscore.js library</title>
+    <script type="text/javascript" src="underscore-min.js"></script>
+</head>
+<body>
+
+<p>Identical to <a href="handleClick2.html"><code>handleClick2.html</code></a> but uses <a href="http://www.underscorejs.org">the underscore library</a>.</p>
+
+<ul id="followMe">
+    <li>Item 1</li>
+    <li>Item 2</li>
+    <li>Item <em>(some extra stuff)</em> 3</li>
+    <li>Item 4</li>
+</ul>
+
+<p>You have clicked:</p>
+<ul id="report">
+
+</ul>
+
+<script type="text/javascript">
+
+    var report = function(event) {
+       var item = this.cloneNode(true);
+       document.getElementById("report").appendChild(item);
+    };
+
+    var list = document.getElementById("followMe");
+    var li = list.getElementsByTagName("li");
+
+        // Using _.each allows us to iterate over the array of <li> elements in a simpler, more "ruby-esque" way.
+    // Notice that this technique eliminates the need for an index variable
+    _.each(li, function(item) {
+       item.addEventListener("click", report);
+    });
+
+</script>
+
+
+</body>
+</html>
