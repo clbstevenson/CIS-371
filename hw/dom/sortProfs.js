@@ -3,7 +3,12 @@
  */
 
 function compare_rows(row_a, row_b) {
+    console.log("row_a: " + row_a);
+    console.log("row_b: " + row_b);
     var td_a = row_a.getElementsByTagName("td");
+    console.log("len of a: " + td_a.length);
+    console.log("td_a: " + td_a);
+    console.log("td_a[1]: " + td_a[1]);
     var lname_a = td_a[1].innerHTML;
     console.log("lname_a: " + td_a);
     console.log("\t1: " + lname_a);
@@ -22,6 +27,53 @@ function compare_rows(row_a, row_b) {
     return comp_val;
 }
 
+function sort() {
+    var html_rows = [];
+    var rows = [];
+    html_rows = document.getElementById("profs").getElementsByTagName("tr");
+    for(j = 0; j < html_rows.length; j++) {
+        rows.push(html_rows[j]);
+    }
+    var num_rows = rows.length;
+    console.log("number of rows: " + num_rows);
+    // Rows[0] is the header text
+    var row_zero = rows[0]; // store row 0 because it will not be sorted
+    rows.shift();   // shift so the header row is removed from the array
+    console.log("rows[0] = " + rows[0]);
+    console.log("\t= " + rows[0].innerHTML);
+    // Rows[1] is the first prof
+    //console.log("rows[1] = " + rows[1]);
+    //console.log("\t= " + rows[1].innerHTML);
+    //var r1 = rows[1].getElementsByTagName("td");
+    //console.log("r1[1]: " + r1[1].innerHTML);
+
+    console.log("Preparing removal of rows...");
+    var row_parent = rows[1].parentNode;
+    // as long as the parent of the rows has more rows, remove them
+    while (row_parent.hasChildNodes()) {
+        row_parent.removeChild(row_parent.firstChild);
+    }
+    console.log("Rows have been removed from table");
+
+
+    // Call the Array sort method using the compare_rows(a,b) function
+    rows.sort(compare_rows);
+    console.log("Rows have been sorted.");
+
+    console.log("Adding header row back to table.");
+    row_parent.appendChild(row_zero);
+
+    console.log("Adding " + rows.length + " rows back to table...");
+    while(rows.length > 0) {
+        row_parent.appendChild(rows[0]); // append next element to table
+        rows.shift(); // shift to remove the 'top' element from array
+    }
+
+    console.log("Rows have been added.");
+
+
+}
+
 function testing2(text) {
     document.getElementById("demo2").innerHTML += text + "<br/>";
 }
@@ -29,6 +81,8 @@ function testing2(text) {
 function testing() {
     document.getElementById("demo").innerHTML = "Functional";
     console.log("functional log");
+    sort();
+
 }
 
 function findLinks() {

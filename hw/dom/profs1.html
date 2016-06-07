@@ -29,7 +29,7 @@
 <h1>State Capitals</h1>
 
 
-<table>
+<table id="states">
  <tr><th id="col_state">State</th><th id="col_cap">Capital</th></tr>
 <tr><td>Michigan</td><td>Lansing</td></tr>
 <tr><td>Ohio</td><td>Columbus</td></tr>
@@ -41,14 +41,20 @@
 </div>
 
 <p id="demo"></p>
+<p id="demo2"></p>
+
 <script src="sortProfs.js"></script>
 <script>
 
 var row_test_a = document.getElementById("row_a");
 var row_test_b = document.getElementById("row_b");
-document.getElementById("col_fname").addEventListener("click", testing());
+document.getElementById("col_fname").addEventListener("click", testing);
 document.getElementById("col_lname").addEventListener("click", compare_rows(row_test_a, row_test_b));
-
+document.getElementById("col_fname").addEventListener("click", 
+    function() {
+        testing2("apple")
+    }
+    );
     //function() {
     //    document.getElementById("demo").innerHTML = "LAME";
     // }
