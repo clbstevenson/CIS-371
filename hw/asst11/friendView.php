@@ -13,8 +13,10 @@ if (! isset($_SESSION["username"])) {
 }
 $username = $_SESSION["username"];
 ?>
+<!DOCTYPE html>
 <html>
-<head>
+<head lang="en">
+    <meta charset="UTF-8">
     <title>Friend Form - View</title>
     <style type="text/css">
         #post {

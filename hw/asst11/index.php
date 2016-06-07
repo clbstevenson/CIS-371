@@ -9,8 +9,10 @@
 //require('friendDB.php');
 session_start();
 ?>
+<!DOCTYPE html>
 <html>
-<head>
+<head lang="en">
+    <meta charset="UTF-8">
     <title>Friend Form</title>
     <style type="text/css">
         #post {
