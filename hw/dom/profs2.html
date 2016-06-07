@@ -44,5 +44,17 @@
 </table>
 </div>
 
+<p id="demo"></p>
+
+<script src="sortProfs.js"></script>
+<script>
+    var table_html = document.getElementById("profs");
+    console.log(table_html);
+
+    var headers = table_html.getElementsByTagName("th");
+    console.log(headers);
+    headers[0].addEventListener("click", testing);
+</script>
+
 </body>
 </html>
