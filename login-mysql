@@ -1,0 +1,6 @@
+#! /bin/bash
+echo "Logging in to mysql..."
+echo "Pass: username#### where #### 4 digits of gnum"
+mysql -h cis.gvsu.edu -u stevecal -p
+#password: stevecal####
+#where #### is last 4 digits of gnum
