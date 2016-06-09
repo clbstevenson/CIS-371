@@ -1,0 +1,145 @@
+h1{
+    background: #b5cfe3;
+    margin: 10px;
+    text-align: center;
+}
+
+//body {
+//    margin: 0;
+//    padding: 0;
+//}
+
+#ROW {
+    //position: relative;
+}
+
+.summer {
+    background: #eb934b;    
+}
+
+.winter {
+    background: #176399;
+}
+
+.spring {
+    background: #0dba07;
+}
+
+.fall {
+    background: #853f14;
+}
+
+.default {
+    background: #b5cfe3;
+}
+
+#ROW td {
+    float: center;
+    width: 35%;
+}
+
+#ROW table{
+    /*margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-right: -50%;
+    margin-bottom: -50%;
+    transform: translate(-50%, -50%)
+    */
+}
+
+#TABLE table td, #TABLE table th, #TABLE table{
+    border: 1px solid gray;
+    text-align: center;
+}
+
+table th {
+    color: darkblue;
+}
+
+/*a, table {
+    margin: 2px;
+    float: left;
+    width: 24%;
+    text-align: center;
+}
+*/
+
+#TODAY {
+    background: #d3e5f2;
+    border: 2px solid gray;
+}
+
+h3 {
+    background: #b5cfe3;
+    margin: 10px;
+    clear: left;
+}
+
+#INFO img {
+    float: right;
+    border: 3px solid orange;
+    color: brown;
+    width: 20%;
+    margin: 10px;
+}
+
+#INFO .MY_INFO {
+    border: 1px solid purple;
+    margin: 1%;
+    //padding: 4px;
+    width: 75%;
+}
+
+#INFO p {
+    text-align: center;
+}
+
+body {
+    color: black;
+    font-family: "Times New Roman", Times, serif;
+    font-size: medium;
+}
+
+table p {
+    font-size: small;
+}
+
+
+ul {
+    color: blue;
+}
+
+.best {
+    font-style: italic;
+}
+
+a:link {
+    color: red;
+}
+
+a:visited {
+    color: green;
+}
+
+table {
+    margin: 2px;
+}
+
+table table {
+    margin: 1px;
+}
+
+
+div.odd {
+    background: #A3A3A3;
+    //color: purple;
+}
+
+.links {
+    font-family: Sans-Serif;
+    //color: purple;
+    //text-decoration: line-through;
+}
+
