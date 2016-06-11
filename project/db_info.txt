@@ -1,0 +1,29 @@
+ALTER TABLE friends ADD CONSTRAINT fk_account_id FOREIGN KEY (account_id) REFERENCE friendAccounts (account_id);
+
+STORY
+	CREATE TABLE story ( 
+		story_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+		title VARCHAR (50),
+		short_desc VARCHAR (50),
+		long_desc VARCHAR (512)
+	);
+	
+EVENT
+	CREATE TABLE event (
+		event_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+		description VARCHAR (128),
+		result VARCHAR (256),
+		choice_a INT NOT NULL,
+		choice_b INT NOT NULL,
+		FOREIGN KEY (choice_a) REFERENCES event(event_id),
+		FOREIGN KEY (choice_b) REFERENCES event(event_id)
+	);
+	
+STORY_EVENT
+	CREATE TABLE story_event (
+		story_id INT NOT NULL,
+		event_id INT NOT NULL,
+		FOREIGN KEY (story_id) REFERENCES story(story_id),
+		FOREIGN KEY (event_id) REFERENCES event(event_id),
+		PRIMARY KEY (story_id, event_id)
+	);
