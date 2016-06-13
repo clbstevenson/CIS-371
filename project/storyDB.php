@@ -51,7 +51,9 @@ function create_story_DB($c) {
         "story_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,".
         "title VARCHAR (50),".
         "short_desc VARCHAR (50),".
-        "long_desc VARCHAR (512));";
+        "long_desc VARCHAR (512),".
+        "start_id INT,".
+        "FOREIGN KEY (start_id) REFERENCES event(event_id));";
     $return_val = $c->query($sql);
     //echo "Created table";
     if(!$return_val) {
@@ -130,10 +132,10 @@ function add_account($c, $p_name, $p_pass, $p_superuser) {
     if(!$p_superuser) {
         $set_superuser = 0; // if not defined, then set as standard user
     }
-    $sql = "INSERT IGNORE INTO friendAccounts (name, password, superuser) VALUES ('$p_name', '$p_pass', '$set_superuser');";
+    $sql = "INSERT IGNORE INTO story_accounts (name, password, superuser) VALUES ('$p_name', '$p_pass', '$set_superuser');";
     $return_val = $c->query($sql);
     if(!$return_val) {
-        die("Could not insert into friendAccounts table [" . $c->error . "]");
+        die("Could not insert into story_accounts table [" . $c->error . "]");
     }
     //echo "Added a new friend!" . "<br>";
     return $return_val;
@@ -261,7 +263,7 @@ function add_story_event_by_id($c, $story_id, $event_id) {
 // TODO: update to work for project accounts
 function get_all_accounts($c) {
     //echo "Selecting all user accounts...";
-    $sql = "select * from friendAccounts";
+    $sql = "select * from story_accounts";
     $result = $c->query($sql);
     if (!$result) {
         die ("Query was unsuccessful: [" . $c->error ."]");
@@ -288,6 +290,42 @@ function get_all_events($c) {
     if (!$result) {
         die ("Query was unsuccessful: [" . $c->error ."]");
     }
+    return $result;
+}
+
+function get_start_event($c, $start_id) {
+    //echo "Selecting all events...";
+    $sql = "select * from event WHERE event_id = $start_id";
+    $result = $c->query($sql);
+    if (!$result) {
+        die ("Query was unsuccessful: [" . $c->error ."]");
+    }
+    return $result;
+}
+
+function get_story_by_id($c, $story_id){
+    echo "story_id in func(): $story_id";
+    $sql = "select * from story where story_id = $story_id";
+    $result = $c->query($sql);
+    // return the result. If null, then result is null as checked
+    // by the calling function, which should display appropriate message.
+    if(mysqli_num_rows($result) < 1) {
+        echo "result is NULL</br>";
+        $result = false;
+        return false;
+    } else {
+        //echo "result is NOT null";
+    }
+    //echo "</br>";
+    return $result;
+}
+function get_event_by_id($c, $event_id){
+    $sql = "select * from event WHERE event_id = $event_id";
+    $result = $c->query($sql);
+    // return the result. If null, then result is null as checked
+    // by the calling function, which should display appropriate message.
+    if(!$result)
+        $result = false;
     return $result;
 }
 
@@ -381,14 +419,34 @@ function display_stories($c) {
     // Each record will be one row in the table, beginning with <tr> 
     echo "<h3>Stories</h3>";
     echo "<table>";
-    echo "<tr><th>Story Title</th><th>Short Description</th><th>Long Description</th></tr>";
+    echo "<tr><th>Story Title</th><th>Short Description</th><th>Long Description</th><th>Start Event</th></tr>";
     foreach ($result as $row) {
         echo "<tr>";
-        $keys = array("title", "short_desc", "long_desc");
+        $keys = array("title", "short_desc", "long_desc", );
         // iterate over all the columns.  Each column is a <td> element.
         foreach ($keys as $key) {
             echo "<td>" . $row[$key] . "</td>";
         }
+        // query and retrieve the 'start event' for the current story row
+        echo "<td>";
+        //echo "start_id: " . $row['start_id'];
+        //$event_result = "";
+        $event_result = get_start_event($c, $row['start_id']); 
+        echo "<table class='start_event_table'";
+        echo "<tr><th>ID</th><th>Description</th><th>Result</th></tr>";
+        foreach ($event_result as $event_row) {
+            echo "<tr>";
+            $event_keys = array("event_id", "description", "result");
+            // iterate over all the selected event's columns
+            foreach ($event_keys as $event_key) {
+                echo "<td>" . $event_row[$event_key] . "</td>";
+            }
+            echo "</tr>\n";
+        }
+        echo "</table>";
+        echo "</td>";
+
+
         echo "</tr>\n";
     }
     echo "</table>" . "<br>";
@@ -396,18 +454,27 @@ function display_stories($c) {
 
 // Collect all of the events, then return a html table with the data.
 // TODO: mainly used for testing, so update this to display more nicely.
-function display_events($c) {
+function display_events($c, $with_id) {
     //echo "Displaying friends...";
     $result = get_all_events($c); 
 
     // iterate over each record in the result.
     // Each record will be one row in the table, beginning with <tr> 
     echo "<h3>Events</h3>";
-    echo "<table>";
-    echo "<tr><th>Description</th><th>Result Text</th><th>Choice A</th><th>Choice B</th></tr>";
+    echo "<table><tr>";
+    if($with_id){
+        echo "<th>ID</th>";
+
+    }
+    echo "<th>Description</th><th>Result Text</th><th>Choice A</th><th>Choice B</th></tr>";
     foreach ($result as $row) {
         echo "<tr>";
-        $keys = array("description", "result", "choice_a", "choice_b");
+        if($with_id) {
+            $keys = array("event_id", "description", "result", "choice_a", "choice_b");
+        } else {
+            $keys = array("description", "result", "choice_a", "choice_b");
+        }
+    
         // iterate over all the columns.  Each column is a <td> element.  
         foreach ($keys as $key) {
             echo "<td>" . $row[$key] . "</td>";
@@ -416,6 +483,7 @@ function display_events($c) {
     }
     echo "</table>" . "<br>";
 }
+
 
 // Collect all of the story_events, then return a html table with the data.
 // TODO: mainly used for testing, so update this to display more nicely.
@@ -442,7 +510,7 @@ function display_story_events($c) {
 
 //TODO: update this function to work with user accounts not friend accs.
 function has_permission($c, $username) {
-    $sql = "SELECT superuser FROM friendAccounts WHERE name = '$username';";
+    $sql = "SELECT superuser FROM story_accounts WHERE name = '$username';";
     if(!$result = $c->query($sql)) {
         die("Unable to process permissions query [".$c->error."]");
     }
@@ -456,9 +524,31 @@ function has_permission($c, $username) {
 }
 
 // The following functions test inserting new stories/events to the db.
+
 function test_insert_story($c, $title, $short_desc, $long_desc) {
     $sql = "REPLACE INTO story (title, short_desc, long_desc) ".
         "VALUES ('$title', '$short_desc', '$long_desc');";
+    $result = $c->query($sql);
+    if (!$result) {
+        die ("Query was unsuccessful: [" . $c->error ."]");
+    }
+    return $result;
+
+}
+// The following functions test inserting new events to the db.
+function test_insert_event($c, $desc, $result, $choice_a, $choice_b) {
+    if(!$choice_a)
+        $choice_a = "NULL";
+    if(!$choice_b)
+        $choice_b = "NULL";
+
+    echo "</br>";
+    echo "choice_a: " . $choice_a;
+    echo "choice_b: " . $choice_b;
+    echo "</br>";
+
+    $sql = "REPLACE INTO event (description, result, choice_a, choice_b) ".
+        "VALUES ('$desc', '$result', $choice_a, $choice_b);";
     $result = $c->query($sql);
     if (!$result) {
         die ("Query was unsuccessful: [" . $c->error ."]");
@@ -503,7 +593,8 @@ create_story_event_DB($c);
 echo "<hr>";
 display_stories($c);
 echo "<hr>";
-display_events($c);
+// if second parameter is true, then the event_ids will also be shown.
+display_events($c, 1);
 echo "<hr>";
 display_story_events($c);
 //display_friends($c);
@@ -513,6 +604,13 @@ display_story_events($c);
 // HOWEVER, duplicates are not ignored -> should look into.
 //test_insert_story($c, 'Dungeon 1', 'Ye find yeself in a dark dungeon',
 //    'Ye find yeself in a dark dungeon room with a grimy gray floor. Ye see a flask on the floor next to ye. There is one exit to ye right.');
+echo "<hr>";
+// TODO: figure out how to insert choices for an event.
+echo "PRE-TEST_INSERT_EVENT";
+//test_insert_event($c, 'Pick up the flask', 'Ye pick up ye flask. Inside is a dull orange liquid. There is one exit to ye right.', NULL, NULL);
+//test_insert_event($c, 'Ye enter ye dungeon.', 'Ye find yeself in a dark dungeon room with a grimy gray floor. Ye see a flask on the floor next to ye. There is one exit to ye right.', NULL, NULL);
+//test_insert_event($c, 'Go through the exit.', 'Ye approach the exit. As you get closer ye hear a faint clicking sound further down the tunnel. Perhaps it is some fowl creature? or merely the ambiant noise of a dark tunnel.', NULL, NULL);
+//test_insert_event($c, 'Go through the exit.', 'Ye approach the exit. As you get closer ye hear a faint clicking sound further down the tunnel. Perhaps it\'s some fowl creature? or merely some ambiant noise of a tunnel.', NULL, NULL);
 echo "<hr>";
 display_stories($c);
 echo "<hr>";

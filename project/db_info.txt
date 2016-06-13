@@ -5,7 +5,9 @@ STORY
 		story_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 		title VARCHAR (50),
 		short_desc VARCHAR (50),
-		long_desc VARCHAR (512)
+		long_desc VARCHAR (512),
+        start_id INT,
+        FOREIGN KEY (start_id) REFERENCES event(event_id)
 	);
 	
 EVENT
@@ -27,3 +29,9 @@ STORY_EVENT
 		FOREIGN KEY (event_id) REFERENCES event(event_id),
 		PRIMARY KEY (story_id, event_id)
 	);
+
+////
+
+ALTER TABLE story
+    ADD COLUMN start_id INT,
+    ADD FOREIGN KEY fk_start_id (start_id) REFERENCES event(event_id);
