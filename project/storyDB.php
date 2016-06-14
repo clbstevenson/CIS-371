@@ -1,6 +1,6 @@
 <?php
 
-$debug = 1;
+$debug = 0;
 //
 // Connect to the database so it can be queried and accessed.
 //
@@ -410,6 +410,33 @@ function display_accounts($c) {
     //echo "Done displaying friends!<br>";
 }
 
+// Collect all of the stories, then return a html table with the data.
+// The display method for this is very basic, showing only title and 
+// the short description.
+// TODO: mainly used for testing, so update this to display more nicely.
+function display_stories_basic($c) {
+    //echo "Displaying friends...";
+    $result = get_all_stories($c); 
+
+    // iterate over each record in the result.
+    // Each record will be one row in the table, beginning with <tr> 
+    echo "<table id='viewStories'>";
+    echo "<tr><th>Story Title</th><th>Short Description</th></tr>";
+    foreach ($result as $row) {
+        echo "<tr>";
+        $keys = array("title", "short_desc"); //, "long_desc", );
+        // iterate over all the columns.  Each column is a <td> element.
+        echo "<td class='title'>" . $row['title'] . "</td>";
+        echo "<td class='short_desc'>" . $row['short_desc'] . "</td>";
+
+        //foreach ($keys as $key) {
+            //echo "<td>" . $row[$key] . "</td>";
+        //}
+
+        echo "</tr>\n";
+    }
+    echo "</table>" . "<br>";
+}
 // Collect all of the stories, then return a html table with the data.
 // TODO: mainly used for testing, so update this to display more nicely.
 function display_stories($c) {

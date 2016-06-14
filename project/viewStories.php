@@ -27,6 +27,11 @@
 
 <h1>Available Stories </h1>
 
+<?php 
+include "storyDB.php";
+$c = connect_DB();
+display_stories_basic($c);
+?>
 
 
 <p id="demo"></p>
