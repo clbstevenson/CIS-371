@@ -6,6 +6,8 @@
     including their First Name, Last Name, Phone Number, and Age.
 -->
 <?php error_reporting(E_ALL); 
+//TODO: create an index.php
+header ("Location: story.php");
 //require('friendDB.php');
 session_start();
 ?>

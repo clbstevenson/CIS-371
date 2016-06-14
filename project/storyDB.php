@@ -1,5 +1,6 @@
 <?php
 
+$debug = 1;
 //
 // Connect to the database so it can be queried and accessed.
 //
@@ -304,13 +305,11 @@ function get_start_event($c, $start_id) {
 }
 
 function get_story_by_id($c, $story_id){
-    echo "story_id in func(): $story_id";
     $sql = "select * from story where story_id = $story_id";
     $result = $c->query($sql);
     // return the result. If null, then result is null as checked
     // by the calling function, which should display appropriate message.
     if(mysqli_num_rows($result) < 1) {
-        echo "result is NULL</br>";
         $result = false;
         return false;
     } else {
@@ -324,8 +323,10 @@ function get_event_by_id($c, $event_id){
     $result = $c->query($sql);
     // return the result. If null, then result is null as checked
     // by the calling function, which should display appropriate message.
-    if(!$result)
+    if(mysqli_num_rows($result) < 1) {
         $result = false;
+        return false;
+    }
     return $result;
 }
 
@@ -508,6 +509,43 @@ function display_story_events($c) {
     echo "</table>" . "<br>";
 }
 
+// This function queries the story table for row data with $story_id.
+function get_story_data($c, $id) {
+    $sql = "SELECT * FROM story WHERE story_id = $id";
+    $result = $c->query($sql);
+    foreach ($result as $row) {
+        return $row;
+    }
+}
+
+// This function queries the story table for $value with $story_id.
+function get_story_data_value($c, $id, $value) {
+    $sql = "SELECT $value FROM story WHERE story_id = $id";
+    $result = $c->query($sql);
+    foreach ($result as $row) {
+        return $row[$value];
+    }
+    /*foreach ($result as $row) {
+        echo "<tr>";
+        $keys = array("story_id", "event_id");
+        // iterate over all the columns.  Each column is a <td> element.
+        foreach ($keys as $key) {
+            echo "<td>" . $row[$key] . "</td>";
+        }
+        echo "</tr>\n";
+    }
+    */
+}
+
+// This function queries the event table for row data with $event_id.
+function get_event_data($c, $id) {
+    $sql = "SELECT * FROM event WHERE event_id = $id";
+    $result = $c->query($sql);
+    foreach ($result as $row) {
+        return $row;
+    }
+}
+
 //TODO: update this function to work with user accounts not friend accs.
 function has_permission($c, $username) {
     $sql = "SELECT superuser FROM story_accounts WHERE name = '$username';";
@@ -557,6 +595,17 @@ function test_insert_event($c, $desc, $result, $choice_a, $choice_b) {
 
 }
 
+// The following functions test inserting new events to the db.
+function test_insert_story_event($c, $story_id, $event_id) {
+    $sql = "INSERT INTO story_event (story_id, event_id) ".
+        "VALUES ('$story_id', '$event_id');";
+    $result = $c->query($sql);
+    if (!$result) {
+        die ("Query was unsuccessful: [" . $c->error ."]");
+    }
+    return $result;
+}
+
 ?>
 
 <html>
@@ -564,7 +613,7 @@ function test_insert_event($c, $desc, $result, $choice_a, $choice_b) {
 <html>
 <head lang="en">
     <meta charset="UTF-8">
-    <title>StoryDB</title>
+    <!--<title>StoryDB</title>-->
     <style type="text/css">
         #post {
             vertical-align: top;
@@ -587,38 +636,37 @@ function test_insert_event($c, $desc, $result, $choice_a, $choice_b) {
 
 
 $c = connect_DB();
-create_story_DB($c);
-create_event_DB($c);
-create_story_event_DB($c);
-echo "<hr>";
-display_stories($c);
-echo "<hr>";
-// if second parameter is true, then the event_ids will also be shown.
-display_events($c, 1);
-echo "<hr>";
-display_story_events($c);
-//display_friends($c);
+if($debug) {
+    create_story_DB($c);
+    create_event_DB($c);
+    create_story_event_DB($c);
+    echo "<hr>";
+    display_stories($c);
+    echo "<hr>";
+    // if second parameter is true, then the event_ids will also be shown.
+    display_events($c, 1);
+    echo "<hr>";
+    display_story_events($c);
+    //display_friends($c);
 
-// * SUCCESS *
-// Stories can be successfully inserted into the database.
-// HOWEVER, duplicates are not ignored -> should look into.
-//test_insert_story($c, 'Dungeon 1', 'Ye find yeself in a dark dungeon',
-//    'Ye find yeself in a dark dungeon room with a grimy gray floor. Ye see a flask on the floor next to ye. There is one exit to ye right.');
-echo "<hr>";
-// TODO: figure out how to insert choices for an event.
-echo "PRE-TEST_INSERT_EVENT";
-//test_insert_event($c, 'Pick up the flask', 'Ye pick up ye flask. Inside is a dull orange liquid. There is one exit to ye right.', NULL, NULL);
-//test_insert_event($c, 'Ye enter ye dungeon.', 'Ye find yeself in a dark dungeon room with a grimy gray floor. Ye see a flask on the floor next to ye. There is one exit to ye right.', NULL, NULL);
-//test_insert_event($c, 'Go through the exit.', 'Ye approach the exit. As you get closer ye hear a faint clicking sound further down the tunnel. Perhaps it is some fowl creature? or merely the ambiant noise of a dark tunnel.', NULL, NULL);
-//test_insert_event($c, 'Go through the exit.', 'Ye approach the exit. As you get closer ye hear a faint clicking sound further down the tunnel. Perhaps it\'s some fowl creature? or merely some ambiant noise of a tunnel.', NULL, NULL);
-echo "<hr>";
-display_stories($c);
-echo "<hr>";
+    // * SUCCESS *
+    // Stories can be successfully inserted into the database.
+    // HOWEVER, duplicates are not ignored -> should look into.
+    //test_insert_story($c, 'Dungeon 1', 'Ye find yeself in a dark dungeon',
+    //    'Ye find yeself in a dark dungeon room with a grimy gray floor. Ye see a flask on the floor next to ye. There is one exit to ye right.');
+    echo "<hr>";
+    // TODO: figure out how to insert choices for an event.
+    echo "PRE-TEST_INSERT_EVENT";
+    //test_insert_event($c, 'Pick up the flask', 'Ye pick up ye flask. Inside is a dull orange liquid. There is one exit to ye right.', NULL, NULL);
+    //test_insert_event($c, 'Ye enter ye dungeon.', 'Ye find yeself in a dark dungeon room with a grimy gray floor. Ye see a flask on the floor next to ye. There is one exit to ye right.', NULL, NULL);
+    //test_insert_event($c, 'Go through the exit.', 'Ye approach the exit. As you get closer ye hear a faint clicking sound further down the tunnel. Perhaps it is some fowl creature? or merely the ambiant noise of a dark tunnel.', NULL, NULL);
+    //test_insert_event($c, 'Go through the exit.', 'Ye approach the exit. As you get closer ye hear a faint clicking sound further down the tunnel. Perhaps it\'s some fowl creature? or merely some ambiant noise of a tunnel.', NULL, NULL);
+    //test_insert_story_event($c, 9, 30);
+    echo "<hr>";
+    display_stories($c);
+    echo "<hr>";
 
-
-
-//read_from_file($c, "frienddata.txt");
-//display_friends($c);
+}
 
 ?>
 </body>

@@ -5,39 +5,60 @@
         so users can't see other options
     3.) Accept votes for what option to choose
 -->
-<?php error_reporting(E_ALL); 
-include "storyDB.php";
-$c = connect_DB();
-session_start();
-//TODO: redirect the user if they are not signed in? or something else
-/*if (! isset($_SESSION["username"])) {
-    header("Location: index.php");
-}
-$username = $_SESSION["username"];
-*/
-if(isset($_GET['story'])) {
-    // if the query string is set, use the specified id
-    $story_id = $_GET['story'];
-    // but, before that, we also need to check if there is a story
-    // with that ID in the database...
-    $story_result = get_story_by_id($c, $story_id);
-    if (!$story_result) {
-        echo "<h3>Sorry, there is not a story with that ID.</h3>";
-        exit;
-    } else {
-        echo "<h3>Found the story with id of $story_id</h3>";
-    }
-    
-} else {
-    $story_id = 9; // by default, use the starting Ye Dungeon story (id=9)
-    echo "Using default story_id";
-}
-?>
 <!DOCTYPE html>
 <html>
 <head lang="en">
     <meta charset="UTF-8">
-    <title>Story</title>
+        <?php error_reporting(E_ALL); 
+        include "storyDB.php";
+        $c = connect_DB();
+        session_start();
+        //TODO: redirect the user if they are not signed in? or something else
+        /*if (! isset($_SESSION["username"])) {
+            header("Location: index.php");
+        }
+        $username = $_SESSION["username"];
+        */
+        if(isset($_GET['story'])) {
+            // if the query string is set, use the specified id
+            $story_id = $_GET['story'];
+            // but, before that, we also need to check if there is a story
+            // with that ID in the database...
+            $story_result = get_story_by_id($c, $story_id);
+            if (!$story_result) {
+                echo "<h3>Sorry, that story doesn't exist yet.</h3>";
+                echo "<p>You can also start a new story!</p>";
+                echo "<hr>";
+                echo "<p>Home</p>";
+                echo "<p>Create Account / Sign In / Logout</p>";
+                echo "<!--<h4><a href='index.php'>Home<a></h4>";
+                echo "<a href='logout.php'>Logout</a>-->";
+                echo "<title>Story Unavailable</title>";
+                exit;
+            } else {
+                /*
+                echo "<h3>Found the story with id of $story_id</h3>";
+                $story_title = get_story_data_value($c, $story_id, 'title');
+                $story_row = get_story_data($c, $story_id);
+                echo "<h2>$story_title</h2>";
+                $short = $story_row['short_desc'];
+                echo "<p>$short</p>";
+                echo "<p>" . $story_row['long_desc'] . "</p>";
+                */
+            }
+            
+        } else {
+            // "Using default story_id";
+            $story_id = 9; // by default, use the starting Ye Dungeon story (id=9)
+        }
+        $story_row = get_story_data($c, $story_id);
+        $title = $story_row['title'];
+        $short_desc = $story_row['short_desc'];
+        $long_desc = $story_row['long_desc'];
+
+        
+        ?>
+    <title>Story - <?php echo $title ?></title>
     <style type="text/css">
         #post {
             vertical-align: top;
@@ -53,28 +74,16 @@ if(isset($_GET['story'])) {
 </head>
 <body>
 
-<h1>Friend Form - View 
-<?php
-echo $username;
-?>'s Friends</h1>
+<h1>Story -  
+<?php echo $title; ?></h1>
 
-<h3>Other pages to update your friends list</h3>
-<ul>
-<li><a href="friendRead.php">Update friends from a file.</a></li>
-<li><a href="friendAdd.php">Add another friend's info by hand.</a></li>
-</ul>
-
-
-<h3>Here is all of your friends</h3>
-<div id="LISTTABLE">
-<table>
-    <?php
-    include 'accountDB.php';
-    $c = connect_accounts_DB();
-    display_my_friends($c, $username);
-    $c->close();
-    ?>
-</table>
+<div id="story_info">
+<p>
+<?php echo $story_row['short_desc']  ?>
+</p>
+<p>
+<?php echo $story_row['long_desc']  ?>
+</p>
 </div>
 
 <p id="demo"></p>
@@ -118,8 +127,11 @@ echo $username;
     */
 </script>
 
-<h4><a href="index.php">Home<a></h4>
-<a href="logout.php">Logout</a>
+<p>Home</p>
+<p>Logout</p>
+<!--<h4><a href="index.php">Home<a></h4>
+<a href="logout.php">Logout</a>-->
+
 
 </body>
 </html>
