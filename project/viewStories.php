@@ -30,26 +30,49 @@
 <?php 
 include "storyDB.php";
 $c = connect_DB();
-display_stories_basic($c);
+// The second parameter is $with_links
+// that, when true, will display the title column with a link to story page 
+display_stories_basic($c, 1);
 ?>
 
 
 <p id="demo"></p>
 
-<script src="sortProfs.js"></script>
+<!--<script src="sortProfs.js"></script>-->
 <script>
     var table_html = document.getElementById("view_stories");
     console.log(table_html);
+    var table_tbody = table_html.firstChild;
 
     // Note: I know there is a better way to add same action to multiple
     // objects where they don't all change/mess with the params of the
     // other listeners, yet this is sufficient for now.
     // TODO: use a loop to add the listeners (in case more cols are added).
-    var headers = table_html.getElementsByClassName("short_desc");
-    console.log(headers);
-    var h0 = headers[0].innerHTML;
-    headers[0].addEventListener("click", function(){
+    var short_descs = table_html.getElementsByClassName("short_desc");
+    console.log(short_descs);
+    var h0 = short_descs[0].innerHTML;
+    short_descs[0].addEventListener("click", function(){
             document.getElementById("demo").innerHTML = "story time?";
+            
+            // Collect the story_id from the parent node (a tr element)
+            var clicked_row = short_descs[0].parentNode;
+            var row_id = clicked_row.id;
+            console.log("row_id: " + row_id);
+            // TODO: Use AJAX to query server for more info, then display
+            // Query the database for the long_description of story row_id
+            //var long_desc = <?php 
+            //    get_story_data_value($c, $row_id, 'long_desc');
+            //    ?>;
+
+            console.log("long_desc: " + long_desc);
+            var new_col = document.createElement("TD");
+            var new_col_text = <?php ?>0 ;
+            
+            //var row_parent = rows[1].parentNode;
+            // as long as the parent of the rows has more rows, remove them
+            //while (table_tbody.hasChildNodes()) {
+            //    table_tbody.removeChild(table_tbody.firstChild);
+            //}
             //testing("LISTTABLE", h0, 0);
     });
     /*

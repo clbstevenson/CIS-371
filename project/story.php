@@ -29,7 +29,7 @@
                 echo "<h3>Sorry, that story doesn't exist yet.</h3>";
                 echo "<p>You can also start a new story!</p>";
                 echo "<hr>";
-                echo "<p>Home</p>";
+                echo "<p><a href='viewStories.php'>Home</a></p>";
                 echo "<p>Create Account / Sign In / Logout</p>";
                 echo "<!--<h4><a href='index.php'>Home<a></h4>";
                 echo "<a href='logout.php'>Logout</a>-->";
@@ -88,8 +88,8 @@
 
 <p id="demo"></p>
 
-<script src="sortProfs.js"></script>
 <script>
+/*
     var table_html = document.getElementById("LISTTABLE");
     console.log(table_html);
 
@@ -127,7 +127,7 @@
     */
 </script>
 
-<p>Home</p>
+<p><a href='viewStories.php'>Home</a></p>
 <p>Logout</p>
 <!--<h4><a href="index.php">Home<a></h4>
 <a href="logout.php">Logout</a>-->

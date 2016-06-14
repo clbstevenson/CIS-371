@@ -414,7 +414,7 @@ function display_accounts($c) {
 // The display method for this is very basic, showing only title and 
 // the short description.
 // TODO: mainly used for testing, so update this to display more nicely.
-function display_stories_basic($c) {
+function display_stories_basic($c, $with_links) {
     //echo "Displaying friends...";
     $result = get_all_stories($c); 
 
@@ -423,10 +423,16 @@ function display_stories_basic($c) {
     echo "<table id='view_stories'>";
     echo "<tr><th>Story Title</th><th>Short Description</th></tr>";
     foreach ($result as $row) {
-        echo "<tr>";
+        $row_id = $row['story_id'];
+        echo "<tr id=$row_id>";
         $keys = array("title", "short_desc"); //, "long_desc", );
         // iterate over all the columns.  Each column is a <td> element.
-        echo "<td class='title'>" . $row['title'] . "</td>";
+        if(!$with_links) {
+            echo "<td class='title'>" . $row['title'] . "</td>";
+        }else {
+            echo "<td class='title'><a href='story.php?id=$row_id'>".
+                $row['title'] ."</a></td>";
+        }
         echo "<td class='short_desc'>" . $row['short_desc'] . "</td>";
 
         //foreach ($keys as $key) {
