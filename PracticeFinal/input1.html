@@ -5,9 +5,10 @@
 </head>
 <body>
 
+
 <p>Four score and <span class="allcaps">seven years ago</span> our <span class="upcase">fathers</span> brought forth on
     this <span class="upcase">continent</span>, <span class="allcaps">a new nation</span>, conceived in Liberty, and
-    dedicated to the proposition that <span clas="allcaps">all</span> men are created equal.</p>
+    dedicated to the proposition that <span class="allcaps">all</span> men are created equal.</p>
 
 <p>Now we are engaged in a <span class="allcaps">great civil war</span>, testing whether that <span class="upcase"> nation</span>,
     or any <span class="upcase">nation</span> so conceived and so dedicated, can long endure. We are met on a great
@@ -27,6 +28,18 @@
     that government <span class="upcase">of the people, by the people, for the people</span>, shall not perish from the
     <span class="upcase">earth</span>.</p>
 
+<script type="text/javascript">
+    var elems_all = document.getElementsByClassName('allcaps');
+    for(j = 0; j < elems_all.length; j++) {
+        elems_all[j].style.textTransform = "uppercase";          
+    }
+
+    var elems_up = document.getElementsByClassName('upcase');
+    for(j = 0; j < elems_up.length; j++) {
+        elems_up[j].style.textTransform = "capitalize";          
+    }
+
+</script>
 
 </body>
 </html>
