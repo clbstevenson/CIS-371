@@ -420,7 +420,7 @@ function display_stories_basic($c) {
 
     // iterate over each record in the result.
     // Each record will be one row in the table, beginning with <tr> 
-    echo "<table id='viewStories'>";
+    echo "<table id='view_stories'>";
     echo "<tr><th>Story Title</th><th>Short Description</th></tr>";
     foreach ($result as $row) {
         echo "<tr>";

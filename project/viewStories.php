@@ -38,19 +38,21 @@ display_stories_basic($c);
 
 <script src="sortProfs.js"></script>
 <script>
-    var table_html = document.getElementById("LISTTABLE");
+    var table_html = document.getElementById("view_stories");
     console.log(table_html);
 
     // Note: I know there is a better way to add same action to multiple
     // objects where they don't all change/mess with the params of the
     // other listeners, yet this is sufficient for now.
     // TODO: use a loop to add the listeners (in case more cols are added).
-    var headers = table_html.getElementsByTagName("th");
+    var headers = table_html.getElementsByClassName("short_desc");
     console.log(headers);
     var h0 = headers[0].innerHTML;
     headers[0].addEventListener("click", function(){
-            testing("LISTTABLE", h0, 0);
+            document.getElementById("demo").innerHTML = "story time?";
+            //testing("LISTTABLE", h0, 0);
     });
+    /*
     var h1 = headers[1].innerHTML;
     headers[1].addEventListener("click", function(){
             testing("LISTTABLE", h1, 1);
@@ -63,6 +65,7 @@ display_stories_basic($c);
     headers[3].addEventListener("click", function(){
             testing("LISTTABLE", h3, 3);
     });
+    */
 
     /*for ( i = 0; i < headers.length; i++) {
         console.log("headers[" + i + "]: " + headers[i]);
