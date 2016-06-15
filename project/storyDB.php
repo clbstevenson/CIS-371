@@ -54,7 +54,9 @@ function create_story_DB($c) {
         "short_desc VARCHAR (50),".
         "long_desc VARCHAR (512),".
         "start_id INT,".
-        "FOREIGN KEY (start_id) REFERENCES event(event_id));";
+        "curr_id INT,".
+        "FOREIGN KEY (start_id) REFERENCES event(event_id),";
+        "FOREIGN KEY (curr_id) REFERENCES event(event_id));";
     $return_val = $c->query($sql);
     //echo "Created table";
     if(!$return_val) {
@@ -341,6 +343,16 @@ function get_all_story_events($c) {
     return $result;
 }
 
+// Select all of the chosen story_event pairs for given @id
+function get_story_event_results($c, $id) {
+    $sql = "SELECT result FROM event WHERE event_id = (SELECT event_id FROM story_event WHERE story_id = $id);";
+    $result = $c->query($sql);
+    if (!$result) {
+        return false;
+    }
+    return $result;
+}
+
 //TODO: add similar functions for reading new story/event info from files.
 // This function may not be necessary for friendAccounts,
 // but it is left here in case it should be updated to
@@ -540,6 +552,27 @@ function display_story_events($c) {
         echo "</tr>\n";
     }
     echo "</table>" . "<br>";
+}
+
+// Displays the chosen event history for a given story ID in a list
+function display_story_history($c, $id) {
+    // retrieve a 'list' of the the chosen results
+    $result = get_story_event_results($c, $id);
+    echo "<h3>History</h3>";
+    // NOTE: By including the current event in the list of History,
+    //      the History will NEVER be empty because the start event
+    //      is always set.
+    if(!$result)  {
+        echo "<p>Your story has just begun!</p>";
+    }
+    echo "<ol>";
+    foreach ($result as $row) {
+        echo "<li>";
+        $keys = "result";
+        echo $row[$keys];
+        echo "</li>";
+    } 
+    echo "</ol></br>";
 }
 
 // This function queries the story table for row data with $story_id.

@@ -55,8 +55,6 @@
         $title = $story_row['title'];
         $short_desc = $story_row['short_desc'];
         $long_desc = $story_row['long_desc'];
-
-        
         ?>
     <title>Story - <?php echo $title ?></title>
     <style type="text/css">
@@ -69,9 +67,38 @@
             text-align: center;
         }
 
+        #history {
+            display: none;
+        }
+
 
     </style>
 </head>
+
+<script>
+    var showing_history = false;
+    function loadHistory(id) {
+        if(!showing_history) {
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = function() {
+                if(xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                    document.getElementById("history").innerHTML = xmlhttp.responseText;
+                }
+            };
+            xmlhttp.open("GET", "getHistory.php?id=" + id, true); 
+            xmlhttp.send();
+            document.getElementById("history_btn").innerHTML = "Hide History";
+            document.getElementById("history").style.display = "block";
+            showing_history = true;
+        } else {
+            document.getElementById("history_btn").innerHTML = "Show History";
+            document.getElementById("history").innerHTML = "";
+            document.getElementById("history").style.display = "none";
+            showing_history = false;
+        }
+    }
+</script>
+
 <body>
 
 <h1>Story -  
@@ -81,51 +108,21 @@
 <p>
 <?php echo $story_row['short_desc']  ?>
 </p>
+<?php
+$id = $story_row['story_id'];
+echo " <button id='history_btn' type='button' onclick='loadHistory($id)'>Show History</button>"
+?>
+<div id="history">
+</div>
+<hr>
 <p>
 <?php echo $story_row['long_desc']  ?>
 </p>
 </div>
+<hr>
 
 <p id="demo"></p>
 
-<script>
-/*
-    var table_html = document.getElementById("LISTTABLE");
-    console.log(table_html);
-
-    // Note: I know there is a better way to add same action to multiple
-    // objects where they don't all change/mess with the params of the
-    // other listeners, yet this is sufficient for now.
-    // TODO: use a loop to add the listeners (in case more cols are added).
-    var headers = table_html.getElementsByTagName("th");
-    console.log(headers);
-    var h0 = headers[0].innerHTML;
-    headers[0].addEventListener("click", function(){
-            testing("LISTTABLE", h0, 0);
-    });
-    var h1 = headers[1].innerHTML;
-    headers[1].addEventListener("click", function(){
-            testing("LISTTABLE", h1, 1);
-    });
-    var h2 = headers[2].innerHTML;
-    headers[2].addEventListener("click", function(){
-            testing("LISTTABLE", h2, 2);
-    });
-    var h3 = headers[3].innerHTML;
-    headers[3].addEventListener("click", function(){
-            testing("LISTTABLE", h3, 3);
-    });
-
-    /*for ( i = 0; i < headers.length; i++) {
-        console.log("headers[" + i + "]: " + headers[i]);
-        var hh = headers[i].innerHTML;
-        console.log("headers[" + i + "] html: " + headers[i].innerHTML);
-        headers[i].addEventListener("click", function(){
-            testing("LISTTABLE", hh, i);
-        });
-    }
-    */
-</script>
 
 <p><a href='viewStories.php'>Home</a></p>
 <p>Logout</p>

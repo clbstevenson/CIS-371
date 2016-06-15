@@ -7,7 +7,7 @@
 -->
 <?php error_reporting(E_ALL); 
 //TODO: create an index.php
-header ("Location: story.php");
+header ("Location: viewStories.php");
 //require('friendDB.php');
 session_start();
 ?>
