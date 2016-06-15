@@ -20,9 +20,10 @@ $num_rows = $num / $num_cols;
     <meta charset="UTF-8">
     <title>Average Evaluation</title>
     <style type="text/css">
-        #blank_vals {
+        #blank_vals, #display_values {
             display: none;
         }
+
     </style>
 
 
@@ -74,6 +75,11 @@ $num_rows = $num / $num_cols;
 
 </fieldset>
 
+<ul id="display_values">
+    <li><p id="max_value"></p></li>
+    <li><p id="min_value"></p></li>
+    <li><p id="avg_value"></p></li>
+</ul>
 <p id="demo"></p>
 
 <script type="text/javascript">
@@ -95,11 +101,15 @@ $num_rows = $num / $num_cols;
 
     function checkInput(event) {
         console.log("Checking input...");
+        // First, reset displays back to normal
         document.getElementById("blank_vals").style.display = "none";
+        document.getElementById("display_values").style.display = "none";
+        //Then, get all of the box nodes and their values
         var value_nodes = document.getElementsByClassName("box_val");
         var num_values = value_nodes.length;
         var blank_nodes = [];
         var values = [];
+        var sum = 0;
         for(i = 0; i < num_values; i++) {
             var submit_val = value_nodes[i].value;
             value_nodes[i].style.background = "white";
@@ -110,17 +120,22 @@ $num_rows = $num / $num_cols;
             } else {
                 console.log("adding value: " + submit_val);
                 values.push(submit_val);
+                sum += parseInt(submit_val,10);
             }
         }
         if(blank_nodes.length > 0) {
             console.log("Found " + blank_nodes.length + " nodes with no value set: " );
             displayError(blank_nodes);
+            return;
         }
         console.log("nodes : " + value_nodes);
         console.log("values: " + values);
 
         console.log("Evaluating Data...");
         
+        // Set the unordered list of values to be displayed
+        document.getElementById("display_values").style.display = "block";
+        // Find and calculate the maximum value
         var max_value = parseInt(Math.max.apply(Math, values),10);
         console.log("Maximum: " + max_value);
         // had to write my own function for finding the index
@@ -129,7 +144,9 @@ $num_rows = $num / $num_cols;
         console.log("Index of max: " + max_index);
         var max_node = value_nodes[max_index];
         max_node.style.background = "lightgreen";
+        document.getElementById("max_value").innerHTML = "Maximum: " + max_value;
 
+        // Find and calculate the minimum value
         var min_value = parseInt(Math.min.apply(Math, values),10);
         console.log("Minimum: " + min_value);
         // had to write my own function for finding the index
@@ -138,9 +155,15 @@ $num_rows = $num / $num_cols;
         console.log("Index of min: " + min_index);
         var min_node = value_nodes[min_index];
         min_node.style.background = "lightblue";
+        document.getElementById("min_value").innerHTML = "Minimum: " + min_value;
+        
+        // Calculate the average value and display it
+        console.log("Sum of Values: " + sum);
+        var avg = sum / (values.length);
+        console.log("Average: " + avg);
+        document.getElementById("avg_value").innerHTML = "Average: " + avg;
         
     }
-
 
     function get_index(values, value) {
         for(i = 0; i < values.length; i++) {
