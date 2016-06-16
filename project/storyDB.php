@@ -114,7 +114,28 @@ function create_story_event_DB($c) {
     return $return_val;
 }
 
+// Creates the table for keeping track of the votes for a choice_id
+// for a story_id and event_id pair.
+function create_event_votes_DB($c) {
+    $sql = "CREATE TABLE IF NOT EXISTS event_votes (".
+        "story_id INT NOT NULL,".
+        "event_id INT NOT NULL,".
+        "choice_id INT NOT NULL,".
+        "num_votes INT DEFAULT 0,".
+        "FOREIGN KEY (story_id) REFERENCES story(story_id),".
+        "FOREIGN KEY (event_id) REFERENCES event(event_id),".
+        "FOREIGN KEY (choice_id) REFERENCES event(event_id),".
+        "PRIMARY KEY (story_id, event_id, choice_id) );";
+    $result = $c->query($sql);
+    if(!$result) {
+        die("Could not create the event_choices table [" . $c->error . "]");
+    }
+    return $result;
+}
+
+//
 // Functions for making additions to the connected database tables.
+//
 
 // TODO: Add a new user account 
 function add_account($c, $p_name, $p_pass, $p_superuser) {
@@ -433,7 +454,7 @@ function display_stories_basic($c, $with_links) {
     // iterate over each record in the result.
     // Each record will be one row in the table, beginning with <tr> 
     echo "<table id='view_stories'>";
-    echo "<tr><th>Story Title</th><th>Short Description</th></tr>";
+    echo "<tr><th>Story Title</th><th>Short Description</th><th>Current Event</th></tr>";
     foreach ($result as $row) {
         $row_id = $row['story_id'];
         echo "<tr id=$row_id>";
@@ -446,6 +467,13 @@ function display_stories_basic($c, $with_links) {
                 $row['title'] ."</a></td>";
         }
         echo "<td class='short_desc'>" . $row['short_desc'] . "</td>";
+        //echo "<td class='curr_desc'>" . $row['curr_id'] . "</td>";
+        $event_data = get_event_data($c, $row['curr_id']);
+        echo "<td class='curr_desc'>" . $event_data['description'] . "</td>";
+        
+        foreach($event_data as $event_item) {
+            //echo "<td class='curr_desc'>" . $event_item['description'] . "</td>";
+        }
 
         //foreach ($keys as $key) {
             //echo "<td>" . $row[$key] . "</td>";
@@ -558,21 +586,24 @@ function display_story_events($c) {
 function display_story_history($c, $id) {
     // retrieve a 'list' of the the chosen results
     $result = get_story_event_results($c, $id);
-    echo "<h3>History</h3>";
+    echo "<h3>Full Story</h3>";
     // NOTE: By including the current event in the list of History,
     //      the History will NEVER be empty because the start event
     //      is always set.
     if(!$result)  {
         echo "<p>Your story has just begun!</p>";
     }
-    echo "<ol>";
+    //echo "<ol>";
     foreach ($result as $row) {
-        echo "<li>";
+        //echo "<li>";
+        echo "<p>";
         $keys = "result";
         echo $row[$keys];
-        echo "</li>";
+        echo "</p>";
+        //echo "</li>";
     } 
-    echo "</ol></br>";
+    //echo "</ol></br>";
+    echo "</br>";
 }
 
 // This function queries the story table for row data with $story_id.
@@ -612,6 +643,102 @@ function get_event_data($c, $id) {
     }
 }
 
+// This function returns the descriptions for choice_a and choice_b
+function get_event_choices($c, $event_id) {
+    $sqla = "SELECT description FROM event WHERE event_id = (SELECT choice_a FROM event WHERE event_id = $event_id);";
+    $sqlb = "SELECT description FROM event WHERE event_id = (SELECT choice_b FROM event WHERE event_id = $event_id);";
+
+    $choices = [];
+    $resulta = $c->query($sqla);
+    // If the query is not successful, add a 'false' element.
+    // If the query is successful, add the description to the array.
+    if(!$resulta) {
+       array_push($choices, false); 
+    } else {
+        foreach($resulta as $rowa) {
+            array_push($choices, $rowa['description']); 
+        }
+
+        //echo "description a: ".$resulta['description'];
+       //array_push($choices, $resulta['description']); 
+    }
+
+    $resultb = $c->query($sqlb);
+    if(!$resultb) {
+        array_push($choices, false);
+    } else {
+        foreach($resultb as $rowb) {
+            array_push($choices, $rowb['description']); 
+        }
+        //array_push($choices, $resultb['description']); 
+    }
+
+    return $choices;
+
+}
+
+function submit_vote($c, $story_id, $event_id, $choice_id) {
+    $sql = "INSERT INTO event_votes (story_id, event_id, choice_id, num_votes)". 
+    "VALUES ($story_id, $event_id, $choice_id, 1)".
+    "ON DUPLICATE KEY UPDATE num_votes=num_votes+1;";
+    /*
+    $sql = "INSERT INTO event_votes (story_id, event_id, choice_id, num_votes) ".
+        "VALUES ($story_id, $event_id, $choice_id, 1) ".
+        "ON DUPLICATE KEY UPDATE num_votes=num_votes+1;";
+    */
+    $result = $c->query($sql);
+    if(!$result) {
+        die("Unable to submit vote [".$c->error."]");
+    }
+    return $result;
+}
+
+function display_event_votes($c, $story_id, $event_id) {
+    $sql = "SELECT num_votes FROM event_votes ".
+        "WHERE story_id=$story_id AND event_id=$event_id;";
+    $result = $c->query($sql);
+    if(!$result) {
+        die("Unable to view the number of votes: [".$c->error."]");
+    }
+
+    $total_votes = 0;
+    $votes = [];
+    $choices = [];
+    $voted_options = 0;
+    // read and gather all of the vote counts for the choices
+    while($row = mysqli_fetch_assoc($result)) {
+        //echo $row['choice_id'] . " (" . $row['num_votes'];
+        array_push($votes, $row['num_votes']);
+        $total_votes += $row['num_votes'];
+        $voted_options ++;
+    }
+
+    //echo $voted_options;
+    $percent_votes = [];
+    foreach($votes as $vote) {
+        $percent_v = $vote / $total_votes;
+        $percent_vote = number_format($percent_v * 100, 2) . '%';
+        array_push($percent_votes, $percent_vote);
+        //echo "PERCENT VOTE: " + $percent_vote;
+        //echo "<li>$percent_vote</li>";
+    }
+
+
+    //echo "<ul>";
+    echo "<p>A total of $total_votes votes</p>";
+    echo "<table>";
+    $choices = get_event_choices($c, $event_id);
+    //echo "CHOICE 0: " . $choices[0];
+    for($i = 0; $i < 2; $i++) {
+        echo "<tr><td>".$choices[$i]."</td><td>".$percent_votes[$i]."</td></tr>";
+        //echo "<li>" . $choices[$i] . "\t" .  $percent_votes[$i]."</li></br>";
+    }
+    echo "</table>";
+    //echo "</ul>";
+    //echo "TESTING?";
+
+}
+
 //TODO: update this function to work with user accounts not friend accs.
 function has_permission($c, $username) {
     $sql = "SELECT superuser FROM story_accounts WHERE name = '$username';";
@@ -627,7 +754,9 @@ function has_permission($c, $username) {
     return $permission;
 }
 
+//
 // The following functions test inserting new stories/events to the db.
+//
 
 function test_insert_story($c, $title, $short_desc, $long_desc) {
     $sql = "REPLACE INTO story (title, short_desc, long_desc) ".
@@ -680,14 +809,7 @@ function test_insert_story_event($c, $story_id, $event_id) {
 <head lang="en">
     <meta charset="UTF-8">
     <!--<title>StoryDB</title>-->
-    <style type="text/css">
-        #post {
-            vertical-align: top;
-            }
-        table td, table th, table {
-            border: 1px solid gray;
-            text-align: center;
-        }
+    <style type="text/css" src="story.css">
 
 
     </style>
@@ -732,7 +854,7 @@ if($debug) {
     display_stories($c);
     echo "<hr>";
 
-}
+} // end if(debug)
 
 ?>
 </body>

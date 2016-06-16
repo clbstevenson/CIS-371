@@ -1,0 +1,18 @@
+#post {
+    vertical-align: top;
+}
+
+td, th, table{
+    border: 1px solid gray;
+    text-align: center;
+}
+#view_stories td, #view_stories th {
+    margin: 10%;
+    width: 30%;
+    padding: 10px;
+    //color: red;
+}
+
+#history, .data {
+    display: none;
+}

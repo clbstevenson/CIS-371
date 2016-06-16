@@ -7,4 +7,6 @@ $c = connect_DB();
 $id = $_REQUEST['id'];
 display_story_history($c, $id);
 
+$c->close();
+
 ?>

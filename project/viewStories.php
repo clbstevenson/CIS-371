@@ -10,18 +10,8 @@
 <head lang="en">
     <meta charset="UTF-8">
     <title>Story List</title>
-    <style type="text/css">
-        #post {
-            vertical-align: top;
-            }
-        #LISTTABLE table td, #LISTTABLE table th, #LISTTABLE table,
-        #LinkTable table, #LinkTable table td{
-            border: 1px solid gray;
-            text-align: center;
-        }
-
-
-    </style>
+    <!--<style type="text/css" src="story.css"></style>-->
+    <link rel="stylesheet" href="story.css" type="text/css"/>
 </head>
 <body>
 
@@ -107,6 +97,9 @@ display_stories_basic($c, 1);
 <!--<h4><a href='index.php'>Home<a></h4>
 <a href='logout.php'>Logout</a>-->
 
+<?php
+$c->close();
+?>
 
 </body>
 </html>
