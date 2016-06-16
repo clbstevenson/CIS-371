@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Final Exam Coding</title>
+</head>
+<body>
+
+<h1>Final Exam Coding</h1>
+
+<p>Write a simple web page to play "mad libs". Your input will be an HTML file marked up with words to be replaced (as
+    shown below):</p>
+
+<xmp>
+    <div class="story">
+        <p>
+            One day, <span class="fillin" id="f1">Student's name</span> walked into class ten minutes late with
+            a <span class="fillin" id="f2">noun</span> stuck to his <span class="fillin" id="f3">body part</span>. The
+            professor said, "What happened to you?".
+        </p>
+
+        <p>
+            "You wouldn't believe me if I told you" the student replied. "You see, I was <span class="fillin" id="f4">gerund</span>
+            on my way to the bus stop when I thought I saw a <span class="fillin" id="f5">noun</span>."</p>
+    </div>
+</xmp>
+
+<p>Notice that the words to be replaced are inside of a <code>&lt;span&gt;</code> tag annotated with a class of <code>fillin</code>.
+    The content of these tags is the type of word to fill in (noun, verb, etc.)</p>
+
+<o>This problem has three parts:</o>
+<ol>
+    <li>Create a form where the user can "fill in the blanks", and, upon submission</li>
+    <li>Display the resulting story.</li>
+    <li>Use CSS to add a unique style to the replaced words so they stand out.</li>
+</ol>
+
+<p> Your solution must include JavaScript.  Other than that, you may use any combination of technologies you like: PHP, JavaScript, XML/XSL, jquery, etc. (For what it's worth: I
+    used PHP to generate the form, and JavaScript to insert the new words.)</p>
+
+
+<p>Your form might look something like this: <br><img width=300px src="sampleForm.png"/></p>
+
+<p>Your final story might look something like this:<br> <img src="sampleResult.png"/></p>
+
+
+<hr>
+<p>Useful files</p>
+<ul>
+    <li><a href="story1.html">Sample story 1</a></li>
+    <li><a href="mlForm.php">Starter php code </a></li>
+    <li><a href="ml.js">Starter Javascript code </a></li>
+</ul>
+
+<p>Useful documentation:</p>
+<ul>
+    <li><a href="http://php.net/manual/en/class.domdocument.php"><code>DOMDocument</code></a></li>
+    <li><a href="http://php.net/manual/en/class.domnode.php"><code>DOMNode</code></a></li>
+    <li><a href="http://php.net/manual/en/class.domelement.php"><code>DOMElement</code></a></li>
+
+</ul>
+
+<p>Hints</p>
+<ul>
+    <li><code>$xmlDoc</code> in the starter code is a <em>XML</em> document, not an <em>HTML</em> document. This means
+        that you can't search this object by class name or id. Instead, search by tag name, then double-check the class
+        and/or id.
+    </li>
+    <li>When handling a form in Javascript, put a "submit" listener on the <em>form</em> tag. (Putting a submit
+        listener on the submit button won't quite do what you want.)
+    </li>
+    <li>Remember to have your event listener call <code>preventDefault</code> if you don't want the form submitted to
+        the server.
+    </li>
+    <li>Remember, ids must be unique on a page.</li>
+
+</ul>
+
+
+</body>
+</html>
