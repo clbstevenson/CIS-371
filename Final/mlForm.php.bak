@@ -24,16 +24,10 @@
 
     <?php
     $xmlDoc = new DomDocument();
-    if(isset($_GET['story'])) {
-        $story = $_GET['story'];
-    } else {
-        $story = "story1.html";
-    }
-    $xmlDoc->load($story);
+    $xmlDoc->load("story2.html");
     $root = $xmlDoc->documentElement;
 
     $spans = $root->getElementsByTagName("span");
-
 
     /* Insert code to generate <input> fields here
        Remember:
@@ -149,16 +143,6 @@
 </ul>
 
 <p id="demo"></p>
-<div>
-<hr>
-<p>Other Stories</p>
-<ul>
-<li><a href="mlForm.php?story=story1.html">Story 1</li>
-<li><a href="mlForm.php?story=story2.html">Story 2</li>
-<li><a href="mlForm.php?story=story3.html">Story 3</li>
-<li><a href="mlForm.php?story=story4.html">Story 4</li>
-</ul>
-</div>
 
 <script type="text/javascript" src="ml.js">
 </script>
