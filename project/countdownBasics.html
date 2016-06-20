@@ -15,12 +15,71 @@ body > iframe { display: none; }
 <script type="text/javascript">
 $(function () {
 	var austDay = new Date();
-	austDay = new Date(austDay.getFullYear(), 6 - 1, 20, 16, 11);
-	$('#defaultCountdown').countdown({until: austDay, onExpiry: liftOff});
-	$('#year').text(austDay.getFullYear());
+	austDay = new Date(austDay.getFullYear(), 6 - 1, 20, 16, 57);
+    //var newEndTime = endTime2();
+    endTime2();
+    var newEndTime = document.getElementById("jstime").innerHTML;
+    var newEndDay = new Date(newEndTime);
+    console.log("endTime: " + newEndTime);
+    //console.log("endDay: " + newEndDay);
+	//$('#defaultCountdown').countdown({until: newEndDay, onExpiry: liftOff,
+    //    serverSync: serverTime});
+	//$('#defaultCountdown').countdown({until: austDay, onExpiry: liftOff,
+    //    serverSync: serverTime});
+	//$('#year').text(newEndDay.getFullYear());
+	//$('#year').text(austDay.getFullYear());
 });
 function liftOff() {
     alert("We have lift off!");
+}
+function serverTime() {
+    var time = null;
+    $.ajax({url: 'serverTime.php',
+        async: false, dataType: 'text',
+        success: function(text){
+            time = new Date(text);
+            console.log("success: " + text);
+        }, error: function(http, message, exc) {
+            time = new Date();
+        }});
+    return time;
+}
+function endTime() {
+    var time = null;
+    console.log("calling endTime() function");
+    // TODO: don't hardcode IDs in -> retrieve from the story.php file
+    $.ajax({url: 'getEndtime.php?story_id=9&event_id=30',
+        async: false, dataType: 'text',
+        success: function(text){
+            time = new Date(text);
+            console.log("success: " + time);
+        }, error: function(http, message, exc) {
+            time = new Date();
+        }});
+    return time;
+}
+function endTime2() {
+    var time = null;
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {
+        if(xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+            //document.getElementById("history").innerHTML = xmlhttp.responseText;
+            var text = xmlhttp.responseText;
+            console.log("response text: " + text);
+            time = new Date(text);
+            console.log("response time: " + time);
+            document.getElementById("jstime").innerHTML = time;
+            var newEndDay = time;
+            $('#defaultCountdown').countdown({until: newEndDay, onExpiry: liftOff,
+                serverSync: serverTime});
+            $('#year').text(newEndDay.getFullYear());
+            return time;
+        }
+    };
+    xmlhttp.open("GET", "getEndtime.php?story_id=9&event_id=30", true); 
+    xmlhttp.send();
+    //document.getElementById("history_btn").innerHTML = "Hide Full Story";
+    //document.getElementById("history").style.display = "block";
 }
 </script>
 </head>
@@ -33,5 +92,6 @@ function liftOff() {
 <p>For more detail see the <a href="http://keith-wood.name/countdownRef.html">documentation reference</a> page.</p>
 <p>Counting down to 26 January <span id="year">2014</span>.</p>
 <div id="defaultCountdown"></div>
+<p id="jstime"></p>
 </body>
 </html>

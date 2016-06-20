@@ -381,17 +381,14 @@ function get_story_event_endtime($c, $story_id, $event_id) {
         $time = strtotime($timestamp);
         //echo "time: $time";
         //echo "</br>";
-
-        return $timestamp;
-        /*$formatTime = date('M j, Y H:i:s O', $time);
+        $formatTime = date('M j, Y H:i:s O', $time);
         $formatTime2 = date("D M d Y H:i:s O", $time);
         //echo "formatTime: $formatTime";
         //echo "</br>";
         //echo "formatTime2: $formatTime2";
         //echo "</br>";
-        return $formatTime;
+        return $formatTime2;
         //echo "</li>";
-        */
     } 
 }
 
@@ -834,6 +831,20 @@ function test_insert_story_event($c, $story_id, $event_id) {
 
 ?>
 
+<!--
+<html>
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>StoryDB</title>
+    <style type="text/css" src="story.css">
+
+
+    </style>
+</head>
+<body>
+-->
 
 <?php
 //$c = connect_DB();
@@ -876,3 +887,5 @@ if($debug) {
 } // end if(debug)
 
 ?>
+</body>
+</html>
