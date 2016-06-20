@@ -64,7 +64,7 @@
         //echo "b: " . $curr_event_row['choice_b'] . $curr_choices[1]."</br>";
         ?>
     <title>Story - <?php echo $title ?></title>
-    <link rel="stylesheet" href="story.css" type="text/css"/>
+    <link rel="stylesheet" href="css/story.css" type="text/css"/>
     <!-- Include the jQuery library -->
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <!-- Include the jQuery Countdown CSS and javascript files

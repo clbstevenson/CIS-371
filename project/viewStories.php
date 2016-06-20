@@ -11,7 +11,7 @@
     <meta charset="UTF-8">
     <title>Story List</title>
     <!--<style type="text/css" src="story.css"></style>-->
-    <link rel="stylesheet" href="story.css" type="text/css"/>
+    <link rel="stylesheet" href="css/story.css" type="text/css"/>
 </head>
 <body>
 
