@@ -65,6 +65,13 @@
         ?>
     <title>Story - <?php echo $title ?></title>
     <link rel="stylesheet" href="story.css" type="text/css"/>
+    <!-- Include the jQuery library -->
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <!-- Include the jQuery Countdown CSS and javascript files
+            to be used for the timer to end voting -->
+    <link rel="stylesheet" type="text/css" href="css/jquery.countdown.css">
+    <script type="text/javascript" src="js/jquery.plugin.js"></script> 
+    <script type="text/javascript" src="js/jquery.countdown.js"></script>
 </head>
 
 <?php 
@@ -94,6 +101,8 @@
             showing_history = false;
         }
     }
+</script>
+<script type="text/javascript" src="timer.js">
 </script>
 
 <body>
@@ -134,6 +143,10 @@ echo " <button id='history_btn' type='button' onclick='loadHistory($id)'>Show Fu
 <input type="submit" name="postSubmit" value="Submit"/>
 </form>
 </div>
+<span>
+<p>Time until voting ends: </p>
+<p id="timer">-1</p>
+</span>
 </fieldset>
 
 <hr>
@@ -147,13 +160,8 @@ echo " <button id='history_btn' type='button' onclick='loadHistory($id)'>Show Fu
 <a href="logout.php">Logout</a>-->
 
 <script type="text/javascript">
-    document.getElementById("choices").addEventListener("submit",
-        function(event){
-            event.preventDefault();
-            document.getElementById("demo").innerHTML += "choose ";
-            submit_vote(event);
-        });
 
+    // Javscript functions 
     function submit_vote(eventID) {
         var xmlhttp = new XMLHttpRequest();
         xmlhttp.onreadystatechange = function() {
@@ -171,6 +179,18 @@ echo " <button id='history_btn' type='button' onclick='loadHistory($id)'>Show Fu
         //document.getElementById("history_btn").innerHTML = "Hide History";
         //document.getElementById("history").style.display = "block";
     }
+
+    function countdown() {
+        document.getElementById("countdown").innerHTML = 
+    }
+
+    // Non-Functions javascript
+    document.getElementById("choices").addEventListener("submit",
+        function(event){
+            event.preventDefault();
+            document.getElementById("demo").innerHTML += "choose ";
+            submit_vote(event);
+        });
 </script>
 <?php
 $c->close();
