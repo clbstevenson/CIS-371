@@ -70,8 +70,8 @@ function endTime2() {
             console.log("response time: " + time);
             document.getElementById("jstime").innerHTML = time;
             var newEndDay = time;
-            $('#defaultCountdown').countdown({until: newEndDay, onExpiry: liftOff,
-                serverSync: serverTime});
+            //$('#defaultCountdown').countdown({until: newEndDay, onExpiry: liftOff,
+            $('#noDaysHours').countdown({until: newEndDay, onExpiry: liftOff, serverSync: serverTime});
             $('#year').text(newEndDay.getFullYear());
             return time;
         }

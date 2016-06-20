@@ -12,8 +12,12 @@
     <title>Story List</title>
     <!--<style type="text/css" src="story.css"></style>-->
     <link rel="stylesheet" href="css/story.css" type="text/css"/>
+    <style type="text/css">
+        #defaultCountdown { width: 200px; height: 45px; }
+    </style>
 </head>
 <body>
+<script type="text/javascript" src="timer.js"></script>
 
 <h1>Available Stories </h1>
 

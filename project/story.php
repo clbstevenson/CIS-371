@@ -72,6 +72,12 @@
     <link rel="stylesheet" type="text/css" href="css/jquery.countdown.css">
     <script type="text/javascript" src="js/jquery.plugin.js"></script> 
     <script type="text/javascript" src="js/jquery.countdown.js"></script>
+    <style type="text/css">
+        #defaultCountdown { width: 200px; height: 45px; }
+        #jstimer {
+            display: none;
+        }
+    </style>
 </head>
 
 <?php 
@@ -102,8 +108,7 @@
         }
     }
 </script>
-<script type="text/javascript" src="timer.js">
-</script>
+<script type="text/javascript" src="timer.js"></script>
 
 <body>
 
@@ -145,7 +150,10 @@ echo " <button id='history_btn' type='button' onclick='loadHistory($id)'>Show Fu
 </div>
 <span>
 <p>Time until voting ends: </p>
-<p id="timer">-1</p>
+<!--<p id="timer">-1</p>-->
+<p id="jstimer"></p>
+<div id="defaultCountdown"></div>
+<div id="noDays"></div>
 </span>
 </fieldset>
 
@@ -181,7 +189,7 @@ echo " <button id='history_btn' type='button' onclick='loadHistory($id)'>Show Fu
     }
 
     function countdown() {
-        document.getElementById("countdown").innerHTML = 
+        //document.getElementById("countdown").innerHTML = 
     }
 
     // Non-Functions javascript

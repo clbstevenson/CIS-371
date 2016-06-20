@@ -485,7 +485,7 @@ function display_stories_basic($c, $with_links) {
     // iterate over each record in the result.
     // Each record will be one row in the table, beginning with <tr> 
     echo "<table id='view_stories'>";
-    echo "<tr><th>Story Title</th><th>Short Description</th><th>Current Event</th></tr>";
+    echo "<tr><th>Story Title</th><th>Short Description</th><th>Current Event</th><th>Voting Ends In</th></tr>";
     foreach ($result as $row) {
         $row_id = $row['story_id'];
         echo "<tr id=$row_id>";
