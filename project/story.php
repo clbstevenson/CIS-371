@@ -30,9 +30,11 @@
                 echo "<p>You can also start a new story!</p>";
                 echo "<hr>";
                 echo "<p><a href='viewStories.php'>Home</a></p>";
-                echo "<p>Create Account / Sign In / Logout</p>";
-                echo "<!--<h4><a href='index.php'>Home<a></h4>";
-                echo "<a href='logout.php'>Logout</a>-->";
+                if(!$signed_in) {
+                    echo "<p><a href='login.php'>Sign In</a></p>";
+                } else {
+                    echo "<p><a href='logout.php'>Logout</a></p>";
+                }
                 echo "<title>Story Unavailable</title>";
                 exit;
             } else {
@@ -60,6 +62,7 @@
         $curr_event_row = get_event_data($c, $story_row['curr_id']);
         $curr_event_id = $curr_event_row['event_id'];
         $curr_choices = get_event_choices($c, $story_row['curr_id']);
+        
         //echo "a: " . $curr_event_row['choice_a'] . $curr_choices[0]."</br>";
         //echo "b: " . $curr_event_row['choice_b'] . $curr_choices[1]."</br>";
         ?>
@@ -83,8 +86,12 @@
 <?php 
 $signed_in = (isset($_SESSION['username']));
 
-    echo "<p id='data_story_id' class='data_story_id' class='data'>$story_id</p>";
-    echo "<p id='data_event_id' class='data_event_id' class='data'>$curr_event_id</p>";
+    echo "<p id='data_story_id' class='data_story_id'>$story_id</p>";
+    echo "<p id='data_event_id' class='data_event_id'>$curr_event_id</p>";
+    if($signed_in) {
+        $name = $_SESSION['username'];
+        echo "<p id='data_user_id' class='data_user_id'>$name</p>";
+    }
 ?>
 
 <script>
@@ -182,6 +189,13 @@ if($signed_in) {
 else {
     echo '<a href="login.php">Sign In</a>';
 }
+
+if($signed_in) {
+    if(has_permission($c, $_SESSION['username'])) {
+        echo "<button id='calc_votes'>Calculate Votes</button>";
+    }
+}
+
 ?>
 <!--<h4><a href="index.php">Home<a></h4>
 <a href="logout.php">Logout</a>-->
@@ -198,17 +212,65 @@ else {
         };
         var story_id = document.getElementById("data_story_id").innerHTML;
         var event_id = document.getElementById("data_event_id").innerHTML;
-        var option = document.querySelector('input[name = "option"]:checked').value;
-        console.log("You selected " + option + "!<br>");
-        console.log("story_id: " + story_id + "; event_id: " + event_id + ";choice_id: " + option);
-        xmlhttp.open("GET", "getVotes.php?story_id=" + story_id + "&event_id="+event_id + "&choice_id=" + option, true); 
+        var user_id = document.getElementById("data_user_id").innerHTML;
+
+        // Check localStorage to see if the user has already voted
+        var voted_id = user_id + ":voted:" + story_id + ":" + event_id;
+        var prev_vote = localStorage.getItem(voted_id);
+        console.log("voted_id (" + voted_id + ") prev_vote? " + prev_vote);
+        if(prev_vote) {
+            console.log("Sorry, you've already voted. Here's the results");  
+            xmlhttp.open("GET", "getVotes.php?story_id=" + story_id + "&event_id="+event_id, true); 
+            // Display the text 'you've already voted' to the user
+            var new_node = document.createElement("p");
+            new_node.setAttribute("id", "i_voted");
+            new_node.style.background = 'orange';
+            console.log("new_node: " + new_node);
+            var textnode = document.createTextNode("Thank you, but you have already voted.");
+            new_node.appendChild(textnode);
+            document.getElementById("div_choices").parentNode.appendChild(new_node);
+        } else {
+            var option = document.querySelector('input[name = "option"]:checked').value;
+            console.log("You selected " + option + "!<br>");
+            console.log("story_id: " + story_id + "; event_id: " + event_id + ";choice_id: " + option);
+            xmlhttp.open("GET", "getVotes.php?story_id=" + story_id + "&event_id="+event_id + "&choice_id=" + option, true); 
+            localStorage.setItem(voted_id, true); 
+        }
+
         xmlhttp.send();
         //document.getElementById("history_btn").innerHTML = "Hide History";
         //document.getElementById("history").style.display = "block";
+
+        // Store the vote in local storage, to limit repeat votes
     }
 
     function countdown() {
         //document.getElementById("countdown").innerHTML = 
+    }
+
+    function calc_votes() {
+        console.log("Tallying votes...");
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function() {
+            if(xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                var xml_response = xmlhttp.responseText;
+                console.log("xml_response: " + xml_response);
+                document.getElementById("div_choices").innerHTML = xmlhttp.responseText;
+                // reload the page
+                //window.location.reload();
+                
+                // Update the state variable stored within the page
+
+            }
+        };
+        var story_id = document.getElementById("data_story_id").innerHTML;
+        var event_id = document.getElementById("data_event_id").innerHTML;
+
+        // Check localStorage to see if the user has already voted
+        console.log("story_id: " + story_id + "; event_id: " + event_id);
+        xmlhttp.open("GET", "calcVotes.php?story_id=" + story_id + "&event_id="+event_id, true); 
+
+        xmlhttp.send();
     }
 
     // Non-Functions javascript
@@ -218,6 +280,8 @@ else {
             document.getElementById("demo").innerHTML += "choose ";
             submit_vote(event);
         });
+
+    document.getElementById("calc_votes").addEventListener("click", calc_votes);
 </script>
 <?php
 $c->close();

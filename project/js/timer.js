@@ -129,7 +129,7 @@ function textTimer() {
 
 function textTimer_withID(s_id, e_id) {
     console.log("using text timer with IDs");
-    general_timer("textTimer", "HMS", '{hnn}{sep}{mnn}{sep}{snn}', s_id, e_id);
+    general_timer("textTimer:"+s_id+":"+e_id, "HMS", '{hnn}{sep}{mnn}{sep}{snn}', s_id, e_id);
     //general_timer("textTimer", "HMS",false);// '{sn} {sl}, {mn} {ml}, {hn} {hl}, and {dn} {dl}');
 }
 

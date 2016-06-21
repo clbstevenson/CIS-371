@@ -396,10 +396,29 @@ function get_story_event_endtime($c, $story_id, $event_id) {
 
 // Select all of the chosen story_event pairs for given @id
 function get_story_event_results($c, $id) {
-    $sql = "SELECT result FROM event WHERE event_id = (SELECT event_id FROM story_event WHERE story_id = $id);";
+    $sql = "SELECT event_id FROM story_event WHERE story_id = $id;";
+    //$sql = "SELECT result FROM event WHERE event_id = (SELECT event_id FROM story_event WHERE story_id = $id);";
     $result = $c->query($sql);
     if (!$result) {
-        return false;
+        //echo "NO RESULT";
+        die("Unable to get story_event ids [".$c->error."]");
+        //return false;
+    }
+    $event_results = [];
+    foreach($result as $row) {
+       echo "found a row"; 
+       $event_id = $row['event_id'];
+       $sql_2 = "SELECT result FROM event WHERE event_id = $event_id;";
+       $result_2 = $c->query($sql_2);
+       if(!$result_2) {
+           die("Unable to get results [".$c->error."]");
+       }
+       echo "SUCCESS</br>";
+       foreach($result_2 as $row_2) {
+           $event_result = $row_2['result'];
+           echo "RESULT: " .$event_result;
+           echo "</br>";
+       }
     }
     return $result;
 }
@@ -687,22 +706,29 @@ function get_event_choices($c, $event_id) {
     // If the query is not successful, add a 'false' element.
     // If the query is successful, add the description to the array.
     if(!$resulta) {
-       array_push($choices, false); 
+        //array_push($choices, "Nothing for a"); 
+        die("Unable to get choices [".$c->error."]");
     } else {
-        foreach($resulta as $rowa) {
-            array_push($choices, $rowa['description']); 
+        if($resulta->num_rows > 0) {
+            foreach($resulta as $rowa) {
+                array_push($choices, $rowa['description']); 
+            }
+        } else {
+            array_push($choices, "This is not much of a choice.");
         }
-
-        //echo "description a: ".$resulta['description'];
-       //array_push($choices, $resulta['description']); 
     }
 
     $resultb = $c->query($sqlb);
     if(!$resultb) {
-        array_push($choices, false);
+        array_push($choices, "Nothing for b");
+        die("Unable to get choices [".$c->error."]");
     } else {
-        foreach($resultb as $rowb) {
-            array_push($choices, $rowb['description']); 
+        if($resultb->num_rows > 0) {
+            foreach($resultb as $rowb) {
+                array_push($choices, $rowb['description']); 
+            }
+        } else {
+            array_push($choices, "This is not a good Plan B.");
         }
         //array_push($choices, $resultb['description']); 
     }
@@ -725,6 +751,46 @@ function submit_vote($c, $story_id, $event_id, $choice_id) {
         die("Unable to submit vote [".$c->error."]");
     }
     return $result;
+}
+
+function calculate_votes($c, $story_id, $event_id) {
+    $sql = "SELECT choice_id,num_votes FROM event_votes ".
+        "WHERE story_id=$story_id AND event_id=$event_id;";
+    $result = $c->query($sql);
+    if(!$result) {
+        die("Unable to view the number of votes: [".$c->error."]");
+    }
+
+    $total_votes = 0;
+    $votes = [];
+    $choice_ids = [];
+    $choices = [];
+    $voted_options = 0;
+    // read and gather all of the vote counts for the choices
+    while($row = mysqli_fetch_assoc($result)) {
+        //echo $row['choice_id'] . " (" . $row['num_votes'];
+        array_push($votes, $row['num_votes']);
+        array_push($choice_ids, $row['choice_id']);
+        $total_votes += $row['num_votes'];
+        $voted_options ++;
+    }
+
+    if($votes[0] > $votes[1]) {
+        $winner_id = $choice_ids[0];
+        //echo "choice A/0 wins: id is";
+    } else {
+        //echo "choice B/1 wins";
+        $winner_id = $choice_ids[1];
+    }
+    //echo "</br>Winner ID is: $winner_id</br>";
+    // Now, query the database to update story_id's current_event
+    $sql = "UPDATE story SET curr_id = $winner_id WHERE story_id = $story_id";
+    $result = $c->query($sql);
+    if(!$result) {
+        die("Unable to view the number of votes: [".$c->error."]");
+    }
+    //echo "Updated curr_id</br>";
+    return $winner_id;
 }
 
 function display_event_votes($c, $story_id, $event_id) {
@@ -764,7 +830,12 @@ function display_event_votes($c, $story_id, $event_id) {
     $choices = get_event_choices($c, $event_id);
     //echo "CHOICE 0: " . $choices[0];
     for($i = 0; $i < 2; $i++) {
-        echo "<tr><td>".$choices[$i]."</td><td>".$percent_votes[$i]."</td></tr>";
+        if(!$choices[$i]) {
+            $disp_choice = "Nothing $i"; 
+        } else {
+            $disp_choice = $choices[$i];
+        }
+        echo "<tr><td>".$disp_choice."</td><td>".$percent_votes[$i]."</td></tr>";
         //echo "<li>" . $choices[$i] . "\t" .  $percent_votes[$i]."</li></br>";
     }
     echo "</table>";
@@ -783,7 +854,7 @@ function has_permission($c, $username) {
     echo "<br/>";
     while($row = $result->fetch_assoc()) {
         $permission = $row['superuser'];
-        echo $row['superuser'] . '<br/>';
+        //echo $row['superuser'] . '<br/>';
     }
     return $permission;
 }
@@ -825,7 +896,7 @@ function test_insert_event($c, $desc, $result, $choice_a, $choice_b) {
 }
 
 // The following functions test inserting new events to the db.
-function test_insert_story_event($c, $story_id, $event_id) {
+function insert_story_event($c, $story_id, $event_id) {
     $sql = "INSERT INTO story_event (story_id, event_id) ".
         "VALUES ('$story_id', '$event_id');";
     $result = $c->query($sql);
@@ -869,9 +940,10 @@ $debug = 0;
 $c = connect_DB();
 if($debug) {
     create_accounts_DB($c);
-    //create_story_DB($c);
-    //create_event_DB($c);
-    //create_story_event_DB($c);
+    create_story_DB($c);
+    create_event_DB($c);
+    create_story_event_DB($c);
+    create_event_votes_DB($c);
     echo "<hr>";
     display_stories($c);
     echo "<hr>";
@@ -893,7 +965,7 @@ if($debug) {
     //test_insert_event($c, 'Ye enter ye dungeon.', 'Ye find yeself in a dark dungeon room with a grimy gray floor. Ye see a flask on the floor next to ye. There is one exit to ye right.', NULL, NULL);
     //test_insert_event($c, 'Go through the exit.', 'Ye approach the exit. As you get closer ye hear a faint clicking sound further down the tunnel. Perhaps it is some fowl creature? or merely the ambiant noise of a dark tunnel.', NULL, NULL);
     //test_insert_event($c, 'Go through the exit.', 'Ye approach the exit. As you get closer ye hear a faint clicking sound further down the tunnel. Perhaps it\'s some fowl creature? or merely some ambiant noise of a tunnel.', NULL, NULL);
-    //test_insert_story_event($c, 9, 30);
+    //insert_story_event($c, 9, 30);
     echo "<hr>";
     display_stories($c);
     echo "<hr>";

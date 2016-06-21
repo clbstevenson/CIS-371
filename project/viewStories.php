@@ -31,9 +31,15 @@
 <h1>Available Stories </h1>
 
 <?php 
+
 include "storyDB.php";
 session_start();
 $signed_in = (isset($_SESSION['username']));
+if($signed_in) {
+    $name = $_SESSION['username'];
+    echo "<p id='data_user_id' class='data_user_id, data'>$name</p>";
+    echo "<h3>Welcome back $name!</h3>";
+}
 /*
 echo "Signed In: " + $signed_in;
 if (!$signed_in) {
@@ -122,13 +128,15 @@ display_stories_basic($c, 1);
 <?php
 // If the user is signed in, show the "Logout" link.
 if($signed_in) {
-   echo '<a href="logout.php">Logout</a>';
+    echo "<a href='logout.php'>Logout</a>";
 } 
 // Otherwise, the user is not signed in. Show SignIn/Create Account
 else {
     echo '<a href="login.php">Sign In</a>';
 }
 ?>
+</br>
+<a href="sources.php">Project Resources</a>
 <!--<p>Create Account / Sign In / Logout</p>
 <h4><a href='index.php'>Home<a></h4>
 <a href='logout.php'>Logout</a>-->
