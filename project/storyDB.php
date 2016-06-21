@@ -1,6 +1,5 @@
 <?php
 
-$debug = 0;
 //
 // Connect to the database so it can be queried and accessed.
 //
@@ -26,7 +25,7 @@ function connect_DB() {
 // various information.
 function create_accounts_DB($c) {
     $sql = "CREATE TABLE IF NOT EXISTS story_accounts( ".
-        "account_id INT NOT NULL PRIMARY KEY,".
+        "account_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,".
         "name VARCHAR(50) NOT NULL,".
         "password VARCHAR(50) NOT NULL,".
         "superuser BOOLEAN);";
@@ -836,6 +835,26 @@ function test_insert_story_event($c, $story_id, $event_id) {
     return $result;
 }
 
+function test_insert_account($c, $name, $password, $isSuper) {
+    $sql = "INSERT INTO story_accounts (name, password, superuser)".
+        "VALUES ('$name', '$password', '$isSuper');";
+    $result = $c->query($sql);
+    if (!$result) {
+        die ("Query was unsuccessful: [" . $c->error ."]");
+    }
+    return $result;
+}
+
+function test_insert_account2($c, $name) {
+    $password = $name ."1234";
+    $sql = "INSERT INTO story_accounts (name, password, superuser)".
+        "VALUES ('$name', '$password', '0');";
+    $result = $c->query($sql);
+    if (!$result) {
+        die ("Query was unsuccessful: [" . $c->error ."]");
+    }
+    return $result;
+}
 ?>
 
 
@@ -846,11 +865,13 @@ function test_insert_story_event($c, $story_id, $event_id) {
 //$c->close();
 
 
+$debug = 0;
 $c = connect_DB();
 if($debug) {
-    create_story_DB($c);
-    create_event_DB($c);
-    create_story_event_DB($c);
+    create_accounts_DB($c);
+    //create_story_DB($c);
+    //create_event_DB($c);
+    //create_story_event_DB($c);
     echo "<hr>";
     display_stories($c);
     echo "<hr>";
@@ -875,6 +896,14 @@ if($debug) {
     //test_insert_story_event($c, 9, 30);
     echo "<hr>";
     display_stories($c);
+    echo "<hr>";
+    //test_insert_account($c, 'stevecal', 'exo88*', '1');
+    //test_insert_account2($c, 'stevejar');
+
+    echo "<hr>";
+    display_accounts($c);
+    echo "<hr>";
+    echo "<hr>";
     echo "<hr>";
 
 } // end if(debug)

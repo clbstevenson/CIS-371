@@ -32,6 +32,16 @@
 
 <?php 
 include "storyDB.php";
+session_start();
+$signed_in = (isset($_SESSION['username']));
+/*
+echo "Signed In: " + $signed_in;
+if (!$signed_in) {
+    echo "NOT";
+} else {
+    echo "YUP";
+}
+*/
 $c = connect_DB();
 // The second parameter is $with_links
 // that, when true, will display the title column with a link to story page 
@@ -109,9 +119,18 @@ display_stories_basic($c, 1);
 
 <hr>
 <p id="jstimer"></p>
-<p>Home</p>
-<p>Create Account / Sign In / Logout</p>
-<!--<h4><a href='index.php'>Home<a></h4>
+<?php
+// If the user is signed in, show the "Logout" link.
+if($signed_in) {
+   echo '<a href="logout.php">Logout</a>';
+} 
+// Otherwise, the user is not signed in. Show SignIn/Create Account
+else {
+    echo '<a href="login.php">Sign In</a>';
+}
+?>
+<!--<p>Create Account / Sign In / Logout</p>
+<h4><a href='index.php'>Home<a></h4>
 <a href='logout.php'>Logout</a>-->
 
 <?php

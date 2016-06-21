@@ -81,6 +81,8 @@
 </head>
 
 <?php 
+$signed_in = (isset($_SESSION['username']));
+
     echo "<p id='data_story_id' class='data_story_id' class='data'>$story_id</p>";
     echo "<p id='data_event_id' class='data_event_id' class='data'>$curr_event_id</p>";
 ?>
@@ -138,14 +140,22 @@ echo " <button id='history_btn' type='button' onclick='loadHistory($id)'>Show Fu
 <legend>Choices</legend>
 <div id="div_choices">
 <form id="choices" action="" method="post">
-<input type="radio" name="option"
 <?php
+if($signed_in) {
+    echo '<input type="radio" name="option"';
     $curr_event_a = $curr_event_row['choice_a'];
     echo "<input type='radio' id='optionA' name='option' checked='true' value='$curr_event_a'>$curr_choices[0]</br>";
     $curr_event_b = $curr_event_row['choice_b'];
     echo "<input type='radio' id='optionB' name='option' value='$curr_event_b'>$curr_choices[1]</br>";
+echo '<input type="submit" name="postSubmit" value="Submit"/>';
+} else {
+    echo "<ul>";
+    echo "<li>$curr_choices[0]</li>";
+    echo "<li>$curr_choices[1]</li>";
+    echo "</ul>";
+    echo "<h4>If you want to vote, you must be <a href='login.php'>signed in</a></h4>";
+}
 ?>
-<input type="submit" name="postSubmit" value="Submit"/>
 </form>
 </div>
 <span>
@@ -163,7 +173,16 @@ echo " <button id='history_btn' type='button' onclick='loadHistory($id)'>Show Fu
 
 
 <p><a href='viewStories.php'>Home</a></p>
-<p>Logout</p>
+<?php
+// If the user is signed in, show the "Logout" link.
+if($signed_in) {
+   echo '<a href="logout.php">Logout</a>';
+} 
+// Otherwise, the user is not signed in. Show SignIn/Create Account
+else {
+    echo '<a href="login.php">Sign In</a>';
+}
+?>
 <!--<h4><a href="index.php">Home<a></h4>
 <a href="logout.php">Logout</a>-->
 
