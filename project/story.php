@@ -191,6 +191,7 @@ else {
 }
 
 if($signed_in) {
+    
     if(has_permission($c, $_SESSION['username'])) {
         echo "<button id='calc_votes'>Calculate Votes</button>";
     }
@@ -257,7 +258,7 @@ if($signed_in) {
                 console.log("xml_response: " + xml_response);
                 document.getElementById("div_choices").innerHTML = xmlhttp.responseText;
                 // reload the page
-                //window.location.reload();
+                window.location.reload();
                 
                 // Update the state variable stored within the page
 
@@ -280,8 +281,9 @@ if($signed_in) {
             document.getElementById("demo").innerHTML += "choose ";
             submit_vote(event);
         });
-
+    <?php if($signed_in) { ?>
     document.getElementById("calc_votes").addEventListener("click", calc_votes);
+    <?php } ?>
 </script>
 <?php
 $c->close();

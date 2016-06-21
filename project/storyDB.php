@@ -375,7 +375,7 @@ function get_story_event_endtime($c, $story_id, $event_id) {
         //echo "<li>";
         $keys = "end_time";
         $timestamp = $row[$keys];
-        //echo "timestamp: $timestamp";
+        //echo "<h2>timestamp: $timestamp</h2>";
         //echo "</br>";
         $time = strtotime($timestamp);
         //echo "time: $time";
@@ -406,21 +406,22 @@ function get_story_event_results($c, $id) {
     }
     $event_results = [];
     foreach($result as $row) {
-       echo "found a row"; 
+       //echo "found a row"; 
        $event_id = $row['event_id'];
        $sql_2 = "SELECT result FROM event WHERE event_id = $event_id;";
        $result_2 = $c->query($sql_2);
        if(!$result_2) {
            die("Unable to get results [".$c->error."]");
        }
-       echo "SUCCESS</br>";
+       //echo "SUCCESS</br>";
        foreach($result_2 as $row_2) {
-           $event_result = $row_2['result'];
-           echo "RESULT: " .$event_result;
-           echo "</br>";
+           $event_result = $row_2['result'] . "</br>";
+           //echo "RESULT: " .$event_result;
+           array_push($event_results, $event_result);
+           //echo "</br>";
        }
     }
-    return $result;
+    return $event_results;
 }
 
 //TODO: add similar functions for reading new story/event info from files.
@@ -522,12 +523,13 @@ function display_stories_basic($c, $with_links) {
         //echo "<td class='curr_desc'>" . $row['curr_id'] . "</td>";
         $event_data = get_event_data($c, $row['curr_id']);
         echo "<td class='curr_desc'>" . $event_data['description'] . "</td>";
-        echo "<td class='curr_endtime'><p id='textTimer'></p></td>";
-        
+        $timer_id = "textTimer:".$row_id.":".$event_id;
+        //echo "<td class='curr_endtime'><p id='$timer_id'></p></td>";
+        echo "<td class='curr_endtime'><p id='defaultCountdown'></p></td>";
+        //"textTimer:"+s_id+":"+e_id
         foreach($event_data as $event_item) {
             //echo "<td class='curr_desc'>" . $event_item['description'] . "</td>";
         }
-
         //foreach ($keys as $key) {
             //echo "<td>" . $row[$key] . "</td>";
         //}
@@ -651,7 +653,8 @@ function display_story_history($c, $id) {
         //echo "<li>";
         echo "<p>";
         $keys = "result";
-        echo $row[$keys];
+        //echo $row[$keys];
+        echo $row;
         echo "</p>";
         //echo "</li>";
     } 

@@ -44,9 +44,9 @@ var event_id = document.getElementById("data_event_id").innerHTML;
 // shown later in the file.
 var austDay = new Date();
 austDay = new Date(austDay.getFullYear(), 6 - 1, 20, 16, 57);
-//endTime();
-defaultTimer();
-textTimer();
+//defaultTimer();
+endTime();
+//textTimer();
 //var jstimer = document.getElementById("jstimer");
 //var newEndTime = jstimer.innerHTML;
 //console.log("jstimer: jstimer");
@@ -93,26 +93,48 @@ function general_timer(classID, myFormat, myLayout, s_id, e_id) {
             var text = xmlhttp.responseText;
             console.log("response text: " + text);
             time = new Date(text);
-            console.log("response time: " + time);
-            document.getElementById("jstimer").innerHTML = time;
-            var newEndDay = time;
-            //$('#defaultCountdown').countdown({until: newEndDay, onExpiry: liftOff,
-            //    serverSync: serverTime});
-            var class_selector = "#" + classID;
-            if(myFormat) {
-                if(myLayout) {
-                    $(class_selector).countdown({until: newEndDay, onExpiry: liftOff, serverSync: serverTime, format: myFormat, layout: myLayout});
+            // Parse the text response to get the time values
+            if(text) {
+                var dateArray = text.split(" ");
+                if(dateArray && dateArray.length == 2) {
+                    var dateArrayLeft = dateArray[0].split("-");
+                    var dateArrayRight = dateArray[1].split(":");
+
+                    var theDate = new Date(dateArrayLeft[0], dateArrayLeft[1]-1, dateArrayLeft[2], dateArrayRight[0], dateArrayRight[1], dateArrayRight[2]);
+                    //alert(theDate);
+                    console.log("response theDate: " + theDate);
+                    document.getElementById("jstimer").innerHTML = theDate;
+                    var newEndDay = theDate;
+                    var newYear = new Date();
+                    neEndDay = new Date(newYear.getFullYear(), newYear.getMonth(), newYear.getDay + 2, newYear.getMinutes());
+                    //$('#defaultCountdown').countdown({until: newEndDay, onExpiry: liftOff,
+                    //    serverSync: serverTime});
+                    var class_selector = "#" + classID;
+                    console.log("class_selector: " + class_selector);
+                    if(myFormat) {
+                        if(myLayout) {
+                            $(class_selector).countdown({until: newEndDay, onExpiry: liftOff, serverSync: serverTime, format: myFormat, layout: myLayout});
+                        } else {
+                            $(class_selector).countdown({until: newEndDay, onExpiry: liftOff, serverSync: serverTime, format: myFormat});
+                        }
+                    } else {
+                        if(myLayout) {
+                            $(class_selector).countdown({until: newEndDay, onExpiry: liftOff, serverSync: serverTime, layout: myLayout});
+                        } else {
+                            $(class_selector).countdown({until: newEndDay, onExpiry: liftOff, serverSync: serverTime});
+                        }
+                    }
+                    //return time;
+                    return theDate;
                 } else {
-                    $(class_selector).countdown({until: newEndDay, onExpiry: liftOff, serverSync: serverTime, format: myFormat});
+                    var newEndDay = new Date();
                 }
             } else {
-                if(myLayout) {
-                    $(class_selector).countdown({until: newEndDay, onExpiry: liftOff, serverSync: serverTime, layout: myLayout});
-                } else {
-                    $(class_selector).countdown({until: newEndDay, onExpiry: liftOff, serverSync: serverTime});
-                }
+                alert("text is null");
+                console.log("response time: " + time);
+                document.getElementById("jstimer").innerHTML = time;
+                var newEndDay = new Date();
             }
-            return time;
         }
     };
     xmlhttp.open("GET", "getEndtime.php?story_id="+s_id+"&event_id="+e_id, true); 
@@ -128,14 +150,14 @@ function textTimer() {
 }
 
 function textTimer_withID(s_id, e_id) {
-    console.log("using text timer with IDs");
+    console.log("using text timer with IDs: story = " + s_id + "; event = " + e_id);
     general_timer("textTimer:"+s_id+":"+e_id, "HMS", '{hnn}{sep}{mnn}{sep}{snn}', s_id, e_id);
     //general_timer("textTimer", "HMS",false);// '{sn} {sl}, {mn} {ml}, {hn} {hl}, and {dn} {dl}');
 }
 
 function defaultTimer() {
-    general_timer("defaultCountdown", "HMS", false, false, false);
     console.log("using default timer");
+    general_timer("defaultCountdown", "HMS", false, false, false);
 }
 
 function endTime() {
@@ -150,6 +172,8 @@ function endTime() {
             console.log("response time: " + time);
             //document.getElementById("jstimer").innerHTML = time;
             var newEndDay = time;
+            var newYear = new Date();
+            newEndDay = new Date(newYear.getFullYear(), 6 - 1, 21, 11, 00);
             //$('#defaultCountdown').countdown({until: newEndDay, onExpiry: liftOff,
             //    serverSync: serverTime});
             $('#defaultCountdown').countdown({until: newEndDay, onExpiry: liftOff, serverSync: serverTime});
@@ -157,7 +181,7 @@ function endTime() {
             return time;
         }
     };
-    xmlhttp.open("GET", "getEndtime.php?story_id=9&event_id=30", true); 
+    xmlhttp.open("GET", "getEndtime.php?story_id=9&event_id=2", true); 
     xmlhttp.send();
     //document.getElementById("history_btn").innerHTML = "Hide Full Story";
     //document.getElementById("history").style.display = "block";
