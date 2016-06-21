@@ -12,8 +12,18 @@
     <title>Story List</title>
     <!--<style type="text/css" src="story.css"></style>-->
     <link rel="stylesheet" href="css/story.css" type="text/css"/>
+    <!-- Include the jQuery library -->
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <!-- Include the jQuery Countdown CSS and javascript files
+            to be used for the timer to end voting -->
+    <link rel="stylesheet" type="text/css" href="css/jquery.countdown.css">
+    <script type="text/javascript" src="js/jquery.plugin.js"></script> 
+    <script type="text/javascript" src="js/jquery.countdown.js"></script>
     <style type="text/css">
         #defaultCountdown { width: 200px; height: 45px; }
+        #jstimer {
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -45,6 +55,7 @@ display_stories_basic($c, 1);
     var short_descs = table_html.getElementsByClassName("short_desc");
     console.log(short_descs);
     var h0 = short_descs[0].innerHTML;
+    /*
     short_descs[0].addEventListener("click", function(){
             document.getElementById("demo").innerHTML = "story time?";
             
@@ -69,6 +80,7 @@ display_stories_basic($c, 1);
             //}
             //testing("LISTTABLE", h0, 0);
     });
+    */
     /*
     var h1 = headers[1].innerHTML;
     headers[1].addEventListener("click", function(){
@@ -96,6 +108,7 @@ display_stories_basic($c, 1);
 </script>
 
 <hr>
+<p id="jstimer"></p>
 <p>Home</p>
 <p>Create Account / Sign In / Logout</p>
 <!--<h4><a href='index.php'>Home<a></h4>

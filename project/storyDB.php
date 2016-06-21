@@ -501,6 +501,7 @@ function display_stories_basic($c, $with_links) {
         //echo "<td class='curr_desc'>" . $row['curr_id'] . "</td>";
         $event_data = get_event_data($c, $row['curr_id']);
         echo "<td class='curr_desc'>" . $event_data['description'] . "</td>";
+        echo "<td class='curr_endtime'><p id='textTimer'></p></td>";
         
         foreach($event_data as $event_item) {
             //echo "<td class='curr_desc'>" . $event_item['description'] . "</td>";
