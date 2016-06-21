@@ -27,7 +27,6 @@
     </style>
 </head>
 <body>
-<script type="text/javascript" src="timer.js"></script>
 
 <h1>Available Stories </h1>
 
@@ -39,6 +38,7 @@ $c = connect_DB();
 display_stories_basic($c, 1);
 ?>
 
+<script type="text/javascript" src="js/timer.js"></script>
 
 <p id="demo"></p>
 

@@ -488,7 +488,10 @@ function display_stories_basic($c, $with_links) {
     echo "<tr><th>Story Title</th><th>Short Description</th><th>Current Event</th><th>Voting Ends In</th></tr>";
     foreach ($result as $row) {
         $row_id = $row['story_id'];
-        echo "<tr id=$row_id>";
+        $event_id = $row['curr_id'];
+        echo "<tr id='$row_id-$event_id'>";
+        echo "<td class='data_story_id' id='data_story_id' style='display:none'>$row_id</td>";
+        echo "<td class='data_event_id' id='data_event_id' style='display:none'>$event_id</td>";
         $keys = array("title", "short_desc"); //, "long_desc", );
         // iterate over all the columns.  Each column is a <td> element.
         if(!$with_links) {

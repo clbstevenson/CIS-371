@@ -13,6 +13,6 @@ td, th, table{
     //color: red;
 }
 
-#history, .data {
+#history, .data, .data_story_id, .data_event_id{
     display: none;
 }

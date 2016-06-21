@@ -81,8 +81,8 @@
 </head>
 
 <?php 
-    echo "<p id='data_story_id' class='data'>$story_id</p>";
-    echo "<p id='data_event_id' class='data'>$curr_event_id</p>";
+    echo "<p id='data_story_id' class='data_story_id' class='data'>$story_id</p>";
+    echo "<p id='data_event_id' class='data_event_id' class='data'>$curr_event_id</p>";
 ?>
 
 <script>
@@ -108,7 +108,7 @@
         }
     }
 </script>
-<script type="text/javascript" src="timer.js"></script>
+<script type="text/javascript" src="js/timer.js"></script>
 
 <body>
 
